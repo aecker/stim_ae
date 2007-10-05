@@ -1,4 +1,3 @@
 function testError
 
-hello = world;
-
+error(struct('message','test','identifier','testError:myError','stack',dbstack))

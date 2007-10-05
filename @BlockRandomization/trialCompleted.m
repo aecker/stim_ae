@@ -1,4 +1,4 @@
-function [r,lastTrial] = trialCompleted(r,valid,correct)
+function [r,lastTrial] = trialCompleted(r,valid,varargin)
 
 % Indicates whether this was the last trial
 lastTrial = false;
@@ -16,7 +16,7 @@ end
 
 % pool empty -> new block
 if isempty(r.conditionPool)
-    r.conditionPool = 1:prod(r.numValues);
+    r = resetPool(r);
 end
 
 % fprintf('BlockRandomization: %d trials remaining\n',r.numTrials)

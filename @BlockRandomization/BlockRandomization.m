@@ -1,22 +1,26 @@
-function r = BlockRandomization(numValues,numTrials)
+function r = BlockRandomization(params,numTrials)
 % Multidimensional block randomization.
 %    r = Blockrandomization(numValues); will create a Blockrandomization
-%    object. numValues is an n-dimensional vector, where n is the total
-%    number of parameters.
+%    object. 
 %
-% AE 2006-12-05
+% AE 2007-10-05
 
-% Number of possible values for each parameter
-r.numValues = numValues;
+% Changes:
+% --------
+% AE 2007-10-05: Now passing full parameter structure rather than just number of
+%                different values. This allows for more flexibility, since some
+%                parameters can be treated in a special way.
+% AE 2006-12-05: initial release.
 
-% Number of trials to run
+% internal fields
 r.numTrials = numTrials;
-
-% Pool of conditions remaining in the current block.
-% In each request a random number is drawn an the according indices are
-% returned.
-r.conditionPool = 1:prod(numValues);
+r.conditions = struct;
+r.conditionPool = [];
 r.lastCondition = [];
 
 % Create class object
 r = class(r,'BlockRandomization');
+
+% determine conditions
+r = computeConditions(r,params);
+r = resetPool(r);
