@@ -1,24 +1,14 @@
 function [e,retInt32,retStruct,returned] = netAbortTrial(e,params)
 % Abort current trial.
 
-% Read and store reason for and timestamp of the abort
-fprintf('entered abortTrial\n')
-con = get(e,'con');
-abortType = pnet(con,'readline');
-disp(sprintf(['got 1st input arg: ' abortType]))
-timeStamp = pnet(con,'read',1,'double');
-fprintf('got 2nd input arg\n')
-e.data = addEvent(e.data,abortType,timeStamp);
+e.data = addEvent(e.data,params.abortType,params.timeStamp);
+e.data = setTrialParam(e.data,'validTrial',false);
 
-% clear screen
+% Screen needs to be cleared here (e.g. in order to remove fixation spot if
+% abort happend during initial fixation period).
 e = clearScreen(e);
+e = playSound(e,params.abortType);
 
-% Set abort status
-e.data = set(e.data,'validTrial',false);
-
-% get sound vectors
-e = playSoundLocal(e,abortType);
-
-% confirmation
-pnet(con,'write',uint8(1));
-fprintf('Wrote confirmation\n')
+retInt32 = int32(0);
+retStruct = struct;
+returned = false;

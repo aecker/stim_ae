@@ -4,6 +4,7 @@ function [e,retInt32,retStruct,returned] = netAddEvent(e,params)
 % structure.
 
 e.data = addEvent(e.data,params.eventName,params.timeStamp);
+
 retInt32 = int32(0);
 retStruct = struct;
 returned = false;

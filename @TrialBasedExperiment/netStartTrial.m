@@ -1,33 +1,24 @@
-function e = netStartTrial(e)
+function [e,retInt32,retStruct,returned] = netStartTrial(e)
 % Start a new trial.
 
-% Request parameters
-[e.randomization,indices,condIndex] = getNextTrial(e.randomization);
-
-% Update current parameters
-paramNames = fieldnames(e.params);
-for i = 1:length(paramNames)
-    p = paramNames{i};
-    e.curParams.(p) = e.params.(p)(:,indices(i));
-    e.curIndex.(p) = indices(i);
-end
+% determine condition
+[e.randomization,condIndex] = getNextTrial(e.randomization);
+e.data = newTrial(e.data);
+e.data = setTrialData(e.data,'condition',condIndex);
 
 % set background & get starting time
 win = get(e,'win');
-Screen('FillRect',win,e.curParams.bgColor);
+Screen('FillRect',win,getParam(e,'bgColor'));
 startTime = Screen('Flip',win);
-
-% play sound
-e = playSound(e,'startTrial');
-
-% init new trial
-e.data = newTrial(e.data);
-
-% put condition
-e.data = set(e.data,'condition',condIndex);
-
-% add startTrial event
 e.data = addEvent(e.data,'startTrial',startTime);
 
-% send acknowledgement
-%pnet(get(e,'con'),'write',uint8(1));
+% do trial initialization
+e = initTrial(e);
+
+% play sound
+warning('TrialBasedExperiment:netStartTrial: what does the sound indicate? Fixation spot to appear soon? If yes, it has to be moved to the appropriate function since startTrial is now before interTrial')
+e = playSound(e,'startTrial');
+
+retInt32 = int32(0);
+retStruct = struct;
+returned = false;

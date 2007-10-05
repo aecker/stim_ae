@@ -3,6 +3,5 @@ function e = clearScreen(e)
 
 % Clear screen
 win = get(e,'win');
-Screen('FillRect',win,e.curParams.bgColor);
-vblTime = Screen('Flip',win);
+Screen('FillRect',win,getParam(e,'bgColor'));
 e.data = addEvent(e.data,'clearScreen',vblTime);
