@@ -1,0 +1,4 @@
+function testError
+
+hello = world;
+
