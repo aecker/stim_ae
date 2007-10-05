@@ -11,9 +11,8 @@ e.win = [];
 e.oldVisualDebugLevel = Screen('Preference','VisualDebugLevel');
 e.oldSupressAllWarnings = Screen('Preference','SuppressAllWarnings');
 
-% tcp connection handle
-e.con = [];
-e.port = 1234;
+% tcp connection
+e.tcpConnection = TcpConnection;
 
 % buffer that stores the clock synchronization timestamps
 e.sync.start = -Inf;    % first timestamp on MAC side

@@ -1,7 +1,5 @@
-function data = addEvent(data,eventType,eventTime)
+function data = addEvent(data,type,time)
 
-i = data.nEvents + 1;
-eventNdx = strmatch(eventType,data.eventNames,'exact');
-data.curTrial.events(i) = eventNdx;
-data.curTrial.eventTimes(i) = eventTime;
-data.nEvents = i;
+ndx = strmatch(type,data.eventNames,'exact');
+data.events(end).types(end+1) = ndx;
+data.events(end).times(end+1) = time;

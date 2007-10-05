@@ -1,40 +1,43 @@
-function data = StimulationData(eventNames,eventSites,varargin)
-% Container for storing data about visual stimulation.
-% AE 2007-02-21
+function data = StimulationData(eventNames,eventSites)
+% Container for storing data about visual stimulation
+%
+% AE 2007-10-04
 
+% Changes
+% AE 2007-10-01: implemented the three different types of parameters
+% AE 2007-02-21: initial implementation
+
+
+%% Parameters
+% parameters that are constant throughout the session.
+% date, subject, and experiment type are mandatory, all others are added when
+% the session is started
+data.params.constants.expType = [];
+data.params.constants.subject = [];
+data.params.constants.startTime = [];
+data.params.constants.endTime = [];
+
+% parameter sets of different conditions
+data.params.conditions = [];
+
+% here we put the trials
+data.params.trials = [];
+
+
+%% Events
 data.eventNames = eventNames;
 data.eventSites = eventSites;
+data.events.types = {};
+data.events.times = {};
 
-% Here we put the data of the currently running trial
-% Fields used by TrialBasedExperiment should be initialized here to make
-% sure that they cannot be used by derived Experiment types
-maxEvents = length(eventNames);
-data.curTrial.condition = [];
-data.curTrial.events = zeros(1,maxEvents);
-data.curTrial.eventTimes = zeros(1,maxEvents);
-data.curTrial.validTrial = true;
-data.curTrial.sync = [];
-data.nEvents = 0;
 
-% Add dynamic fields. This can be used by derived Experiment types to put
-% data into the structure
-if nargin > 2
-    f = fieldnames(varargin{1});
-    for i = 1:length(f)
-        if any(strmatch(f{i},fieldnames(data.curTrial)))
-            error('%s is a default fieldname and cannot be used.',f{i})
-        else
-            data.curTrial.(f{i}) = varargin{1}.(f{i});
-        end
-    end
-end
-
-% Keep a memory of default trial. This will be used to initialize the
-% curTrial field for the next trial at the end of a trial.
-data.defaultTrial = data.curTrial;
-
-% Here we put the completed trials
-data.trials = repmat(data.curTrial,1,0);
+%% internal fields
+% where to store the data on disk
+data.folder = [];
+data.fallback = [];
+data.defaultTrial.events = struct('types',{},'times',{});
+data.defaultTrial.params = [];
+data.initialized = false;
 
 % create class object
 data = class(data,'StimulationData');

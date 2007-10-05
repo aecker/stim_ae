@@ -1,3 +1,3 @@
-function e = addEvent(e,eventType,eventTime)
+function e = addEvent(e,type,time)
 
-e.data = addEvent(e.data,eventType,eventTime);
+e.data = addEvent(e.data,type,time);
