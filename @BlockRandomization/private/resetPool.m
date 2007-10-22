@@ -1,4 +1,4 @@
-function r = resetPool(r);
+function r = resetPool(r)
 % Reset condition pool.
 % AE 2007-10-05
 

@@ -1,19 +1,17 @@
-function r = MovingBarRandomization(numValues,numTrials)
+function r = MovingBarRandomization()
 % Custom randomization for MovingBarExperiments
 %
-% AE & PhB 2007-09-28
+% AE & PhB 2007-10-09
 
-% Number of possible values for each parameter
-r.numValues = numValues;
+r.numSubBlocks = NaN;
+r.movingTrials = NaN;
+r.initMapTrials = NaN;
+r.mapTrials = NaN;
 
-% Number of trials to run
-r.numTrials = numTrials;
+r.conditions = repmat(struct,0,0);
 
-% Pool of conditions remaining in the current block.
-% In each request a random number is drawn an the according indices are
-% returned.
-r.conditionPool = 1:prod(numValues);
-r.lastCondition = [];
+r.conditionPool = [];
+r.currentTrial = 1;
 
 % Create class object
 r = class(r,'MovingBarRandomization');

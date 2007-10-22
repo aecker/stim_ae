@@ -1,7 +1,7 @@
-function data = StimulationData(constants,conditions,perTrial,eventNames,eventSites)
+function data = StimulationData
 % Container for storing data about visual stimulation
 %
-% AE 2007-10-04
+% AE 2007-10-08
 
 % Changes
 % AE 2007-10-01: implemented the three different types of parameters
@@ -9,38 +9,25 @@ function data = StimulationData(constants,conditions,perTrial,eventNames,eventSi
 
 
 %% Parameters
-% parameters that are constant throughout the session.
-% date, subject, and experiment type are mandatory, all others are added when
-% the session is started
-data.params.constants = parseVarArgs(constants,'startTime',now,'endTime',[]);
-data.params.conditions = conditions;
-data.defaultTrial.params = parseVarArgs(perTrial,'condition',[]);
-data.params.trials = repmat(data.defaultTrial.params,0,0);
-
-% make sure subject name is passed
-if isempty(data.constant.subject)
-    error('StimulationData:init','Constant ''subject'' missing!')
-end
+data.params.constants = struct;
+data.params.conditions = struct;
+data.params.trials = struct;
 
 
 %% Events
-data.eventTypes = eventTypes;
-data.eventSites = eventSites;
-data.events.types = {};
-data.events.times = {};
+data.eventTypes = {};
+data.eventSites = [];
+data.events = struct;
 
 
 %% internal fields
 % create directory for temporary storage of trial data
-subject = data.constants.subject;
-date = datestr(data.constants.startTime,'YYYY-mm-dd HH-MM-SS');
-data.folder = getLocalPath(sprintf('/stor01/stimulation/%s/%s',subject,date));
-data.fallback = sprintf('~/stimulation/%s',date);
-mkdir(data.fallback)
+data.folder = '';
+data.fallback = '';
 
-% default trial parameters (used when a new trial gets started)
-data.defaultTrial.events = struct('types',{},'times',{});
-data.defaultTrial.params = [];
+% default trial (used when a new trial gets started)
+data.defaultTrial = struct;
+data.initialized = false;
 
 % create class object
 data = class(data,'StimulationData');

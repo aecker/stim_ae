@@ -5,14 +5,14 @@ function err = saveData(data)
 %   highest number and increase this by one.
 
 try
-    doSave(data.folder,data);
+    doSave(data,data.folder);
     err = 0;
 catch
-    doSave(data.fallback,data);
+    doSave(data,data.fallback);
     err = 1;
-    fprintf('------------------------------')
+    fprintf('------------------------------\n')
     fprintf('Saving on at-storage failed. Created local backup in %s',data.fallback);
-    fprintf('------------------------------')
+    fprintf('------------------------------\n')
 end
 
 
@@ -22,5 +22,5 @@ function doSave(data,where)
     mkdir(where)
     % convert to simple matlab structure and get rid of some fields
     stim = struct(data);
-    stim = rmfield(stim,{'folder','fallback','defaultTrial','initialized'});
-    save(sprintf('%s/%s.mat',where,data.constants.expType),'stim')
+    stim = rmfield(stim,{'folder','fallback','defaultTrial'});
+    save(sprintf('%s/%s.mat',where,data.params.constants.expType),'stim')

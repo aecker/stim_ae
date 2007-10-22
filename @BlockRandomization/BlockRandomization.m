@@ -1,9 +1,9 @@
-function r = BlockRandomization(params,numTrials)
+function r = BlockRandomization
 % Multidimensional block randomization.
-%    r = Blockrandomization(numValues); will create a Blockrandomization
-%    object. 
+%    R = Blockrandomization; creates a Blockrandomization object
+%    R = init(R,params); initializes the randomization
 %
-% AE 2007-10-05
+% AE 2007-10-08
 
 % Changes:
 % --------
@@ -13,14 +13,9 @@ function r = BlockRandomization(params,numTrials)
 % AE 2006-12-05: initial release.
 
 % internal fields
-r.numTrials = numTrials;
-r.conditions = struct;
+r.conditions = repmat(struct,0,0);
 r.conditionPool = [];
 r.lastCondition = [];
 
 % Create class object
 r = class(r,'BlockRandomization');
-
-% determine conditions
-r = computeConditions(r,params);
-r = resetPool(r);

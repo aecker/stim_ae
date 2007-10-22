@@ -5,6 +5,6 @@ function tcp = TcpConnection(port)
 if nargin < 1, port = 1234; end
 tcp.port = port;
 tcp.socket = [];
-tcp.con = [];
+tcp.con = 0;
 tcp.host = [];
 tcp = class(tcp,'TcpConnection');

@@ -1,4 +1,4 @@
-function [e,retInt32,retStruct,returned] = netStartTrial(e)
+function [e,retInt32,retStruct,returned] = netStartTrial(e,params)
 % Start a new trial.
 
 % determine condition
@@ -16,7 +16,7 @@ e.data = addEvent(e.data,'startTrial',startTime);
 e = initTrial(e);
 
 % play sound
-warning('TrialBasedExperiment:netStartTrial: what does the sound indicate? Fixation spot to appear soon? If yes, it has to be moved to the appropriate function since startTrial is now before interTrial')
+warning('TrialBasedExperiment:netStartTrial','What does the sound indicate? Fixation spot to appear soon? If yes, it has to be moved to the appropriate function since startTrial is now before interTrial')
 e = playSound(e,'startTrial');
 
 retInt32 = int32(0);

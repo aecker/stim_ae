@@ -9,3 +9,4 @@ if isempty(strmatch(name,fieldnames(data.params.trials),'exact'))
 end
 
 data.params.trials(end).(name) = value;
+data.defaultTrial.params.(name) = value;

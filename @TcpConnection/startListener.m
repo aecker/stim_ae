@@ -1,4 +1,4 @@
-function startListener(tcp)
+function tcp = startListener(tcp)
 
 tcp.socket = pnet('tcpsocket',tcp.port);
 fprintf('\n* Waiting for connection on port %d\n',tcp.port);

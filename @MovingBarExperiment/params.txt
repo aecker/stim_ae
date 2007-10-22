@@ -1,0 +1,16 @@
+params = struct('barSize', [10; 1000] ...          (width; height) pixels
+                'barColor', [255; 255; 255], ...
+                'speed', 500, ...                  pixels/sec
+                'trajectoryStart', [100; 600], ... (x,y) from top left corner; center of box
+                'trajectoryLength', 1000, ...      pixels
+                'trajectoryAngle', 0, ...          degrees (to be implemented)
+                'initMapTrials', 100, ...          initial rf mapping (at beginning of experiment only)
+                'mapLocPerTrial', 30, ...          random locations per mapping trial
+                'mapFramesPerLoc', 3, ...          frames per location
+                'mapTrials', 15, ...               mapping trials at end of each moving block
+%                 'reversalTrials', 10, ...          trials where movement reverses
+%                 'reversalLocation', 0.5, ...       % of total trajectory length where reversal occurs
+                'movingTrials', 85, ...            trials with normal movement
+                'blocksPerPrior', 3, ...           
+                'priors', [0.5 0.1 0.9], ...       fraction of rightwards movement
+                );

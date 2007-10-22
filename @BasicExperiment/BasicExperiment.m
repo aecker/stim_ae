@@ -22,5 +22,11 @@ e.sync.end = 0;         % second timestamo on MAC side
 % Maximum allowed round trip time
 e.maxRoundTripTime = 10; % ms
 
+% monitor refresh rate
+e.refreshRate = [];
+
+% debug mode
+e.debug = false;
+
 % create object
 e = class(e,'BasicExperiment');

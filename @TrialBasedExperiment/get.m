@@ -2,7 +2,7 @@ function field = get(e,fieldName)
 % return parameter structure
 
 switch fieldName
-    case {'data','soundWaves'}
+    case {'randomization','data','params','soundWaves'}
         field = e.(fieldName);
     otherwise
         field = get(e.BasicExperiment,fieldName);

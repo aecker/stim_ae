@@ -20,6 +20,8 @@ whichScreen = max(Screen('Screens'));
 % a different monitor by supplying a different number in the second
 % argument to OpenWindow, e.g. Screen('OpenWindow', 2).
 e.win = Screen('OpenWindow', whichScreen);
+e.refreshRate = Screen(whichScreen,'FrameRate',[]);
+HideCursor;
 
 % confirm execution
 ret = 1;

@@ -9,15 +9,20 @@ e.tcpConnection = startListener(e.tcpConnection);
 % by the remote host.
 while isConnected(e.tcpConnection)
 
-    % read out and execute remote function call
+    % read out function name and arguments
     [fctName,params] = getFunctionCall(e.tcpConnection);
-    [e,retValI32,retStruct,returned] = feval(fctName,e,params);
 
-    % Some functions such as showStimulus are non-blocking. They send an
-    % aknowledgement to LabView before they actually return and we don't 
-    % need to send it here
-    if ~returned
-        returnFunctionCall(e.tcpConnection,fctName,retvalI32,retStruct);
+    if ~isempty(fctName)
+        
+        % execute function call
+        [e,retInt32,retStruct,returned] = feval(fctName,e,params);
+
+        % Some functions such as showStimulus are non-blocking. They send an
+        % aknowledgement to LabView before they actually return and we don't 
+        % need to send it here
+        if ~returned
+            returnFunctionCall(e.tcpConnection,fctName,retInt32,retStruct);
+        end
     end
 end
 

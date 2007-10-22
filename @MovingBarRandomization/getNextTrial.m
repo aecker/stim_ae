@@ -1,9 +1,8 @@
-function [r,indices,condIndex] = getNextTrial(r)
+function [r,condIndex] = getNextTrial(r)
 % Return parameters for given condition.
 
-% draw random condition
-condIndex = ceil(rand(1) * length(r.conditionPool));
-r.lastCondition = condIndex;
+if r.currentTrial > length(r.conditionPool)
+    error('All trials completed. LabView should have read out the ''mustStop'' return value of trialCompleted!')
+end
 
-% get parameter indices
-indices = conditionToIndices(r,r.conditionPool(condIndex));
+condIndex = r.conditionPool(r.currentTrial);

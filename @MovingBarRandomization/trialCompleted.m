@@ -1,22 +1,20 @@
-function [r,lastTrial] = trialCompleted(r,valid,correct)
+function [r,canStop,mustStop] = trialCompleted(r,valid,varargin)
 
-% Indicates whether this was the last trial
-lastTrial = false;
+% Indicates whether this was the last trial in current block
+canStop = false;
+mustStop = false;
 
 % trial successfully completed -> remove condition from pool
 if valid
-    r.conditionPool(r.lastCondition) = [];
-    r.numTrials = r.numTrials - 1;
-    
-    % last trial?
-    if r.numTrials == 0
-        lastTrial = true;
-    end
+    r.currentTrial = r.currentTrial + 1;
 end
 
-% pool empty -> new block
-if isempty(r.conditionPool)
-    r.conditionPool = 1:prod(r.numValues);
+% can stop after each completed block
+blockSize = r.numSubBlocks * (r.movingTrials + r.mapTrials);
+if mod(r.currentTrial - r.initMapTrials,blockSize) == 1
+    canStop = true;
 end
 
-% fprintf('BlockRandomization: %d trials remaining\n',r.numTrials)
+if r.currentTrial > length(r.conditionPool)
+    mustStop = true;
+end

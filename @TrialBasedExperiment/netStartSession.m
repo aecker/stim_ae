@@ -5,3 +5,7 @@ function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 % AE 2007-10-01
 
 e = init(e);
+
+retInt32 = int32(0);
+retStruct = struct;
+returned = false;

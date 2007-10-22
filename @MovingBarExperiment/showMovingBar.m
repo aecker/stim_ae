@@ -3,44 +3,36 @@ function e = showMovingBar(e)
 
 % some member variables..
 win = get(e,'win');
-con = get(e,'con');
-curParams = get(e,'curParams');
-curIndex = get(e,'curIndex');
 
 % determine starting position
-len = curParams.trajectoryLength;
-if rand(1) > 0.9
-    startPos = curParams.trajectoryStart;
-    angle = curParams.trajectoryAngle / 180 * pi;
-else
-    startPos = curParams.trajectoryStart + len * [sin(angle); cos(angle)];
-    angle = (curParams.trajectoryAngle + 180) / 180 * pi;
-end
+len = getParam(e,'trajectoryLength');
+dir = (rand(1) > getParam(e,'prior'));
+angle = (getParam(e,'trajectoryAngle') + 180 * dir) / 180 * pi;
+startPos = getParam(e,'trajectoryCenter') - len/2 * [cos(angle); -sin(angle)];
+speed = getParam(e,'speed');
 
 % put start time
 startTime = GetSecs;
 firstTrial = true;
-s = 0;
-while s < len
+refresh = get(e,'refreshRate');
+n = ceil(len / speed * refresh);
+s = zeros(n,1);
+pos = startPos;
+i = 1;
+abort = false;
+while s(i) < len
 
     % check for abort signal
-    [e,abort] = checkForAbort(e);
+    [e,abort] = tcpMiniListener(e,{'netAbortTrial'});
     if abort
-        % read out buffer swap times and reset timer
-        swapTimes = getSwapTimes(e.photoDiodeTimer);
-        e = putTrialData(e,'swapTimes',swapTimes);
-        e.photoDiodeTimer = reset(e.photoDiodeTimer);
-        return
+        break
     end
 
-    % determine current position
-    s = (GetSecs - startTime) * curParams.speed / 1000;
-    pos = startPos + s * [sin(angle); cos(angle)];
-
     % draw colored rectangle
-    rect = [pos - curParams.barSize/2; pos + curParams.barSize/2];
-    Screen('FillRect',win,curParams.color',rect);
-
+    barSize = getParam(e,'barSize');
+    rect = [pos - barSize/2; pos + barSize/2];
+    Screen('DrawTexture',win,e.tex,[],rect,-angle*180/pi); 
+    
     % draw photodiode spot; do buffer swap and keep timestamp
     e.photoDiodeTimer = swap(e.photoDiodeTimer,win);
     
@@ -50,16 +42,26 @@ while s < len
         e = addEvent(e,'showStimulus',startTime);
         firstTrial = false;
     end
+
+    i = i+1;
     
+    % compute next position
+    s(i) = (getLastSwap(e.photoDiodeTimer) - startTime + 1 / refresh) * speed;
+    pos = startPos + s(i) * [cos(angle); -sin(angle)];
 end
 
-% send 'completed' to state system
-pnet(con,'write',uint8(1));
+%if i == 100, keyboard, end
+
+% clear screen (abort clears the screen anyway in netAbortTrial, so skip it in
+% this case)
+if ~abort
+    e = clearScreen(e);
+end
 
 % read out buffer swap times and reset timer
 swapTimes = getSwapTimes(e.photoDiodeTimer);
-e = putTrialData(e,'swapTimes',swapTimes);
+e = setTrialData(e,'swapTimes',swapTimes);
 e.photoDiodeTimer = reset(e.photoDiodeTimer);
 
-% clear screen
-e = clearScreen(e);
+% save bar locations
+e = setTrialData(e,'barLocations',s(1:i-1));

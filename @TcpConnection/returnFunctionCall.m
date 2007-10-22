@@ -14,4 +14,4 @@ function returnFunctionCall(tcp,functionName,retValI32,retStruct)
 pnet(tcp.con,'write',int32(length(functionName)));
 pnet(tcp.con,'write',functionName);
 pnet(tcp.con,'write',int32(retValI32));
-writeStruct(retStruct);
+writeStruct(tcp,retStruct);

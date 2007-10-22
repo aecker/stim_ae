@@ -8,6 +8,12 @@ function [e,abort] = tcpMiniListener(e,allowedFunctions)
 %
 % AE 2007-10-04
 
+% in debug mode, don't use network calls
+if get(e,'debug')
+    abort = false;
+    return
+end
+
 % read out remote function call (if there is any)
 [fctName,params] = getFunctionCall(e.tcpConnection);
 abort = false;

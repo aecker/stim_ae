@@ -31,7 +31,7 @@ while GetSecs < endTime
         
         % read out buffer swap times and reset timer
         swapTimes = getSwapTimes(e.photoDiodeTimer);
-        e = putTrialData(e,'swapTimes',swapTimes);
+        e = setTrialData(e,'swapTimes',swapTimes);
         e.photoDiodeTimer = reset(e.photoDiodeTimer);
         
         return
@@ -57,7 +57,7 @@ pnet(con,'write',uint8(1));
 
 % read out buffer swap times and reset timer
 swapTimes = getSwapTimes(e.photoDiodeTimer);
-e = putTrialData(e,'swapTimes',swapTimes);
+e = setTrialData(e,'swapTimes',swapTimes);
 e.photoDiodeTimer = reset(e.photoDiodeTimer);
 
 % clear screen

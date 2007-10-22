@@ -9,28 +9,33 @@ function e = init(e)
 %
 % AE 2007-10-05
 
+% make sure we have all parameters set
+assertCorrectParams(e);
+e.params.constants.expType = class(e);
+e.params.trials.validTrial = true;
+e.params.trials.correctResponse = true;
+
+% get event types and sites
+[eventTypes,eventSites] = getEventTypes(e);
+
 % initalize sounds
 basePath = fileparts(mfilename('fullpath'));
 soundFiles = getSoundFiles(e);
 f = fieldnames(soundFiles);
 for i = 1:length(f)
     fileName = fullfile(basePath,'sounds',[soundFiles.(f{i}),'.wav']);
-    e.soundWaves.(f{i}) = wavread(fileName);
+    e.soundWaves.(f{i}) = wavread(fileName); % read sound file
+    eventTypes{end+1} = [f{i} 'Sound'];      % add sound event
+    eventSites(end+1) = 0;
 end
 
-% extract different parameter types and initialize StimulationData
-const = (e.paramTypes == getParamTypeConstant(e,'constant'));
-constParams = parseVarArgs(e.paramNames(const),'expType',class(e));
-trials = (e.paramTypes == getParamTypeConstant(e,'trial'));
-trialParams = e.paramNames(trials);
-conditionParams = getConditions(e.randomization);
+% initialize randomization
+e.randomization = init(e.randomization,e.params.conditions);
 
-% get event types and sites
-[eventTypes,eventSites] = getEventTypes(e);
-
-% Construct stimulation data container
-e.data = StimulationData(constParams,conditionParams,trialParams, ...
-                         eventTypes,eventSites);
+% initialize stimulation data container
+conditions = getConditions(e.randomization);
+e.data = init(e.data,e.params.constants,conditions,e.params.trials, ...
+                     eventTypes,eventSites);
 
 % save parameters to disk
 saveData(e.data);
