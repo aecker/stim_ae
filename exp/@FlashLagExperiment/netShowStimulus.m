@@ -79,9 +79,9 @@ offset = offsetX * [cos(angle); -sin(angle)] ...
 
 % is flash location randomized?
 if randLocation
-    movingLoc = noFlashZone + flashOffset * (flashOffset < 0) ...
+    movingLoc = noFlashZone + abs(flashOffset) * (flashOffset < 0) ...
         + rand(1) * ...
-            (len - flashOffset - 2 * (noFlashZone + offsetMove) - perceivedLag);
+            (len - abs(flashOffset) - 2 * (noFlashZone + offsetMove) - perceivedLag);
     flashLoc = movingLoc + offsetX;
 else
     movingLoc = flashLoc - offsetX;
@@ -98,6 +98,9 @@ i = 1;
 abort = false;
 flash = 0;
 while s(i) < len
+
+	%%%%
+	drawFixspot(e);
 
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});

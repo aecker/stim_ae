@@ -7,4 +7,10 @@ function [e,retInt32,retStruct,returned] = netTrialOutcome(e,params)
 
 r = get(e,'randomization');
 isReward = getReward(r,logical(params.correctResponse));
-retStruct.reward = int32(isReward * getParam(e,'rewardAmount'));
+if getParam(e,'randReward')
+    rewardAmount = isReward * rand(1) * getParam(e,'rewardAmount');
+else
+    rewardAmount = isReward * getParam(e,'rewardAmount');
+end
+e = setTrialParam(e,'rewardAmount',rewardAmount);
+retStruct.reward = int32(rewardAmount);
