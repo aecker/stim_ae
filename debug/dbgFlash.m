@@ -4,6 +4,7 @@
 warning off TrialBasedExperiment:netStartTrial
 warning off TrialBasedExperiment:netEndTrial
 warning off StimulationData:setTrialParam
+warning off StimulationData:setParam
 
 T = FlashLagExperiment;
 T = set(T,'debug',true);

@@ -6,7 +6,7 @@ cla
 
 warning off TrialBasedExperiment:netStartTrial
 warning off TrialBasedExperiment:netEndTrial
-% warning off StimulationData:setTrialParam
+warning off StimulationData:setTrialParam
 warning off StimulationData:setParam
 
 E = EyeCalibration;

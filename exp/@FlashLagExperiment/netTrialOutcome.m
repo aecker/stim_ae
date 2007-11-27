@@ -20,6 +20,7 @@ else
     rewardAmount = isReward * getParam(e,'rewardAmount');
 end
 e = setTrialParam(e,'rewardAmount',rewardAmount);
+fprintf('reward: %dms\n',int32(rewardAmount))
 
 retInt32 = 0;
 retStruct = struct('reward',int32(rewardAmount));

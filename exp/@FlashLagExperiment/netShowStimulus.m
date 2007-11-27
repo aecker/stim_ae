@@ -49,8 +49,10 @@ e = setTrialParam(e,'flashOffset',flashOffset);
 % direction)
 if flashOffset < 0
     retStruct.correctResponse = RIGHT_JOYSTICK(e);
+    disp('correct response: right')
 else
     retStruct.correctResponse = LEFT_JOYSTICK(e);
+    disp('correct response: left')
 end
 retStruct.trialIndex = int32(getParam(e,'trialIndex'));
 retStruct.trialType = int32(getParam(e,'trialType'));
