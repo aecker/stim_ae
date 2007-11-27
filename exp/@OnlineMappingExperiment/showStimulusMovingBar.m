@@ -20,6 +20,10 @@ e = setTrialParam(e,'moveDir',moveDir);
 texMat = permute(repmat(getParam(e,'barColor'),[1; barSize]),[2 3 1]);
 barTex = Screen('MakeTexture',get(e,'win'),texMat);
 
+% return function call
+tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+
+
 
 % determine starting position
 angle = (trajectoryAngle + 180 * moveDir) / 180 * pi;
