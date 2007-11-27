@@ -100,7 +100,7 @@ flash = 0;
 while s(i) < len
 
 	%%%%
-	drawFixspot(e);
+%  	drawFixspot(e);
 
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
@@ -122,12 +122,12 @@ while s(i) < len
         flash = flash - 1;
     end
 
-    % draw photodiode spot; do buffer swap and keep timestamp
-    e.photoDiodeTimer = swap(e.photoDiodeTimer,win);
+    % buffer swap
+    e = swap(e);
     
     % compute timeout
     if firstTrial
-        startTime = getSwapTimes(e.photoDiodeTimer);
+        startTime = getLastSwap(e);
         e = addEvent(e,'showStimulus',startTime);
         firstTrial = false;
     end
@@ -135,7 +135,7 @@ while s(i) < len
     i = i+1;
     
     % compute next position
-    s(i) = (getLastSwap(e.photoDiodeTimer) - startTime + 1 / refresh) * speed;
+    s(i) = (getLastSwap(e) - startTime + 1 / refresh) * speed;
     pos = startPos + s(i) * [cos(angle); -sin(angle)];
     
     % flash?
@@ -149,11 +149,6 @@ end
 if ~abort
     e = clearScreen(e);
 end
-
-% read out buffer swap times and reset timer
-swapTimes = getSwapTimes(e.photoDiodeTimer);
-e = setTrialParam(e,'swapTimes',swapTimes);
-e.photoDiodeTimer = reset(e.photoDiodeTimer);
 
 % save bar locations
 e = setTrialParam(e,'barLocations',s(1:i-1));

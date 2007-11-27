@@ -16,9 +16,9 @@ timer = PhotoDiodeTimer(nFrames);
 for i = 1:nFrames
     timer = swap(timer,win);
     % have it miss frame flips randomly
-    t = GetSecs + randn(1) * 4 / 1000;
+%     t = GetSecs + randn(1) * 4 / 1000;
 %     t = GetSecs+3;
-    while GetSecs < t, end
+%     while GetSecs < t, end
 end
 sca
 

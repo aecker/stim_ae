@@ -40,11 +40,11 @@ while (GetSecs - startTime) * 1000 < mappingTime - (1000 / refresh)
     Screen('DrawTexture',win,e.tex,[],rect,-angle*180/pi); 
     
     % draw photodiode spot; do buffer swap and keep timestamp
-    e.photoDiodeTimer = swap(e.photoDiodeTimer,win);
+    e = swap(e);
     
     % compute timeout
     if i == 1;
-        startTime = getSwapTimes(e.photoDiodeTimer);
+        startTime = getLastSwap(e);
         e = addEvent(e,'showStimulus',startTime);
     end
 
@@ -57,11 +57,6 @@ end
 if ~abort
     e = clearScreen(e);
 end
-
-% read out buffer swap times and reset timer
-swapTimes = getSwapTimes(e.photoDiodeTimer);
-e = setTrialData(e,'swapTimes',swapTimes);
-e.photoDiodeTimer = reset(e.photoDiodeTimer);
 
 % save bar locations
 e = setTrialData(e,'barLocations',s);

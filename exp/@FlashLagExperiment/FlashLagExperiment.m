@@ -2,7 +2,6 @@ function e = FlashLagExperiment(startNow)
 % Flash lag experiment
 % AE 2007-10-17
 
-e.photoDiodeTimer = PhotoDiodeTimer;
 e.tex = [];
 
 % Create class object
