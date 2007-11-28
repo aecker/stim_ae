@@ -5,7 +5,6 @@ function [e,retInt32,retStruct,returned] = showStimulusMovingBar(e,params)
 % some member variables..
 win     = get(e,'win');
 refresh = get(e,'refreshRate');
-rnd     = get(e,'randomization');
 
 % parameters
 barSize          = getParam(e,'barSize');
@@ -79,8 +78,8 @@ e = setTrialParam(e,'swapTimes',swapTimes);
 e.photoDiodeTimer = reset(e.photoDiodeTimer);
 
 % save bar locations
-e = setTrialParam(e,'barLocations',s(1:i-1));
-e = setTrialParam(e,'barTexture',barTex);
+e = setTrialParam(e,'movBarLocations',s(1:i-1));
+e = setTrialParam(e,'movBarTexture',barTex);
 
 
 % return values
