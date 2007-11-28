@@ -2,7 +2,6 @@ function e = OnlineMappingExperiment(startNow)
 % OnlineMappingExperiment for initial phase of recording
 % PHB 2007-11-24
 
-e.photoDiodeTimer = PhotoDiodeTimer;
 e.tex = [];
 
 % Create class object
