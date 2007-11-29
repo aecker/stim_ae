@@ -45,9 +45,10 @@ else % if expMode == EXPERIMENT(e)
 end
 e = setTrialParam(e,'flashOffset',flashOffset);
 
-% flash lags behind moving bar => move joystick right (independent of movement
-% direction)
-if flashOffset < 0
+% The response should indicate the location of the flashed bar relative to the 
+% moving bar
+if flashOffset < 0 && moveDir == MOTION_LEFT(e) || ...
+        flashOffset >= 0 && moveDir == MOTION_RIGHT(e)
     retStruct.correctResponse = RIGHT_JOYSTICK(e);
     disp('correct response: right')
 else
