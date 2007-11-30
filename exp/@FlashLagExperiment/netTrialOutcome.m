@@ -8,14 +8,15 @@ e = clearScreen(e);
 e = setTrialParam(e,'correctResponse',logical(params.correctResponse));
 e = setTrialParam(e,'validTrial',true);
 
-
 % If the monkey responds correctly, he will be rewarded with a certain
 % probability.
-
 r = get(e,'randomization');
 isReward = getReward(r,logical(params.correctResponse));
 if getParam(e,'randReward')
-    rewardAmount = isReward * rand(1) * getParam(e,'rewardAmount');
+    mu = getParam(e,'rewardAmount');
+    a = 1.5;
+    randAmount = 0.3 * mu + gamrnd(a,0.7 * mu / a,1);
+    rewardAmount = isReward * randAmount;
 else
     rewardAmount = isReward * getParam(e,'rewardAmount');
 end
