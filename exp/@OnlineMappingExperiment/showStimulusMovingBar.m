@@ -50,11 +50,11 @@ while s(i) < len
     Screen('DrawTexture',win,barTex,[],rect,-angle*180/pi); 
       
     % draw photodiode spot; do buffer swap and keep timestamp
-    e.photoDiodeTimer = swap(e.photoDiodeTimer,win);
+    e = swap(e);
     
     % compute timeout
     if firstTrial
-        startTime = getSwapTimes(e.photoDiodeTimer);
+        startTime = getLastSwap(e);
         e = addEvent(e,'showStimulus',startTime);
         firstTrial = false;
     end
@@ -62,7 +62,7 @@ while s(i) < len
     i = i+1;
     
     % compute next position
-    s(i) = (getLastSwap(e.photoDiodeTimer) - startTime + 1 / refresh) * speed;
+    s(i) = (getLastSwap(e) - startTime + 1 / refresh) * speed;
     pos = startPos + s(i) * [cos(angle); -sin(angle)];
 end
 
@@ -72,15 +72,9 @@ if ~abort
     e = clearScreen(e);
 end
 
-% read out buffer swap times and reset timer
-swapTimes = getSwapTimes(e.photoDiodeTimer);
-e = setTrialParam(e,'swapTimes',swapTimes);
-e.photoDiodeTimer = reset(e.photoDiodeTimer);
-
 % save bar locations
 e = setTrialParam(e,'movBarLocations',s(1:i-1));
 e = setTrialParam(e,'movBarTexture',barTex);
-
 
 % return values
 retInt32 = int32(0);

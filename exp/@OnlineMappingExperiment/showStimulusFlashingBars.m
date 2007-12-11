@@ -74,7 +74,7 @@ while running
     Screen('DrawTexture',win,currTex,[],rect,-angle*180/pi); 
       
     % draw photodiode spot; do buffer swap and keep timestamp
-    e.photoDiodeTimer = swap(e.photoDiodeTimer,win);
+    e = swap(e);
     
     % compute startTime
     if firstTrial
@@ -88,8 +88,6 @@ while running
 
     r(i)=texRand;
     i = i+1;
- 
- 
 end
 
 % clear screen (abort clears the screen anyway in netAbortTrial, so skip it in
@@ -97,11 +95,6 @@ end
 if ~abort
     e = clearScreen(e);
 end
-
-% read out buffer swap times and reset timer
-swapTimes = getSwapTimes(e.photoDiodeTimer);
-e = setTrialParam(e,'swapTimes',swapTimes);
-e.photoDiodeTimer = reset(e.photoDiodeTimer);
 
 % save bar locations
 e = setTrialParam(e,'flashBarLocations',s(1:i-1));
