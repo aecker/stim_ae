@@ -43,6 +43,9 @@ constants.moveProb = 0;
 constants.rewardProb = 1;
 constants.randReward = 1;
 constants.rewardAmount = 200;
+
+constants.fixationMode = 0;
+
 % constants. = ;
 
 trials = struct;

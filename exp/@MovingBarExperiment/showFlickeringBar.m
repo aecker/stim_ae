@@ -1,25 +1,37 @@
-function e = showFlickeringBar(e)
+function [e,retInt32,retStruct,returned] = showFlickeringBar(e)
 % show flickering bars for receptive field mapping.
 
-% some member variables..
-win = get(e,'win');
+win =           get(e,'win');
+refresh =       get(e,'refreshRate');
+barSize =       getParam(e,'barSize');
+len =           getParam(e,'trajectoryLength');
+angle =         getParam(e,'trajectoryAngle');
+trajCenter =    getParam(e,'trajectoryCenter');
+mappingTime =   getParam(e,'mapTime');
+fpLoc =         getParam(e,'mapFramesPerLoc');
+
 
 % determine starting position
-len = getParam(e,'trajectoryLength');
-dir = (rand(1) > getParam(e,'prior'));
-angle = (getParam(e,'trajectoryAngle') + 180 * dir) / 180 * pi;
-startPos = getParam(e,'trajectoryCenter') - len/2 * [cos(angle); -sin(angle)];
+angle = angle / 180 * pi;
+startPos = trajCenter - len/2 * [cos(angle); -sin(angle)];
 
-% put start time
+% return function call
+tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+
+% initialize
 startTime = GetSecs;
-mappingTime = getParam(e,'mapTime');
-refresh = get(e,'refreshRate');
-fpLoc = getParam(e,'mapFramesPerLoc');
 n = ceil(mappingTime / (1000 / refresh * fpLoc));
-s = zeros(n,1);
+s = zeros(1,n);
+rect = zeros(4,n);
+center = zeros(2,n);
 i = 1;
 abort = false;
+% * 1000 to convert into ms
+% minus one frame since after the last iteration of the loop the stimulus will
+% stay for one frame until clearScreen()
 while (GetSecs - startTime) * 1000 < mappingTime - (1000 / refresh)
+    
+    drawFixspot(e);
     
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial'});
@@ -29,16 +41,15 @@ while (GetSecs - startTime) * 1000 < mappingTime - (1000 / refresh)
 
     % change position only every couple frames
     if mod(i-1,fpLoc)==0
-        s(i) = rand(1) * len;
+        s(i) = round(rand(1) * len);
     else
         s(i) = s(i-1);
     end
-    pos = startPos + s(i) * [cos(angle); -sin(angle)];
+    center(:,i) = startPos + s(i) * [cos(angle); -sin(angle)];
     
     % draw colored rectangle
-    barSize = getParam(e,'barSize');
-    rect = [pos - barSize/2; pos + barSize/2];
-    Screen('DrawTexture',win,e.tex,[],rect,-angle*180/pi); 
+    rect(:,i) = [center(:,i) - barSize/2; center(:,i) + barSize/2];
+    Screen('DrawTexture',win,e.tex,[],rect(:,i),-angle*180/pi); 
     
     % buffer swap
     e = swap(e);
@@ -60,4 +71,11 @@ if ~abort
 end
 
 % save bar locations
-e = setTrialData(e,'barLocations',s);
+e = setTrialParam(e,'barLocations',s);
+e = setTrialParam(e,'barRects',rect);
+e = setTrialParam(e,'barCenters',center);
+
+% return values
+retInt32 = int32(0);
+retStruct = struct;
+returned = true;

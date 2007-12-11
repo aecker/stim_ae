@@ -1,26 +1,35 @@
-function e = showMovingBar(e)
+function [e,retInt32,retStruct,returned] = showMovingBar(e)
 % show moving bar
 
-% some member variables..
-win = get(e,'win');
+% get Parameters
+win =           get(e,'win');
+len =           getParam(e,'trajectoryLength');
+prior =         getParam(e,'prior');
+trajAngle =     getParam(e,'trajectoryAngle');
+trajCenter =    getParam(e,'trajectoryCenter');
+speed =         getParam(e,'speed');
+refresh =       get(e,'refreshRate');
+barSize =       getParam(e,'barSize');
 
 % determine starting position
-len = getParam(e,'trajectoryLength');
-dir = (rand(1) > getParam(e,'prior'));
-angle = (getParam(e,'trajectoryAngle') + 180 * dir) / 180 * pi;
-startPos = getParam(e,'trajectoryCenter') - len/2 * [cos(angle); -sin(angle)];
-speed = getParam(e,'speed');
+dir = (rand(1) > prior);
+angle = (trajAngle + 180 * dir) / 180 * pi;
+startPos = trajCenter - len/2 * [cos(angle); -sin(angle)];
 
-% put start time
+
+% compute timing & length
 startTime = GetSecs;
 firstTrial = true;
-refresh = get(e,'refreshRate');
 n = ceil(len / speed * refresh);
-s = zeros(n,1);
-pos = startPos;
+s = zeros(1,n);
+rect = zeros(4,n);
+center = zeros(2,n);
+center(:,1) = startPos;
 i = 1;
 abort = false;
 while s(i) < len
+    
+    drawFixspot(e);
 
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial'});
@@ -29,9 +38,8 @@ while s(i) < len
     end
 
     % draw colored rectangle
-    barSize = getParam(e,'barSize');
-    rect = [pos - barSize/2; pos + barSize/2];
-    Screen('DrawTexture',win,e.tex,[],rect,-angle*180/pi); 
+    rect(:,i) = [center(:,i) - barSize/2; center(:,i) + barSize/2];
+    Screen('DrawTexture',win,e.tex,[],rect(:,i),-angle*180/pi); 
     
     % buffer swap
     e = swap(e);
@@ -47,10 +55,8 @@ while s(i) < len
     
     % compute next position
     s(i) = (getLastSwap(e) - startTime + 1 / refresh) * speed;
-    pos = startPos + s(i) * [cos(angle); -sin(angle)];
+    center(:,i) = startPos + s(i) * [cos(angle); -sin(angle)];
 end
-
-%if i == 100, keyboard, end
 
 % clear screen (abort clears the screen anyway in netAbortTrial, so skip it in
 % this case)
@@ -59,4 +65,11 @@ if ~abort
 end
 
 % save bar locations
-e = setTrialData(e,'barLocations',s(1:i-1));
+e = setTrialParam(e,'barLocations',s(1:i-1));
+e = setTrialParam(e,'barRects',rect);
+e = setTrialParam(e,'barCenters',center(:,1:i-1));
+
+% return values
+retInt32 = int32(0);
+retStruct = struct;
+returned = true;

@@ -102,8 +102,10 @@ abort = false;
 flash = 0;
 while s(i) < len
 
-	%%%%
-%  	drawFixspot(e);
+	% Does the monkey have to fixate?
+    if getParam(e,'fixationMode')
+     	drawFixSpot(e);
+    end
 
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
@@ -147,10 +149,29 @@ while s(i) < len
     end    
 end
 
-% clear screen (abort clears the screen anyway in netAbortTrial, so skip it in
-% this case)
+% keep fixation spot after stimulus turns off
 if ~abort
-    e = clearScreen(e);
+
+    % Does the monkey have to fixate?
+    if getParam(e,'fixationMode')
+        drawFixSpot(e);
+        e = swap(e);
+        delayTime = getParam(e,'delayTime');
+        responseTime = getParam(e,'responseTime');
+        
+        % wait until response time is over, then remove fixation spot
+        while GetSecs < startTime + delayTime + responseTime
+            % check for abort signal
+            [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
+            if abort
+                break
+            end
+        end
+    end
+    
+    if ~abort
+        e = clearScreen(e);
+    end
 end
 
 % save bar locations

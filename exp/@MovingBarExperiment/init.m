@@ -1,17 +1,11 @@
-function e = init(e)
-% Initalization
-% AE 2007-02-21
+function e = init(e,params)
 
-params = get(e,'params');
-params.trials.swapTimes = [];
-params.trials.barLocations = [];
-e = set(e,'params',params);
-
+% initialize randomization
 randomization = get(e,'randomization');
-randomization = set(randomization,'numSubBlocks',params.constants.numSubBlocks);
-randomization = set(randomization,'movingTrials',params.constants.movingTrials);
-randomization = set(randomization,'mapTrials',params.constants.mapTrials);
-randomization = set(randomization,'initMapTrials',params.constants.initMapTrials);
+randomization = set(randomization,'numSubBlocks',params.numSubBlocks);
+randomization = set(randomization,'movingTrials',params.movingTrials);
+randomization = set(randomization,'mapTrials',params.mapTrials);
+randomization = set(randomization,'initMapTrials',params.initMapTrials);
 e = set(e,'randomization',randomization);
 
 % call parent's init function
