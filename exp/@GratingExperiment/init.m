@@ -1,9 +1,8 @@
-function g = init(g)
+function g = init(e,params)
 % Initalization. (I.e. generate textures in this case)
-% AE 2007-02-21
 
 % first call parent's init function
-g.TrialBasedExperiment = init(g.TrialBasedExperiment);
+e.TrialBasedExperiment = init(e.TrialBasedExperiment);
 
 % generate textures
-g = generateTextures(g);
+e = generateTextures(e);

@@ -16,6 +16,8 @@ dir = (rand(1) > prior);
 angle = (trajAngle + 180 * dir) / 180 * pi;
 startPos = trajCenter - len/2 * [cos(angle); -sin(angle)];
 
+% return function call
+tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
 % compute timing & length
 startTime = GetSecs;
