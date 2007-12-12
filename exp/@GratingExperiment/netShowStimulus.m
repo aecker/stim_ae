@@ -3,21 +3,20 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 
 % some member variables..
 win = get(e,'win');
-con = get(e,'con');
 rect = Screen('Rect',win);
+refresh = get(e,'refresh');
 
 
 % get current parameter
 r = get(e,'randomization');
-conditions = getConditions(r);
 
 % read parameters
 curIdx = getParam(e,'condition');
 location = getParam(e,'location');
 spatialFreq = getParam(e,'spatialFreq');
-direction = getParam(e,'direction');
-
-
+orientation = getParam(e,'orientation');
+phi0 = getParam(e,'initialPhase');      
+speed = getParam(e,'speed');            % cyc/s
 
 % some shortcuts
 texture = e.textures(curIdx);
@@ -30,9 +29,10 @@ centerY = mean(rect([2 4])) + location(2);
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
 % some values we need 
-period = 2*pi / spatialFreq;
+period = 1 / spatialFreq;
+speed = speed * refresh / 1000 * period;     % convert to px/frame
 
-i=1;
+phi = phi0;
 firstTrial = true;
 running = true;
 while running
@@ -46,14 +46,14 @@ while running
     end
     
     % update grating
-    u = mod(i,period) - period/2;
-    xInc = -u * sin(direction/180*pi);
-    yInc = u * cos(direction/180*pi);
+    u = mod(phi,period) - period/2;
+    xInc = -u * sin(orientation/180*pi);
+    yInc = u * cos(orientation/180*pi);
     destRect = [-texSize -texSize texSize texSize] / 2 ...
         + [centerX centerY centerX centerY] + [xInc yInc xInc yInc];
     
     % draw texture, aperture, flip screen
-    Screen('DrawTexture',win,texture,[],destRect,direction); 
+    Screen('DrawTexture',win,texture,[],destRect,orientation); 
     Screen('DrawTexture',win,alpha); 
     e = swap(e);
     
@@ -67,7 +67,7 @@ while running
     % compute timeOut
     running = (getLastSwap(e)-startTime) < delayTime;
     
-    i = i+1;
+    phi = phi + speed;
 end
 
 

@@ -23,10 +23,10 @@ for i=1:length(conditions)
         % generate grating texture
         currSpatFreq = conditions(i).spatialFreq;
         currContrast = conditions(i).contrast;
-        period = 2*pi / currSpatFreq;
+        period = 1 / currSpatFreq;
         e.textureSize(i) = ceil(max(diskSize) + period);
         [x,y] = meshgrid(1:e.textureSize(i), 1:e.textureSize(i));
-        gratingMatrix = 127.5 + (127.5 * sin(currSpatFreq .* y) * ...
+        gratingMatrix = 127.5 + (127.5 * sin(2*pi*currSpatFreq .* y) * ...
             currContrast / 100);
         e.textures(i) = Screen('MakeTexture',win,gratingMatrix);
         

@@ -34,7 +34,7 @@ while s(i) < len
     drawFixspot(e);
 
     % check for abort signal
-    [e,abort] = tcpMiniListener(e,{'netAbortTrial'});
+    [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
         break
     end

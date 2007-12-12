@@ -34,7 +34,7 @@ while (GetSecs - startTime) * 1000 < mappingTime - (1000 / refresh)
     drawFixspot(e);
     
     % check for abort signal
-    [e,abort] = tcpMiniListener(e,{'netAbortTrial'});
+    [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
         break
     end
