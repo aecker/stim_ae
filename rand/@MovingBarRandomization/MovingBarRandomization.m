@@ -1,12 +1,13 @@
-function r = MovingBarRandomization()
+function r = MovingBarRandomization(numSubBlocks,movingTrials,initMapTrials, ...
+                                    mapTrials)
 % Custom randomization for MovingBarExperiments
 %
-% AE & PhB 2007-10-09
+% AE & PhB 2007-12-17
 
-r.numSubBlocks = NaN;
-r.movingTrials = NaN;
-r.initMapTrials = NaN;
-r.mapTrials = NaN;
+r.numSubBlocks = numSubBlocks;
+r.movingTrials = movingTrials;
+r.initMapTrials = initMapTrials;
+r.mapTrials = mapTrials;
 
 r.conditions = repmat(struct,0,0);
 

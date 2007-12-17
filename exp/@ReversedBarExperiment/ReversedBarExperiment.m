@@ -6,5 +6,5 @@ e.tex = [];
 e.texInvisible = [];
 
 % Create class object
-t = TrialBasedExperiment(ReversedBarRandomization,StimulationData);
+t = TrialBasedExperiment([],StimulationData);
 e = class(e,'ReversedBarExperiment',t);

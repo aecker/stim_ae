@@ -1,10 +1,10 @@
-function r = ReversedBarRandomization()
+function r = ReversedBarRandomization(initMapTrials,exceptionRate)
 % Custom randomization for MovingBarExperiments
 %
 % AE & PhB 2007-10-09
 
-r.initMapTrials = NaN;
-r.exceptionRate = NaN;
+r.initMapTrials = initMapTrials;
+r.exceptionRate = exceptionRate;
 
 r.conditions = repmat(struct,0,0);
 

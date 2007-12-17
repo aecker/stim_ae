@@ -23,6 +23,7 @@ constants.spatialFreq = .01;
 constants.orientation = [0 45 90 135];
 constants.initialPhase = 0;
 constants.speed = [0 2 -2];
+constants.rewardProb=1;
 
 trials = struct;
 

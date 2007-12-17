@@ -1,8 +1,8 @@
-function g = init(e,params)
+function e = initSession(e,params,expType)
 % Initalization. (I.e. generate textures in this case)
 
 % first call parent's init function
-e.TrialBasedExperiment = init(e.TrialBasedExperiment);
+e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
 
 % generate textures
 e = generateTextures(e);
