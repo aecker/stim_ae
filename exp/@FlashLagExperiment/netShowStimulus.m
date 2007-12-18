@@ -13,7 +13,7 @@ speed            = getParam(e,'speed');
 flashDuration    = getParam(e,'flashDuration');
 perceivedLag     = getParam(e,'perceivedLag');
 flashLoc         = getParam(e,'flashLocation'); % constant location for training
-flashLocMult     = getParam(e,'flashLocations') % variable locations for experiment (used with expmode)
+flashLocMult     = getParam(e,'flashLocations'); % variable locations for experiment (used with expmode)
 randLocation     = getParam(e,'randLocation');
 noFlashZone      = getParam(e,'noFlashZone');
 lagProb          = getParam(e,'lagProb');
@@ -99,6 +99,8 @@ else
 end
 e = setTrialParam(e,'flashLocation',flashLoc);
 e = setTrialParam(e,'movingLocation',movingLoc);
+
+fprintf('flashLocation: %d  movingLocation: %d   offset: %d\n',flashLoc,movingLoc,flashOffset)
 
 % put start time
 firstTrial = true;
