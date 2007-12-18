@@ -4,14 +4,14 @@ function r = resetPool(r)
 pool = {};
 for i = 1:r.maxBlockSize
     pool{end+1} = find([r.conditions.blockSize] == i &  ...
-                       [r.conditions.blockType] == REGULAR_BLOCK(r));
+                       [r.conditions.blockType] == ReportPerceptRandomization.REGULAR_BLOCK);
 end
 
 % probe blocks
 if r.expMode
     for i = 2:r.maxBlockSize
         cond = find([r.conditions.blockSize] == i &  ...
-                    [r.conditions.blockType] == PROBE_BLOCK(r));
+                    [r.conditions.blockType] == ReportPerceptRandomization.PROBE_BLOCK);
         ndx = 1:2:2*i;
         rnd = ceil(rand(1) * (i-1));
         ndx(rnd) = 2*rnd;

@@ -4,7 +4,8 @@ canStop = true;
 mustStop = false;
 
 cond = r.conditionPool(r.currentTrial);
-if (valid && correct) || r.conditions(cond).trialType == PROBE(r)
+if (valid && correct) || ...
+        r.conditions(cond).trialType == ReportPerceptRandomization.PROBE
     r.currentTrial = r.currentTrial + 1;
 end
 

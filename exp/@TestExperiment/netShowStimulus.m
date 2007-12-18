@@ -2,7 +2,7 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % Show stimulus.
 % AE 2007-10-17
 
-retStruct.correctResponse = RIGHT_JOYSTICK(e);
+retStruct.correctResponse = TrialBasedExperiment.RIGHT_JOYSTICK;
 retStruct.trialIndex = int32(getParam(e,'trialIndex'));
 retStruct.trialType = int32(getParam(e,'trialType'));
 retStruct.blockSize = int32(getParam(e,'blockSize'));

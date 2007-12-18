@@ -5,7 +5,6 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % some member variables..
 win     = get(e,'win');
 refresh = get(e,'refreshRate');
-rnd     = get(e,'randomization');
 
 % parameters
 barSize          = getParam(e,'barSize');
@@ -30,14 +29,14 @@ e = setTrialParam(e,'moveDir',moveDir);
 % For training we use a fixed offset (flashOffset) set on the front panel. For
 % the experiment we use a fixed set of offsets (flashOffsets) defined in the
 % config file
-if expMode == TRAINING(e)
+if expMode == FlashLagExperiment.TRAINING
     lagDir = 2 * (rand(1) > lagProb) - 1;
     flashOffset = lagDir * flashOffset;
 
-else % if expMode == EXPERIMENT(e)
-    if trialType == PROBE(rnd)
+else % if expMode == FlashLagExperiment.EXPERIMENT
+    if trialType == ReportPerceptRandomization.PROBE
         offsets = find(abs(flashOffsets) <= offsetThreshold);
-    else % if trialType == REGULAR_[NO_]REWARD(rnd)
+    else % if trialType == ReportPerceptRandomization.REGULAR_[NO_]REWARD
         offsets = find(abs(flashOffsets) > offsetThreshold);
     end
     ndx = offsets(ceil(rand(1) * length(offsets)));
@@ -47,12 +46,12 @@ e = setTrialParam(e,'flashOffset',flashOffset);
 
 % The response should indicate the location of the flashed bar relative to the 
 % moving bar
-if flashOffset < 0 && moveDir == MOTION_LEFT(e) || ...
-        flashOffset >= 0 && moveDir == MOTION_RIGHT(e)
-    retStruct.correctResponse = RIGHT_JOYSTICK(e);
+if flashOffset < 0 && moveDir == FlashLagExperiment.MOTION_LEFT || ...
+        flashOffset >= 0 && moveDir == FlashLagExperiment.MOTION_RIGHT
+    retStruct.correctResponse = TrialBasedExperiment.RIGHT_JOYSTICK;
     disp('correct response: right')
 else
-    retStruct.correctResponse = LEFT_JOYSTICK(e);
+    retStruct.correctResponse = TrialBasedExperiment.LEFT_JOYSTICK;
     disp('correct response: left')
 end
 retStruct.trialIndex = int32(getParam(e,'trialIndex'));

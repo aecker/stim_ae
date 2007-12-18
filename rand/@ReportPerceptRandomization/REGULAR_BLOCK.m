@@ -1,3 +1,3 @@
-function x = REGULAR_BLOCK(r)
+function x = REGULAR_BLOCK
 
 x = 0;

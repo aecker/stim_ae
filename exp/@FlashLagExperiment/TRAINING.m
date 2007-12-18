@@ -1,3 +1,3 @@
-function x = TRAINING(e)
+function x = TRAINING
 
 x = false; 

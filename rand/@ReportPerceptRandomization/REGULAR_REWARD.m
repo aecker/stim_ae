@@ -1,3 +1,3 @@
-function x = REGULAR_REWARD(r)
+function x = REGULAR_REWARD
 
 x = 1;

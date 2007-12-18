@@ -1,3 +1,3 @@
-function x = MOTION_LEFT(e)
+function x = MOTION_LEFT
 
 x = 1;

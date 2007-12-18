@@ -1,3 +1,3 @@
-function x = PROBE(r)
+function x = PROBE
 
 x = 2;

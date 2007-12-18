@@ -1,3 +1,3 @@
-function x = EXPERIMENT(e)
+function x = EXPERIMENT
 
 x = true;

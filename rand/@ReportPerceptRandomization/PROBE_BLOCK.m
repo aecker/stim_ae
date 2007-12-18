@@ -1,3 +1,3 @@
-function x = PROBE_BLOCK(r)
+function x = PROBE_BLOCK
 
 x = 2;
