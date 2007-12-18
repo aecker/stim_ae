@@ -16,7 +16,8 @@ moveDir = rand(1) > getParam(e,'moveProb');
 e = setTrialParam(e,'moveDir',moveDir);
 
 % generate bar texture
-texMat = permute(repmat(getParam(e,'barColor'),[1; barSize]),[2 3 1]);
+barColor = repmat(getParam(e,'barColor'),3,1);
+texMat = permute(repmat(barColor,[1; barSize]),[2 3 1]);
 barTex = Screen('MakeTexture',get(e,'win'),texMat);
 
 % return function call
