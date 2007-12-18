@@ -18,13 +18,16 @@ constants.fixSpotLocation = [0; 0];
 constants.fixSpotSize = 10;
 
 constants.location = [50; 50];
-constants.diskSize = [200;200];
+constants.diskSize = 200;
+constants.contrast = [100];
 constants.spatialFreq = .01;
 constants.orientation = [0 45 90 135];
 constants.initialPhase = 0;
-constants.speed = [0 2 -2]; 
+constants.speed = [0 .1 -.1]; 
 constants.rewardProb=1;
 
+constants.delayTime=1000;
+constants.rewardAmount=0;
 
 trials = struct;
 

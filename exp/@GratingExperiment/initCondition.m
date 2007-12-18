@@ -30,4 +30,4 @@ alphaLum = repmat(permute(bgColor,[2 3 1]), ...
                   2*halfHeight,2*halfWidth);
 
 alphaBlend = 255 * (sqrt(X.^2 + Y.^2) > diskSize/2);
-e.alphaMask(i) = Screen('MakeTexture',win,cat(3,alphaLum,alphaBlend));
+e.alphaMask(cond) = Screen('MakeTexture',win,cat(3,alphaLum,alphaBlend));

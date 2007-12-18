@@ -4,11 +4,7 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % some member variables..
 win = get(e,'win');
 rect = Screen('Rect',win);
-refresh = get(e,'refresh');
-
-
-% get current parameter
-r = get(e,'randomization');
+refresh = get(e,'refreshRate');
 
 % read parameters
 curIdx = getParam(e,'condition');
@@ -17,6 +13,7 @@ spatialFreq = getParam(e,'spatialFreq');
 orientation = getParam(e,'orientation');
 phi0 = getParam(e,'initialPhase');      
 speed = getParam(e,'speed');            % cyc/s
+delayTime = getParam(e,'delayTime');
 
 % some shortcuts
 texture = e.textures(curIdx);
@@ -37,8 +34,6 @@ firstTrial = true;
 running = true;
 while running
 
-    drawFixspot(e);
-
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
@@ -55,6 +50,7 @@ while running
     % draw texture, aperture, flip screen
     Screen('DrawTexture',win,texture,[],destRect,orientation); 
     Screen('DrawTexture',win,alpha); 
+    drawFixspot(e);
     e = swap(e);
     
     % compute startTime
@@ -65,8 +61,8 @@ while running
     end
     
     % compute timeOut
-    running = (getLastSwap(e)-startTime) < delayTime;
-    
+    running = (getLastSwap(e)-startTime)*1000 < delayTime;
+   
     phi = phi + speed;
 end
 

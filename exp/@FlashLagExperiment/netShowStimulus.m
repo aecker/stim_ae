@@ -12,7 +12,8 @@ len              = getParam(e,'trajectoryLength');
 speed            = getParam(e,'speed');
 flashDuration    = getParam(e,'flashDuration');
 perceivedLag     = getParam(e,'perceivedLag');
-flashLoc         = getParam(e,'flashLocation');
+flashLoc         = getParam(e,'flashLocation'); % constant location for training
+flashLocMult     = getParam(e,'flashLocations') % variable locations for experiment (used with expmode)
 randLocation     = getParam(e,'randLocation');
 noFlashZone      = getParam(e,'noFlashZone');
 lagProb          = getParam(e,'lagProb');
@@ -79,13 +80,21 @@ offsetY = 1.2 * barSize(2);
 offset = offsetX * [cos(angle); -sin(angle)] ...
        + offsetY * [sin(mod(angle,pi)); cos(mod(angle,pi))];
 
-% is flash location randomized?
-if randLocation
-    movingLoc = noFlashZone + abs(flashOffset) * (flashOffset < 0) ...
-        + rand(1) * ...
-            (len - abs(flashOffset) - 2 * (noFlashZone + offsetMove) - perceivedLag);
-    flashLoc = movingLoc + offsetX;
+% in training, we allow randomized and fixed locations. in the experiment,
+% we give it a number of locations at which the flash may be shown
+
+if expMode == FlashLagExperiment.TRAINING
+    if randLocation
+        movingLoc = noFlashZone + abs(flashOffset) * (flashOffset < 0) ...
+            + rand(1) * ...
+                (len - abs(flashOffset) - 2 * (noFlashZone + offsetMove) - perceivedLag);
+        flashLoc = movingLoc + offsetX;
+    else
+        movingLoc = flashLoc - offsetX;
+    end
 else
+    ndx = ceil(rand*length(flashLocMult));
+    flashLoc = flashLocMult(ndx);
     movingLoc = flashLoc - offsetX;
 end
 e = setTrialParam(e,'flashLocation',flashLoc);
