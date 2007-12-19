@@ -11,6 +11,8 @@ barSize          = getParam(e,'barSize');
 len              = getParam(e,'trajectoryLength');
 speed            = getParam(e,'speed');
 trajectoryAngle  = getParam(e,'trajectoryAngle');
+autoAngle  = getParam(e,'autoAngle');
+trajectoryAngles  = getParam(e,'trajectoryAngles');
 trajectoryCenter = getParam(e,'trajectoryCenter');
 moveDir = rand(1) > getParam(e,'moveProb');
 e = setTrialParam(e,'moveDir',moveDir);
@@ -26,6 +28,12 @@ tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
 
 % determine starting position
+
+if autoAngle
+    ndx = ceil(rand*length(trajectoryAngles));
+    trajectoryAngle = trajectoryAngles(ndx);
+end
+e = setTrialParam(e,'movBarAngle',trajectoryAngle);
 angle = (trajectoryAngle + 180 * moveDir) / 180 * pi;
 startPos = trajectoryCenter - len/2 * [cos(angle); -sin(angle)];
 
