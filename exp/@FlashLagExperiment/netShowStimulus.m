@@ -49,10 +49,10 @@ e = setTrialParam(e,'flashOffset',flashOffset);
 % moving bar
 if flashOffset < 0 && moveDir == FlashLagExperiment.MOTION_LEFT || ...
         flashOffset >= 0 && moveDir == FlashLagExperiment.MOTION_RIGHT
-    retStruct.correctResponse = TrialBasedExperiment.RIGHT_JOYSTICK;
+    retStruct.correctResponse = int32(TrialBasedExperiment.RIGHT_JOYSTICK);
     disp('correct response: right')
 else
-    retStruct.correctResponse = TrialBasedExperiment.LEFT_JOYSTICK;
+    retStruct.correctResponse = int32(TrialBasedExperiment.LEFT_JOYSTICK);
     disp('correct response: left')
 end
 retStruct.trialIndex = int32(getParam(e,'trialIndex'));
@@ -113,7 +113,7 @@ flash = 0;
 while s(i) < len
 
 	% Does the monkey have to fixate?
-    if getParam(e,'fixationMode')
+    if getParam(e,'eyeControl')
      	drawFixSpot(e);
     end
 
@@ -163,7 +163,7 @@ end
 if ~abort
 
     % Does the monkey have to fixate?
-    if getParam(e,'fixationMode')
+    if getParam(e,'eyeControl')
         drawFixSpot(e);
         e = swap(e);
         delayTime = getParam(e,'delayTime');
