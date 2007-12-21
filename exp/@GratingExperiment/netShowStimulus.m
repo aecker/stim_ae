@@ -15,6 +15,8 @@ phi0 = getParam(e,'initialPhase');
 speed = getParam(e,'speed');            % cyc/s
 delayTime = getParam(e,'delayTime');
 
+[curIdx length(e.textures) spatialFreq orientation phi0 speed ]
+
 % some shortcuts
 texture = e.textures(curIdx);
 texSize = e.textureSize(curIdx);

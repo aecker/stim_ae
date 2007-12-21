@@ -7,6 +7,7 @@ e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
 % now. TrialBasedExperiment/initSession is calling initCondition automatically,
 % but since the above call is running only on the parent, it calls
 % TrialBasedExperiment/initCondition instead of GratingExperiment/initSession.
+getNumConditions(e)
 for i = 1:getNumConditions(e)
     e = initCondition(e,i);
 end
