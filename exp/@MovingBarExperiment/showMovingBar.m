@@ -4,7 +4,8 @@ function [e,retInt32,retStruct,returned] = showMovingBar(e)
 % get Parameters
 win =           get(e,'win');
 len =           getParam(e,'trajectoryLength');
-prior =         getParam(e,'prior');
+% prior =         getParam(e,'prior');
+dir =           getParam(e,'direction');
 trajAngle =     getParam(e,'trajectoryAngle');
 trajCenter =    getParam(e,'trajectoryCenter');
 speed =         getParam(e,'speed');
@@ -12,7 +13,6 @@ refresh =       get(e,'refreshRate');
 barSize =       getParam(e,'barSize');
 
 % determine starting position
-dir = (rand(1) > prior);
 angle = (trajAngle + 180 * dir) / 180 * pi;
 startPos = trajCenter - len/2 * [cos(angle); -sin(angle)];
 
