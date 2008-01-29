@@ -29,7 +29,8 @@ tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
 % some values we need 
 period = 1 / spatialFreq;
-speed = speed * refresh / 1000 * period;     % convert to px/frame
+% speed = speed * refresh / 1000 * period;     % convert to px/frame
+speed = speed * period / refresh;     % convert to px/frame
 
 phi = phi0;
 firstTrial = true;
