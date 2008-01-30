@@ -1,7 +1,8 @@
 function r = computeConditions(r,params)
 % Compute condition pool.
 % AE 2007-10-05
-
+% fprintf('computeConditions\n')
+% params
 r.conditionPool = ones(1,r.initMapTrials);
 r.conditions = struct('prior',NaN, ...
                       'subBlock',NaN, ...

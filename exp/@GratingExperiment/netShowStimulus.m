@@ -13,9 +13,11 @@ spatialFreq = getParam(e,'spatialFreq');
 orientation = getParam(e,'orientation');
 phi0 = getParam(e,'initialPhase');      
 speed = getParam(e,'speed');            % cyc/s
-delayTime = getParam(e,'delayTime');
+stimTime = getParam(e,'stimTime');
+postStimTime = getParam(e,'postStimTime');
 
-[curIdx length(e.textures) spatialFreq orientation phi0 speed ]
+
+%[curIdx length(e.textures) spatialFreq orientation phi0 speed ]
 
 % some shortcuts
 texture = e.textures(curIdx);
@@ -64,14 +66,31 @@ while running
     end
     
     % compute timeOut
-    running = (getLastSwap(e)-startTime)*1000 < delayTime;
+    running = (getLastSwap(e)-startTime)*1000 < stimTime;
    
     phi = phi + speed;
 end
 
-
+% keep fixation spot after stimulus turns off
 if ~abort
-    e = clearScreen(e);
+
+    % Does the monkey have to fixate?
+    if getParam(e,'eyeControl')
+        drawFixSpot(e);
+        e = swap(e);
+        
+        while (GetSecs-startTime)*1000 < stimTime+postStimTime;
+            % check for abort signal
+            [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
+            if abort
+                break
+            end
+        end
+    end
+    
+    if ~abort
+        e = clearScreen(e);
+    end
 end
 
 % return values

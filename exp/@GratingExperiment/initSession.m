@@ -1,5 +1,9 @@
 function e = initSession(e,params,expType)
 
+% substract fixation time after stimulus is off to produce stimulus time.
+% stimTime is used to control the behaviour of the netShowStimulus function.
+params.stimTime = params.delayTime - params.postStimTime;
+
 % initialize parent
 e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
 

@@ -2,7 +2,8 @@ function e = initSession(e,params,expType)
 
 % Create randomization
 %   This has to be done before calling initSession of the parent experiment
-%   since the randomization is initialized there.
+%   since the randomization is initialized there. This way, we can use the
+%   values set by labview to make a randomization object.
 rnd = MovingBarRandomization(params.numSubBlocks,params.movingTrials, ...
                              params.initMapTrials,params.mapTrials);
 e = set(e,'randomization',rnd);
