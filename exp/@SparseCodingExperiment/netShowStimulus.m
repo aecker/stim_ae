@@ -12,7 +12,7 @@ stimTime = getParam(e,'stimTime');
 postStimTime = getParam(e,'postStimTime');
 
 n = getParam(e,'imageNumber');
-imStats = getParam(e,'imageStats');
+imStats = cell2mat(getParam(e,'imageStats'));
 
 fprintf('\n image id: %05.0f, image stats: %s',n,imStats);
 

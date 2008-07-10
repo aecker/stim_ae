@@ -11,6 +11,7 @@ T = set(T,'debug',true);
 T = openWindow(T);
 
 constants.subject = 'DEBUG';
+constants.eyeControl = 0;
 
 constants.bgColor = [64; 64; 64];
 constants.fixSpotColor = [255; 0; 0];
@@ -20,7 +21,7 @@ constants.fixSpotSize = 10;
 constants.location = [50; 50];
 constants.diskSize = 250;
 
-constants.imagePath = 'V:\projects\sparsecoding\stimuli\stimuli'
+constants.imagePath = '\\steinlach\berens\projects\sparsecoding\stimuli\stimuli'
 constants.imageNumber = [34, 152];
 constants.imageStats = {'whn','nat','phs'};
 
