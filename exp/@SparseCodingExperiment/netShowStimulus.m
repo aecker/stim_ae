@@ -10,6 +10,7 @@ curIdx = getParam(e,'condition');
 location = getParam(e,'location');
 stimTime = getParam(e,'stimTime');
 postStimTime = getParam(e,'postStimTime');
+fadeFactor = getParam(e,'fadeFactor');
 
 n = getParam(e,'imageNumber');
 imStats = cell2mat(getParam(e,'imageStats'));
@@ -18,7 +19,7 @@ fprintf('\n image id: %05.0f, image stats: %s',n,imStats);
 
 % some shortcuts
 texture = e.textures(curIdx);
-texSize = getParam(e,'diskSize');
+texSize = fadeFactor*getParam(e,'diskSize');
 alpha = e.alphaMask(curIdx);
 centerX = mean(rect([1 3])) + location(1);
 centerY = mean(rect([2 4])) + location(2);

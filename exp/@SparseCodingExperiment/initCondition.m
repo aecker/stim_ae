@@ -16,8 +16,8 @@ img = imread(getLocalPath(sprintf('%s\\%05.0f_%s.tif',imagePath,n,stat)));
 imgSize = size(img);
 diskSize = getSessionParam(e,'diskSize',cond);
 fadeFactor = getSessionParam(e,'fadeFactor',cond);    
-dx = ceil(diskSize*fadeFactor);
-texture = img(imgSize(1)/2 + (-dx+1:dx),imgSize(2)/2 + (-dx+1:dx));
+dx = ceil(fadeFactor*diskSize);
+texture = img(imgSize(1)/2 + (-dx+1:dx),imgSize(2)/2 + (-dx+1:dx))';
 e.textures(cond) = Screen('MakeTexture',win,texture');
 
 % generate mask
@@ -35,9 +35,9 @@ alphaLum = repmat(permute(bgColor,[2 3 1]), ...
 % create blending map with cosine fade out
 normXY = sqrt(X.^2 + Y.^2);              
 disk = (normXY < diskSize/2);
-blend = normXY < fadeFactor*diskSize/2 & normXY > diskSize/2;
+blend = normXY < fadeFactor*diskSize/2 & normXY >= diskSize/2;
 mv = fadeFactor*diskSize/2 - diskSize/2;
-blend = cos((normXY-diskSize/2)*pi/2/mv).*blend;
+blend = (0.5*cos((normXY-diskSize/2)*pi/mv)+.5).*blend;
 
 alphaBlend = 255 * (1-blend-disk);
 
