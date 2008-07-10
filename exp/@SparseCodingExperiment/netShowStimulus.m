@@ -55,8 +55,8 @@ while running
                     + [centerX centerY centerX centerY];
     
     % draw texture, aperture, flip screen
-    mtexture = f(t,1000/refresh)*texture;    % modulate texture by funtion
-    Screen('DrawTexture',win,mtexture,[],destRect,0); 
+
+    Screen('DrawTexture',win,texture,[],destRect,0,[],f(t,1000/refresh)); 
     Screen('DrawTexture',win,alpha); 
     drawFixspot(e);
     e = swap(e);
