@@ -25,6 +25,8 @@ constants.fadeFactor = 1.3;
 constants.imagePath = '\\steinlach\berens\projects\sparsecoding\stimuli\stimuli'
 constants.imageNumber = [34, 152];
 constants.imageStats = {'whn','nat','phs'};
+constants.modFunction = {'0.5*(sin(2*pi*5*(t*fd/1000))+1)', ...
+                         '(mod(t*fd,150)>100)*0+(mod(t*fd,150)<=100)*1'};
 
 constants.rewardProb = 1;
 
