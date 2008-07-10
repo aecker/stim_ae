@@ -1,5 +1,14 @@
 function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 
+% important re: modulation function:
+% this is a string defined in the parameter file that depends on the frame
+% number t and may depend on the frame refresh rate 'fd'. it generally
+% should return values between 0 and 1
+% examples:
+%   stimulus on for the whole time f(t,fd)=1
+%   stimulus modulated with a 5 Hz sinusoid
+%                       '0.5*(sin(2*pi*5*(t*fd/1000))+1)'
+
 % some member variables
 win = get(e,'win');
 rect = Screen('Rect',win);
@@ -11,6 +20,8 @@ location = getParam(e,'location');
 stimTime = getParam(e,'stimTime');
 postStimTime = getParam(e,'postStimTime');
 fadeFactor = getParam(e,'fadeFactor');
+modFunction = getParam(e,'modFunction');
+f = inline(modFunction,'t','fd');
 
 n = getParam(e,'imageNumber');
 imStats = cell2mat(getParam(e,'imageStats'));
