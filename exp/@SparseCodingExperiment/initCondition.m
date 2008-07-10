@@ -31,5 +31,15 @@ bgColor = getSessionParam(e,'bgColor',cond);
 alphaLum = repmat(permute(bgColor,[2 3 1]), ...
                   2*halfHeight,2*halfWidth);
 
-alphaBlend = 255 * (sqrt(X.^2 + Y.^2) > diskSize/2);
+% create blending map with cosine fade out
+fadeFactor = getSessionParam(e,'fadeFactor',cond);              
+normXY = sqrt(X.^2 + Y.^2);              
+disk = (normXY < diskSize/2);
+blend = normXY < fadeFactor*diskSize/2 & normXY > diskSize/2;
+mv = fadeFactor*diskSize/2 - diskSize/2;
+blend = cos((normXY-diskSize/2)*pi/2/mv).*blend;
+
+alphaBlend = 255 * (1-blend-disk);
+
+
 e.alphaMask(cond) = Screen('MakeTexture',win,cat(3,alphaLum,alphaBlend));
