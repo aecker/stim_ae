@@ -20,6 +20,7 @@ constants.fixSpotSize = 10;
 
 constants.location = [50; 50];
 constants.diskSize = 250;
+constants.fadeFactor = 1.3;
 
 constants.imagePath = '\\steinlach\berens\projects\sparsecoding\stimuli\stimuli'
 constants.imageNumber = [34, 152];
