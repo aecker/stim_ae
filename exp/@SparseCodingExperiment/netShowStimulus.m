@@ -8,6 +8,8 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 %   stimulus on for the whole time f(t,fd)=1
 %   stimulus modulated with a 5 Hz sinusoid
 %                       '0.5*(sin(2*pi*5*(t*fd/1000))+1)'
+%   stimulus on for 100 ms and off for 50 ms
+%                       '(mod(t*fd,150)>100)*0+(mod(t*fd,150)<=100)*1'
 
 % some member variables
 win = get(e,'win');
@@ -20,7 +22,7 @@ location = getParam(e,'location');
 stimTime = getParam(e,'stimTime');
 postStimTime = getParam(e,'postStimTime');
 fadeFactor = getParam(e,'fadeFactor');
-modFunction = getParam(e,'modFunction');
+modFunction = cell2mat(getParam(e,'modFunction'));
 f = inline(modFunction,'t','fd');
 
 n = getParam(e,'imageNumber');
@@ -40,6 +42,7 @@ tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
 firstTrial = true;
 running = true;
+t = 1;  % frame counter
 while running
 
     % check for abort signal
@@ -52,10 +55,12 @@ while running
                     + [centerX centerY centerX centerY];
     
     % draw texture, aperture, flip screen
-    Screen('DrawTexture',win,texture,[],destRect,0); 
+    mtexture = f(t,1000/refresh)*texture;    % modulate texture by funtion
+    Screen('DrawTexture',win,mtexture,[],destRect,0); 
     Screen('DrawTexture',win,alpha); 
     drawFixspot(e);
     e = swap(e);
+    t = t + 1;      % count new frame
     
     % compute startTime
     if firstTrial
