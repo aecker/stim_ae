@@ -15,7 +15,8 @@ img = imread(getLocalPath(sprintf('%s\\%05.0f_%s.tif',imagePath,n,stat)));
 % generate texture
 imgSize = size(img);
 diskSize = getSessionParam(e,'diskSize',cond);
-dx = ceil(diskSize/2);
+fadeFactor = getSessionParam(e,'fadeFactor',cond);    
+dx = ceil(diskSize*fadeFactor);
 texture = img(imgSize(1)/2 + (-dx+1:dx),imgSize(2)/2 + (-dx+1:dx));
 e.textures(cond) = Screen('MakeTexture',win,texture');
 
@@ -32,7 +33,6 @@ alphaLum = repmat(permute(bgColor,[2 3 1]), ...
                   2*halfHeight,2*halfWidth);
 
 % create blending map with cosine fade out
-fadeFactor = getSessionParam(e,'fadeFactor',cond);              
 normXY = sqrt(X.^2 + Y.^2);              
 disk = (normXY < diskSize/2);
 blend = normXY < fadeFactor*diskSize/2 & normXY > diskSize/2;
