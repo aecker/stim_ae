@@ -112,11 +112,6 @@ abort = false;
 flash = 0;
 while s(i) < len
 
-	% Does the monkey have to fixate?
-    if getParam(e,'eyeControl')
-     	drawFixSpot(e);
-    end
-
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
@@ -126,7 +121,7 @@ while s(i) < len
     % draw colored rectangle
     rect = [pos - barSize/2; pos + barSize/2];
     Screen('DrawTexture',win,e.tex,[],rect,-angle*180/pi); 
-    
+  
     % draw flashing bar
     if flash > 0
         if flash == flashDuration
@@ -137,6 +132,9 @@ while s(i) < len
         flash = flash - 1;
     end
 
+    % fixation spot
+    drawFixSpot(e);
+    
     % buffer swap
     e = swap(e);
     
@@ -162,31 +160,28 @@ end
 % keep fixation spot after stimulus turns off
 if ~abort
 
-    % Does the monkey have to fixate?
-    if getParam(e,'eyeControl')
-        drawFixSpot(e);
-        e = swap(e);
-        delayTime = getParam(e,'delayTime');
-        responseTime = getParam(e,'responseTime');
-        
-        % wait until response time is over, then remove fixation spot
-        while GetSecs < startTime + delayTime + responseTime
-            % check for abort signal
-            [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
-            if abort
-                break
-            end
+    drawFixSpot(e);
+    e = swap(e);
+    
+    delayTime = getParam(e,'delayTime');
+    responseTime = getParam(e,'responseTime');
+
+    % wait until response time is over, then remove fixation spot
+    while GetSecs < startTime + delayTime + responseTime
+        % check for abort signal
+        [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
+        if abort
+            break
         end
     end
     
     if ~abort
         e = clearScreen(e);
     end
+else
+    % log stimulus offset event (when bar finished trajectory)
+    e = addEvent(e,'endStimulus',getLastSwap(e));
 end
-
-% log stimulus offset event 
-% in this case removal of fixation spot and not when bar leaves the screen
-e = addEvent(e,'endStimulus',getLastSwap(e));
 
 % save bar locations
 e = setTrialParam(e,'barLocations',s(1:i-1));
