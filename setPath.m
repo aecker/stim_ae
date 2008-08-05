@@ -5,3 +5,4 @@ folder = fileparts(path);
 addpath(fullfile(folder,'exp'))
 addpath(fullfile(folder,'debug'))
 addpath(fullfile(folder,'rand'))
+addpath(fullfile(folder,'bugfix'))

@@ -25,10 +25,7 @@ barTex = Screen('MakeTexture',get(e,'win'),texMat);
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
-
-
 % determine starting position
-
 if autoAngle
     ndx = ceil(rand*length(trajectoryAngles));
     trajectoryAngle = trajectoryAngles(ndx);
@@ -80,6 +77,9 @@ end
 if ~abort
     e = clearScreen(e);
 end
+
+% log stimulus offset event
+e = addEvent(e,'endStimulus',getLastSwap(e));
 
 % save bar locations
 e = setTrialParam(e,'movBarLocations',s(1:i-1));

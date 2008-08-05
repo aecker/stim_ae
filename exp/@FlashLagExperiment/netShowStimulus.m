@@ -184,6 +184,10 @@ if ~abort
     end
 end
 
+% log stimulus offset event 
+% in this case removal of fixation spot and not when bar leaves the screen
+e = addEvent(e,'endStimulus',getLastSwap(e));
+
 % save bar locations
 e = setTrialParam(e,'barLocations',s(1:i-1));
 

@@ -93,12 +93,14 @@ if ~abort
     e = clearScreen(e);
 end
 
+% log stimulus offset event
+e = addEvent(e,'endStimulus',getLastSwap(e));
+
 % save bar locations
 e = setTrialParam(e,'dotLocations',s(1:i-1,:));
 e = setTrialParam(e,'dotTexture',r);
 e = setTrialParam(e,'dotTextureBright',dotTexBright);
 e = setTrialParam(e,'dotTextureDark',dotTexDark);
-
 
 % return values
 retInt32 = int32(0);

@@ -70,6 +70,9 @@ if ~abort
     e = clearScreen(e);
 end
 
+% log stimulus offset event
+e = addEvent(e,'endStimulus',getLastSwap(e));
+
 % save bar locations
 e = setTrialParam(e,'barLocations',s);
 e = setTrialParam(e,'barRects',rect);

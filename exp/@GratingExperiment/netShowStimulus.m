@@ -16,9 +16,6 @@ speed = getParam(e,'speed');            % cyc/s
 stimTime = getParam(e,'stimTime');
 postStimTime = getParam(e,'postStimTime');
 
-
-%[curIdx length(e.textures) spatialFreq orientation phi0 speed ]
-
 % some shortcuts
 texture = e.textures(curIdx);
 texSize = e.textureSize(curIdx);
@@ -92,6 +89,9 @@ if ~abort
         e = clearScreen(e);
     end
 end
+
+% log stimulus offset event
+e = addEvent(e,'endStimulus',getLastSwap(e));
 
 % return values
 retInt32 = int32(0);
