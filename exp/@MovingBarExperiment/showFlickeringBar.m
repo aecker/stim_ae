@@ -95,8 +95,8 @@ e = setTrialParam(e,'barRects',rect);
 e = setTrialParam(e,'barCenters',center);
 
 % save timing information
-e = setTrialParam(e,'stimTime',mappingTime);
-e = setTrialParam(e,'postStimTime',delayTime-mappingTime);
+e = setTrialParam(e,'stimulusTime',mappingTime);
+e = setTrialParam(e,'postStimulusTime',delayTime-mappingTime);
 
 % return values
 retInt32 = int32(0);

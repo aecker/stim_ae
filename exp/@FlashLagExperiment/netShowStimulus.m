@@ -186,7 +186,8 @@ else
     e = addEvent(e,'endStimulus',getLastSwap(e));
 end
 
-% save bar locations
+% save stimulus time and bar locations
+e = setTrialParam(e,'stimulusTime',trajectoryLength / speed * 1000);
 e = setTrialParam(e,'barLocations',s(1:i-1));
 
 % return values

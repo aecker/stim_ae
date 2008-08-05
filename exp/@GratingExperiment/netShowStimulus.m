@@ -13,8 +13,8 @@ spatialFreq = getParam(e,'spatialFreq');
 orientation = getParam(e,'orientation');
 phi0 = getParam(e,'initialPhase');      
 speed = getParam(e,'speed');            % cyc/s
-stimTime = getParam(e,'stimTime');
-postStimTime = getParam(e,'postStimTime');
+stimTime = getParam(e,'stimulusTime');
+postStimTime = getParam(e,'postStimulusTime');
 
 % some shortcuts
 texture = e.textures(curIdx);

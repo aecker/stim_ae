@@ -19,8 +19,8 @@ refresh = get(e,'refreshRate');
 % read parameters
 curIdx = getParam(e,'condition');
 location = getParam(e,'location');
-stimTime = getParam(e,'stimTime');
-postStimTime = getParam(e,'postStimTime');
+stimTime = getParam(e,'stimulusTime');
+postStimTime = getParam(e,'postStimulusTime');
 fadeFactor = getParam(e,'fadeFactor');
 modFunction = cell2mat(getParam(e,'modFunction'));
 f = inline(modFunction,'t','fd');
