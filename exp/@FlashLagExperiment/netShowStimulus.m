@@ -26,6 +26,7 @@ trajectoryAngle  = getParam(e,'trajectoryAngle');
 trajectoryCenter = getParam(e,'trajectoryCenter');
 moveDir = rand(1) > getParam(e,'moveProb');
 e = setTrialParam(e,'moveDir',moveDir);
+e = setTrialParam(e,'stimulusTime',len / speed * 1000);
 
 % For training we use a fixed offset (flashOffset) set on the front panel. For
 % the experiment we use a fixed set of offsets (flashOffsets) defined in the
@@ -186,8 +187,7 @@ else
     e = addEvent(e,'endStimulus',getLastSwap(e));
 end
 
-% save stimulus time and bar locations
-e = setTrialParam(e,'stimulusTime',trajectoryLength / speed * 1000);
+% save bar locations
 e = setTrialParam(e,'barLocations',s(1:i-1));
 
 % return values
