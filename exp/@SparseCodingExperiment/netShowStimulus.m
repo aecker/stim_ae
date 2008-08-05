@@ -76,23 +76,26 @@ end
 % keep fixation spot after stimulus turns off
 if ~abort
 
-    % Does the monkey have to fixate?
-    if getParam(e,'eyeControl')
-        drawFixSpot(e);
-        e = swap(e);
-        
-        while (GetSecs-startTime)*1000 < stimTime+postStimTime;
-            % check for abort signal
-            [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
-            if abort
-                break
-            end
+    drawFixSpot(e);
+    e = swap(e);
+
+    % log stimulus offset event
+    e = addEvent(e,'endStimulus',getLastSwap(e));
+
+    while (GetSecs-startTime)*1000 < stimTime+postStimTime;
+        % check for abort signal
+        [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
+        if abort
+            break
         end
     end
     
     if ~abort
         e = clearScreen(e);
     end
+else
+    % log stimulus offset event
+    e = addEvent(e,'endStimulus',getLastSwap(e));
 end
 
 % return values

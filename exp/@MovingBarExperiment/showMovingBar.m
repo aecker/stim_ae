@@ -69,6 +69,9 @@ if ~abort
     drawFixSpot(e);
     e = swap(e);
 
+    % log stimulus offset event
+    e = addEvent(e,'endStimulus',getLastSwap(e));
+
     while (GetSecs-startTime)*1000 < delayTime;
         % check for abort signal
         [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
@@ -80,10 +83,10 @@ if ~abort
     if ~abort
         e = clearScreen(e);
     end
+else
+    % log stimulus offset event
+    e = addEvent(e,'endStimulus',getLastSwap(e));
 end
-
-% log stimulus offset event
-e = addEvent(e,'endStimulus',getLastSwap(e));
 
 % save bar locations
 e = setTrialParam(e,'barLocations',s(1:i-1));
