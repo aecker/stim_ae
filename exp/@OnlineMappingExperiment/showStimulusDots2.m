@@ -14,7 +14,7 @@ dotSize          = round(dotSize);
 dotFrames        = getParam(e,'dotFrames');
 dotRangeCenter   = getParam(e,'dotRangeCenter');
 dotRange         = getParam(e,'dotRange');
-delayTime        = getParam(e,'delayTime');
+stimulusTime     = getParam(e,'stimulusTime');
 nDots            = getParam(e,'nDots');
 
 
@@ -23,7 +23,7 @@ tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
 % initialize
 % Preallocate cell arrays for speed
-m = ceil(delayTime/refresh);
+m = ceil(stimulusTime/refresh);
 dotColors = zeros(1,ceil(m/dotFrames));
 dotLocations = cell(1,ceil(m/dotFrames));
 
@@ -71,7 +71,7 @@ while T < endTime
     if firstTrial
         startTime = getLastSwap(e);
         e = addEvent(e,'showStimulus',startTime);
-        endTime = startTime + delayTime/1000;
+        endTime = startTime + stimulusTime/1000;
         firstTrial = false;
     end
     frames = frames-1;  % update number of frames the stimulus is still there

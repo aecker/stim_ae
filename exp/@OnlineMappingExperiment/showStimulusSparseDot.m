@@ -14,7 +14,7 @@ dotSize          = getParam(e,'dotSize');
 dotFrames        = getParam(e,'dotFrames');
 dotRangeCenter   = getParam(e,'dotRangeCenter');
 dotRange         = getParam(e,'dotRange');
-delayTime        = getParam(e,'delayTime');
+stimulusTime     = getParam(e,'stimulusTime');
 
 
 % generate dot textures in both colors
@@ -31,7 +31,7 @@ dotTexBright = Screen('MakeTexture',get(e,'win'),texMat);
 tcpReturnFunctionCall(e,int32(0),struct('correctResponse',int32(1)),'netShowStimulus');
 % initialize
 i = 1;
-m = ceil(delayTime/refresh);
+m = ceil(stimulusTime/refresh);
 s = zeros(m,2);
 r = zeros(m,1);
 abort = false;
@@ -78,7 +78,7 @@ while running
     end
     
     % compute timeOut
-    running = (getLastSwap(e)-startTime) < delayTime;
+    running = (getLastSwap(e)-startTime) < stimulusTime;
     
     % save buffer swap data
     s(i,:)=pos';        % position of dot in frame i

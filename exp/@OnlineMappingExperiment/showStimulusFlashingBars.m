@@ -13,7 +13,7 @@ trajectoryAngles = getParam(e,'trajectoryAngles');
 trajectoryCenter = getParam(e,'trajectoryCenter');
 barColorDark     = getParam(e,'barColorDark');
 barColorBright   = getParam(e,'barColorBright');
-delayTime        = getParam(e,'delayTime');
+stimulusTime     = getParam(e,'stimulusTime');
 barFrames        = getParam(e,'barFrames');
 
 % select angle of trajectory
@@ -37,7 +37,7 @@ startPos = trajectoryCenter - len/2 * [cos(angle); -sin(angle)];
 
 % put start time
 i = 1;
-m = ceil(delayTime/refresh);
+m = ceil(stimulusTime/refresh);
 s = zeros(m,1);
 r = zeros(m,1);
 abort = false;
@@ -84,7 +84,7 @@ while running
     end
     
     % compute timeOut
-    running = (getLastSwap(e)-startTime) < delayTime;
+    running = (getLastSwap(e)-startTime) < stimulusTime;
 
     r(i)=texRand;
     i = i+1;

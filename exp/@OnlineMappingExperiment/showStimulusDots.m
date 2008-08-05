@@ -15,13 +15,13 @@ dotSize          = round(dotSize);
 dotFrames        = getParam(e,'dotFrames');
 dotRangeCenter   = getParam(e,'dotRangeCenter');
 dotRange         = getParam(e,'dotRange');
-delayTime        = getParam(e,'delayTime');
+stimulusTime     = getParam(e,'stimulusTime');
 nDots            = getParam(e,'nDots');
 %--------------------------------------------------------------------------
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct('correctResponse',int32(1)),'netShowStimulus');
 %--------------------------------------------------------------------------
-m = ceil(delayTime/flipInterval);
+m = ceil(stimulusTime/flipInterval);
 nFrames = ceil(m/dotFrames);
 justInCaseFrames = 5;
 totalFrames = nFrames + justInCaseFrames;
@@ -72,7 +72,7 @@ while T < endTime
     if firstTrial
         startTime = getLastSwap(e);
         e = addEvent(e,'showStimulus',startTime);
-        endTime = startTime + delayTime/1000;
+        endTime = startTime + stimulusTime/1000;
         firstTrial = false;
     end
     frames = frames-1;  % update number of frames the stimulus is still there
