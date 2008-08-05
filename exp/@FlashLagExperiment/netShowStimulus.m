@@ -163,6 +163,9 @@ if ~abort
     drawFixSpot(e);
     e = swap(e);
     
+    % log stimulus offset event (when bar finished trajectory)
+    e = addEvent(e,'endStimulus',getLastSwap(e));
+
     delayTime = getParam(e,'delayTime');
     responseTime = getParam(e,'responseTime');
 
