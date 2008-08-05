@@ -39,6 +39,7 @@ while running
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
+        fprintf('stimulus was aborted.....................................\n')
         break
     end
     
@@ -71,17 +72,14 @@ end
 % keep fixation spot after stimulus turns off
 if ~abort
 
-    % Does the monkey have to fixate?
-    if getParam(e,'eyeControl')
-        drawFixSpot(e);
-        e = swap(e);
-        
-        while (GetSecs-startTime)*1000 < stimTime+postStimTime;
-            % check for abort signal
-            [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
-            if abort
-                break
-            end
+    drawFixSpot(e);
+    e = swap(e);
+
+    while (GetSecs-startTime)*1000 < (stimTime + postStimTime);
+        % check for abort signal
+        [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
+        if abort
+            break
         end
     end
     

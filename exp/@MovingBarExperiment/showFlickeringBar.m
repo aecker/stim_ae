@@ -9,7 +9,7 @@ angle =         getParam(e,'trajectoryAngle');
 trajCenter =    getParam(e,'trajectoryCenter');
 mappingTime =   getParam(e,'mapTime');
 fpLoc =         getParam(e,'mapFramesPerLoc');
-
+delayTime =     getParam(e,'delayTime');
 
 % determine starting position
 angle = angle / 180 * pi;
@@ -64,10 +64,23 @@ while (GetSecs - startTime) * 1000 < mappingTime - (1000 / refresh)
 
 end
 
-% clear screen (abort clears the screen anyway in netAbortTrial, so skip it in
-% this case)
+% keep fixation spot after stimulus turns off
 if ~abort
-    e = clearScreen(e);
+
+    drawFixSpot(e);
+    e = swap(e);
+
+    while (GetSecs-startTime)*1000 < delayTime;
+        % check for abort signal
+        [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
+        if abort
+            break
+        end
+    end
+    
+    if ~abort
+        e = clearScreen(e);
+    end
 end
 
 % log stimulus offset event
@@ -77,6 +90,10 @@ e = addEvent(e,'endStimulus',getLastSwap(e));
 e = setTrialParam(e,'barLocations',s);
 e = setTrialParam(e,'barRects',rect);
 e = setTrialParam(e,'barCenters',center);
+
+% save timing information
+e = setTrialParam(e,'stimTime',mappingTime);
+e = setTrialParam(e,'postStimTime',delayTime-mappingTime);
 
 % return values
 retInt32 = int32(0);

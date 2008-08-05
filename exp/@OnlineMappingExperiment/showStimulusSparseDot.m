@@ -1,4 +1,4 @@
-function [e,retInt32,retStruct,returned] = showStimulusMovingBar(e,params)
+function [e,retInt32,retStruct,returned] = showStimulusSparseDot(e,params)
 % shows moving bar
 % PHB 2007-11-24
 
@@ -27,8 +27,8 @@ texMat = permute(repmat(dotColorBright,[1; dotSize]),[2 3 1]);
 dotTexBright = Screen('MakeTexture',get(e,'win'),texMat);
 
 % return function call
-tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
-
+% tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+tcpReturnFunctionCall(e,int32(0),struct('correctResponse',int32(1)),'netShowStimulus');
 % initialize
 i = 1;
 m = ceil(delayTime/refresh);
@@ -59,7 +59,7 @@ while running
             currTex = dotTexDark;
         end
         pos = dotRangeCenter + rand(2,1) .* (2*dotRange) - dotRange;
-        fprintf('dot position %.2f %.2f\n',pos(1),pos(2))
+%         fprintf('dot position %.2f %.2f\n',pos(1),pos(2))
         frames = dotFrames-1;
     end
     

@@ -23,7 +23,8 @@ texMat = permute(repmat(barColor,[1; barSize]),[2 3 1]);
 barTex = Screen('MakeTexture',get(e,'win'),texMat);
 
 % return function call
-tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+% tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+tcpReturnFunctionCall(e,int32(0),struct('correctResponse',int32(1)),'netShowStimulus');
 
 % determine starting position
 if autoAngle

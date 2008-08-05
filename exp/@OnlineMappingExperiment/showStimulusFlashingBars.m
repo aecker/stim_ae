@@ -29,8 +29,8 @@ texMat = permute(repmat(barColorBright,[1; barSize]),[2 3 1]);
 barTexBright = Screen('MakeTexture',get(e,'win'),texMat);
 
 % return function call
-tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
-
+% tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+tcpReturnFunctionCall(e,int32(0),struct('correctResponse',int32(1)),'netShowStimulus');
 % determine starting position
 angle = angle / 180 * pi;
 startPos = trajectoryCenter - len/2 * [cos(angle); -sin(angle)];

@@ -5,7 +5,7 @@ function e = OnlineMappingExperiment(startNow)
 e.tex = [];
 
 % Create class object
-t = TrialBasedExperiment(NoRandomization,StimulationData);
+t = TrialBasedExperiment(struct,StimulationData);
 e = class(e,'OnlineMappingExperiment',t);
 
 
