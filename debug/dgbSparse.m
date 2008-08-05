@@ -32,7 +32,7 @@ constants.modFunction = {'0.5*(sin(2*pi*3*(t*fd/1000))+1)', ...
 constants.rewardProb = 1;
 
 constants.delayTime = 1000;
-constants.postStimTime = 250;
+constants.postStimulusTime = 250;
 constants.rewardAmount = 0;
 constants.date = datestr(now,'YYYY-mm-dd_HH-MM-SS');
 
