@@ -37,6 +37,8 @@ alpha = e.alphaMask(curIdx);
 centerX = mean(rect([1 3])) + location(1);
 centerY = mean(rect([2 4])) + location(2);
 
+keyboard
+
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
