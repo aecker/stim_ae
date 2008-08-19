@@ -2,12 +2,14 @@ function e = initCondition(e,cond)
 % Condition-specific initialization.
 % PHB 2008-07-09
 
+imageStats = {'whn','phs','nat'};
+
 win = get(e,'win');
 rect = Screen('Rect',win);
 
 imagePath = getSessionParam(e,'imagePath',1);        % image path
 n = getSessionParam(e,'imageNumber',cond);          % number of the image
-stat = cell2mat(getSessionParam(e,'imageStats',cond));        % image statistics
+stat = imageStats{getSessionParam(e,'imageStats',cond)}        % image statistics
 
 % read image
 img = imread(getLocalPath(sprintf('%s\\%05.0f_%s.tif',imagePath,n,stat)));
