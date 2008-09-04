@@ -1,9 +1,5 @@
 function e = initSession(e,params,expType)
 
-% substract fixation time after stimulus is off to produce stimulus time.
-% stimTime is used to control the behaviour of the netShowStimulus function.
-keyboard
-params.stimulusTime = params.delayTime - params.postStimulusTime;
 
 % initialize parent
 e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
@@ -13,7 +9,10 @@ e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
 % but since the above call is running only on the parent, it calls
 % TrialBasedExperiment/initCondition instead of GratingExperiment/initSession.
 
+getNumConditions(e)
+
 for i = 1:getNumConditions(e)
+    fprintf('Loading Condition %d\n',i)
     e = initCondition(e,i);
 end
 

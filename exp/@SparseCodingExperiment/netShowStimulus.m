@@ -22,11 +22,12 @@ location = getParam(e,'location');
 stimTime = getParam(e,'stimulusTime');
 postStimTime = getParam(e,'postStimulusTime');
 fadeFactor = getParam(e,'fadeFactor');
-modFunction = cell2mat(getParam(e,'modFunction'));
-f = inline(modFunction,'t','fd');
+modFunction = getParam(e,'modFunction');
+f = inline(modFunction,'t');
+%f = inline('rem(t,.25)<.2','t');
 
 n = getParam(e,'imageNumber');
-imStats = cell2mat(getParam(e,'imageStats'));
+imStats = e.imgStatConst{getParam(e,'imageStats')};
 
 fprintf('\n image id: %05.0f, image stats: %s',n,imStats);
 
@@ -37,7 +38,6 @@ alpha = e.alphaMask(curIdx);
 centerX = mean(rect([1 3])) + location(1);
 centerY = mean(rect([2 4])) + location(2);
 
-keyboard
 
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
@@ -45,11 +45,13 @@ tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 firstTrial = true;
 running = true;
 t = 1;  % frame counter
+modul = zeros(1);
 while running
 
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
+        fprintf('stimulus was aborted.....................................\n')
         break
     end
     
@@ -57,8 +59,13 @@ while running
                     + [centerX centerY centerX centerY];
     
     % draw texture, aperture, flip screen
-
-    Screen('DrawTexture',win,texture,[],destRect,0,[],f(t,1000/refresh)); 
+    if firstTrial
+        modul(t) = true;
+    else
+        modul(t) = f(getLastSwap(e)-startTime);
+    end
+%    Screen('DrawTexture',win,texture,[],destRect,0,[],f(t,1000/refresh)); 
+    Screen('DrawTexture',win,texture,[],destRect,0,[],modul(t)); 
     Screen('DrawTexture',win,alpha); 
     drawFixspot(e);
     e = swap(e);
@@ -74,6 +81,9 @@ while running
     % compute timeOut
     running = (getLastSwap(e)-startTime)*1000 < stimTime;
 end
+
+e = setTrialParam(e,'modul',modul);
+
 
 % keep fixation spot after stimulus turns off
 if ~abort

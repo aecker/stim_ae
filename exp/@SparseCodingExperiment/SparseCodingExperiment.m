@@ -7,6 +7,7 @@ function e = SparseCodingExperiment(varargin)
 e.textures = [];
 e.textureSize = [];
 e.alphaMask = [];
+e.imgStatConst = {'whn','phs','nat'};
 
 t = TrialBasedExperiment(BlockRandomization,StimulationData);
 e = class(e,'SparseCodingExperiment',t);
