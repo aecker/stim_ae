@@ -15,9 +15,18 @@ constants.fixSpotColor = [255; 0; 0];
 constants.fixSpotLocation = [0; 0];
 constants.fixSpotSize = 10;
 
+% Psychophysics was done on unlinearized monitor. Converted parameter values
+% are:       before  now
+%   bgColor  64      10
+%   barColor 192     136    <-- run this since we didn't find contrast dep in PP
+%            160     89
+%            120     44
+%            75      14
 constants.bgColor = [10; 10; 10];
 constants.barColor = [136; 136; 136];
 constants.barSize = [30; 300];
+% Speeds run in PP were: 1500, 1000, 750
+% These correspond to dx:  15,   10, 7.5
 constants.dx = 10;
 constants.stimCenter = [850; 720];
 constants.trajectoryAngle = 0;
@@ -25,8 +34,9 @@ constants.trajectoryLength = 500;
 constants.numFlashLocs = 5;
 constants.direction = [0 1];
 constants.flashStimTime = 500;
-constants.delayTime = 800;
 constants.postStimTime = 300;
+
+constants.delayTime = 800;
 
 constants.subject = 'DEBUG';
 constants.eyeControl = 0;
