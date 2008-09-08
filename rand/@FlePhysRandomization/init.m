@@ -40,3 +40,7 @@ end
 % randomization
 params = struct('conds',1:length(r.conditions));
 r.block = init(BlockRandomization,params);
+
+
+c = r.conditions;
+save('~/cond.mat','c')

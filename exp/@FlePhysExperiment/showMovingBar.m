@@ -10,6 +10,7 @@ trajAngle  = getParam(e,'trajectoryAngle');
 trajLen    = getParam(e,'trajectoryLength');
 nLocs      = getParam(e,'numFlashLocs');
 dir        = getParam(e,'direction');         % \in {0,1}
+cond       = getParam(e,'condition');
 
 % determine number of frames
 nFrames = ceil(trajLen / dx);
@@ -19,7 +20,7 @@ end
 
 % determine starting position (this way we make sure it will hit the flash 
 % locations)
-angle = (trajAngle + 180 * dir) / 180 * pi;
+angle = trajAngle / 180 * pi;
 startPos = -(nFrames - 1) / 2 * dx;
 
 firstTrial = true;
@@ -39,7 +40,7 @@ for i = 1:nFrames
     s(i) = (-1)^dir * (startPos + (i-1) * dx);
     center(:,i) = stimCenter + s(i) * [cos(angle); -sin(angle)];
     rect(:,i) = [center(:,i) - barSize/2; center(:,i) + barSize/2];
-    Screen('DrawTexture',get(e,'win'),e.tex,[],rect(:,i),-angle*180/pi); 
+    Screen('DrawTexture',get(e,'win'),e.tex(cond),[],rect(:,i),-angle*180/pi); 
     
     % fixation spot
     drawFixSpot(e);

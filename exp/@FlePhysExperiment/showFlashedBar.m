@@ -4,18 +4,12 @@ function e = showFlashedBar(e,varargin)
 
 % parameters
 barSize    = getParam(e,'barSize');
-dx         = getParam(e,'dx');
 stimCenter = getParam(e,'stimCenter');
 trajAngle  = getParam(e,'trajectoryAngle');
-trajLen    = getParam(e,'trajectoryLength');
 nLocs      = getParam(e,'numFlashLocs');
 loc        = getParam(e,'flashLocation');
-
-% determine number of frames
-nFrames = ceil(trajLen / dx);
-if mod(nFrames,2) ~= mod(nLocs,2)
-    nFrames = nFrames - 1;
-end
+nFrames    = getParam(e,'nFrames');
+cond       = getParam(e,'condition');
 
 % determine starting position (this way we make sure it will hit the flash 
 % locations)
@@ -39,7 +33,7 @@ for i = 1:flashFrame
     if i == flashFrame
         center = stimCenter + flashLoc * [cos(angle); -sin(angle)];
         rect = [center - barSize/2; center + barSize/2];
-        Screen('DrawTexture',get(e,'win'),e.tex,[],rect,-angle*180/pi); 
+        Screen('DrawTexture',get(e,'win'),e.tex(cond),[],rect,-angle*180/pi); 
     end
     
     % fixation spot

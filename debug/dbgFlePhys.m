@@ -10,32 +10,32 @@ T = FlePhysExperiment;
 T = set(T,'debug',true);
 T = openWindow(T);
 
-constants.subject = 'DEBUG';
-constants.eyeControl = 0;
-
-constants.bgColor = [64; 64; 64];
+% PARAMETERS for config file
 constants.fixSpotColor = [255; 0; 0];
 constants.fixSpotLocation = [0; 0];
 constants.fixSpotSize = 10;
 
+constants.bgColor = [10; 10; 10];
+constants.barColor = [136; 136; 136];
 constants.barSize = [30; 300];
-constants.barColor = [192; 192; 192];
 constants.dx = 10;
-constants.stimCenter = [960; 600];
+constants.stimCenter = [850; 720];
 constants.trajectoryAngle = 0;
 constants.trajectoryLength = 500;
-constants.numFlashLocs = 6;
+constants.numFlashLocs = 5;
 constants.direction = [0 1];
+constants.flashStimTime = 500;
+constants.delayTime = 800;
+constants.postStimTime = 300;
 
+constants.subject = 'DEBUG';
+constants.eyeControl = 0;
 constants.rewardProb = 1;
 constants.joystickThreshold = 200;
 constants.fixationRadius = 50;
 constants.passive = 1;
 constants.acquireFixation = 1;
 constants.allowSaccades = 0;
-
-constants.delayTime = 1500;
-constants.postStimTime = 300;
 constants.rewardAmount = 0;
 constants.date = datestr(now,'YYYY-mm-dd_HH-MM-SS');
 
@@ -43,7 +43,7 @@ trials = struct;
 
 T = netStartSession(T,constants);
 
-for i = 1:12
+for i = 1:getNumConditions(T)
     
     fprintf('trial #%d\n',i)
 
