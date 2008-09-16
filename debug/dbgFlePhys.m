@@ -24,17 +24,18 @@ constants.fixSpotSize = 10;
 %            75      14
 constants.bgColor = [10; 10; 10];
 constants.barColor = [136; 136; 136];
-constants.barSize = [30; 300];
+constants.barSize = [20; 300];
 % Speeds run in PP were: 1500, 1000, 750
 % These correspond to dx:  15,   10, 7.5
 constants.dx = 10;
-constants.stimCenter = [850; 720];
+constants.stimCenter = [960; 600];
 constants.trajectoryAngle = 0;
-constants.trajectoryLength = 500;
-constants.numFlashLocs = 5;
+constants.trajectoryLength = 300;
+constants.numFlashLocs = 2;
 constants.direction = [0 1];
 constants.flashStimTime = 500;
 constants.postStimTime = 300;
+constants.flashStop = 0;
 
 constants.delayTime = 800;
 

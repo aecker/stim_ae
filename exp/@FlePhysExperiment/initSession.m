@@ -6,7 +6,8 @@ function e = initSession(e,params,expType)
 
 % set randomization parameters
 rnd = FlePhysRandomization(params.barColor,params.trajectoryAngle, ...
-                           params.dx,params.direction,params.numFlashLocs);
+                           params.dx,params.direction, ...
+                           params.numFlashLocs,params.flashStop);
 e = set(e,'randomization',rnd);
 
 % call parent's init function

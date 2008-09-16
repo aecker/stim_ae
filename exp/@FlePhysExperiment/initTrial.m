@@ -14,7 +14,7 @@ else
     nFrames = ceil(trajLen / dx);
 end
 
-% make sure its symmetric and hits the same locations as the flashes
+% make sure it's symmetric and hits the same locations as the flashes
 nLocs = getParam(e,'numFlashLocs');
 if mod(nFrames,2) ~= mod(nLocs,2)
     nFrames = nFrames - 1;
@@ -22,7 +22,7 @@ end
 e = setTrialParam(e,'nFrames',nFrames);
 
 % compute post-stimulus fixation time
-stimTime = nFrames * refresh;
+stimTime = nFrames * 1000 / refresh;
 delayTime = getParam(e,'delayTime');
 e = setTrialParam(e,'stimulusTime',stimTime);
 e = setTrialParam(e,'postStimulusTime',delayTime - stimTime);
