@@ -28,6 +28,10 @@ abort = false;
 s = zeros(1,nFrames);
 rect = zeros(4,nFrames);
 center = zeros(2,nFrames);
+
+% return function call
+tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+
 for i = 1:nFrames
     
     % check for abort signal

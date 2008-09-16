@@ -17,6 +17,9 @@ angle = trajAngle / 180 * pi;
 flashLoc = (loc - (nLocs + 1) / 2) * barSize(1);
 flashFrame = ceil(rand(1) * nFrames);
 
+% return function call
+tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
+
 abort = false;
 firstTrial = true;
 rect = [];
