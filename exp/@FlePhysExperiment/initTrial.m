@@ -23,6 +23,6 @@ e = setTrialParam(e,'nFrames',nFrames);
 
 % compute post-stimulus fixation time
 stimTime = nFrames * 1000 / refresh;
-delayTime = getParam(e,'delayTime');
+postStimTime = getParam(e,'postStimulusTime');
 e = setTrialParam(e,'stimulusTime',stimTime);
-e = setTrialParam(e,'postStimulusTime',delayTime - stimTime);
+e = setTrialParam(e,'delayTime',stimTime + postStimTime);
