@@ -192,5 +192,7 @@ e = setTrialParam(e,'barLocations',s(1:i-1));
 
 % return values
 retInt32 = int32(0);
-retStruct = struct;
 returned = true;
+
+% 2008-05-23, PHB: removed line
+% returnStruct = struct;
