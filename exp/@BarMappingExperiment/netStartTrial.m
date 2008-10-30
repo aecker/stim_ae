@@ -12,3 +12,7 @@ if getParam(e,'barLength') ~= getPrev(data,'barLength') || ...
     e = initRand(e);
     e = precompTextures(e);
 end
+
+% write stimulusTime parameter
+delayTime = getParam(e,'delayTime');
+e = setTrialParam(e,'stimulusTime',delayTime);

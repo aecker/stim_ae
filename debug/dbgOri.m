@@ -19,22 +19,33 @@ constants.fixSpotSize = 10;
 
 constants.location = [50; 50];
 constants.diskSize = 200;
-constants.contrast = [100];
-constants.spatialFreq = .01;
-constants.orientation = [0 45 90 135];
+constants.contrast = 100;
+constants.spatialFreq = .05;
+constants.orientation = [0 75];
 constants.initialPhase = 0;
-constants.speed = [0 .1 -.1]; 
-constants.rewardProb=1;
+constants.speed = 0; 
+constants.rewardProb = 1;
 
-constants.delayTime=1000;
-constants.rewardAmount=0;
+constants.delayTime = 1000;
+constants.stimulusTime = 2000;
+
+constants.subject = 'DEBUG';
+constants.eyeControl = 0;
+constants.rewardProb = 1;
+constants.joystickThreshold = 200;
+constants.fixationRadius = 50;
+constants.passive = 1;
+constants.acquireFixation = 1;
+constants.allowSaccades = 0;
+constants.rewardAmount = 0;
+constants.date = datestr(now,'YYYY-mm-dd_HH-MM-SS');
 
 trials = struct;
 
 %params.constants = constants;
 T = netStartSession(T,constants);
 
-for i = 1:20
+for i = 1:2
     
     fprintf('trial #%d\n',i)
 
@@ -43,12 +54,12 @@ for i = 1:20
     T = netSync(T,struct('counter',1));
     T = netInitTrial(T);
     
-    T = netAcquireFixation(T,struct);
+    T = netShowFixspot(T,struct);
     pause(0.5)
     
     T = netShowStimulus(T,struct);
     
-    T = netTrialOutcome(T,struct('correctResponse',true));
+    T = netTrialOutcome(T,struct('correctResponse',true,'behaviorTimestamp',NaN));
     T = netEndTrial(T);
 
     pause(0.5)

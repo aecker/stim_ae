@@ -12,3 +12,7 @@ if getParam(e,'dotSize') ~= getPrev(data,'dotSize') || ...
         getParam(e,'dotNumY') ~= getPrev(data,'dotNumY')
     e = initRand(e);
 end
+
+% write stimulusTime parameter
+delayTime = getParam(e,'delayTime');
+e = setTrialParam(e,'stimulusTime',delayTime);
