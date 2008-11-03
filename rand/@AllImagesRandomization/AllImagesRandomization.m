@@ -9,7 +9,7 @@ r.imageList = [];
 r.conditions = repmat(struct,0,0);
 
 r.conditionPool = [];
-r.currentTrial = 1;
+r.conditionIdx = 1;
 
 % Create class object
 r = class(r,'AllImagesRandomization');

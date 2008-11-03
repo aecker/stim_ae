@@ -1,4 +1,4 @@
-function r = computeConditions(r,params)
+function r = computeConditions(r)
 % Compute condition pool.
 % AE 2007-10-05
 

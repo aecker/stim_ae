@@ -6,10 +6,12 @@ mustStop = false;
 
 % trial successfully completed -> remove condition from pool
 if valid
-    r.currentTrial = r.currentTrial + 1;
+    % r.currentTrial = r.currentTrial + 1;
+    r.conditionPool(r.conditionIdx)=[];
+end
+
+if isempty(r.conditionPool)
+  r.conditionPool = computeConditions(r);
 end
 
 
-if r.currentTrial > length(r.conditionPool)
-    mustStop = true;
-end

@@ -21,5 +21,5 @@ fileList = fileList(statIdx);
 r.imageList = fileList;
 
 % compute list of images
-r = computeConditions(r,params);
+r = computeConditions(r);
 
