@@ -51,6 +51,7 @@ end
 
 % init block rands
 n = numel(cond);
+r.block = BlockRandomization;
 for i = 1:n
     if cond(i).trialType == FleHumanRandomization.PROBE
         r.block(i) = init(BlockRandomization,r.subParams);

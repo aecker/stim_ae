@@ -8,15 +8,14 @@ for i = 1:r.maxBlockSize
 end
 
 % probe blocks
-if r.expMode
-    for i = 2:r.maxBlockSize
-        cond = find([r.conditions.blockSize] == i &  ...
-                    [r.conditions.blockType] == FleHumanRandomization.PROBE_BLOCK);
-        ndx = 1:2:2*i;
-        rnd = ceil(rand(1) * (i-1));
-        ndx(rnd) = 2*rnd;
-        pool{end+1} = cond(ndx); %#ok<AGROW>
-    end
+for i = 2:r.maxBlockSize
+    cond = find([r.conditions.blockSize] == i &  ...
+                [r.conditions.blockType] == FleHumanRandomization.PROBE_BLOCK);
+    ndx = 1:2:2*i;
+    % randomly select which trial in the block is going to be probe trial
+    rnd = ceil(rand(1) * (i-1)); 
+    ndx(rnd) = 2*rnd;
+    pool{end+1} = cond(ndx); %#ok<AGROW>
 end
 
 r.conditionPool = [pool{randperm(length(pool))}];

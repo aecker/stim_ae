@@ -1,6 +1,6 @@
-function r = FleHumanRandomization(maxBlockSize,speeds,barColors,directions,flashOffsets,offsetThresh)
+function r = FleHumanRandomization(maxBlockSize,speeds,barColors,directions,flashOffsets,flashLoc,offsetThresh)
 % Human Flash-lag experiment randomizaton.
-%   r = FleHumanRandomization(maxBlockSize,speeds,barColors,directions,flashOffsets,offsetThresh)
+%   r = FleHumanRandomization(maxBlockSize,speeds,barColors,directions,flashOffsets,flashLoc,offsetThresh)
 %
 % AE & PhB 2008-10-08
 
@@ -10,9 +10,10 @@ r.allConditions = [];
 r.conditions = [];
 r.firstCond = [];
 r.maxBlockSize = maxBlockSize;
-r.block = [];
+r.block = BlockRandomization;
 sup = abs(flashOffsets) >= offsetThresh;
-r.supraParams = struct('speed',speeds,'barColor',barColors,'direction',directions,'flashOffset',flashOffsets(sup));
-r.subParams = struct('speed',speeds,'contrast',contrasts,'direction',directions,'flashOffset',flashOffsets(~sup));
+% sup = flashOffsets >= offsetThresh;     % stupid bug...
+r.supraParams = struct('speed',speeds,'barColor',barColors,'direction',directions,'flashOffset',flashOffsets(sup),'flashLocation',flashLoc);
+r.subParams = struct('speed',speeds,'barColor',barColors,'direction',directions,'flashOffset',flashOffsets(~sup),'flashLocation',flashLoc);
 
 r = class(r,'FleHumanRandomization');
