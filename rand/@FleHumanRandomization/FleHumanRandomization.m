@@ -11,7 +11,7 @@ r.conditions = [];
 r.firstCond = [];
 r.maxBlockSize = maxBlockSize;
 r.block = [];
-sup = flashOffsets >= offsetThresh;
+sup = abs(flashOffsets) >= offsetThresh;
 r.supraParams = struct('speed',speeds,'barColor',barColors,'direction',directions,'flashOffset',flashOffsets(sup));
 r.subParams = struct('speed',speeds,'contrast',contrasts,'direction',directions,'flashOffset',flashOffsets(~sup));
 
