@@ -11,7 +11,5 @@ if valid
 end
 
 if isempty(r.conditionPool)
-  r.conditionPool = computeConditions(r);
+  r = resetPool(r);
 end
-
-
