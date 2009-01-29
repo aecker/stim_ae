@@ -1,34 +1,37 @@
-% Script to test TrialBasedExperiment
-% AE 2007-10-08
+% Script to test FlePhysExperiment
+% AE 2008-09-02
 
 warning off TrialBasedExperiment:netStartTrial
 warning off TrialBasedExperiment:netEndTrial
 warning off StimulationData:setTrialParam
 warning off StimulationData:setParam
 
-T = GratingExperiment;
+try
+
+T = MultDimExperiment;
 T = set(T,'debug',true);
 T = openWindow(T);
 
-constants.subject = 'DEBUG';
-
-constants.bgColor = [1; 1; 1] * 127.5;
+% PARAMETERS for config file
 constants.fixSpotColor = [255; 0; 0];
 constants.fixSpotLocation = [0; 0];
 constants.fixSpotSize = 10;
+constants.bgColor = [128; 128; 128];
 
 constants.location = [50; 50];
-constants.diskSize = 200;
-constants.contrast = [1 10 100];
-constants.spatialFreq = [0.01 0.05 0.1 0.5];
-constants.orientation = [0 45 90 135];
-constants.initialPhase = [0 pi/2];
-constants.speed = 0; 
-constants.rewardProb = 1;
+constants.diskSize = 400;
+constants.stimFrames = 2;
 
-constants.delayTime = 1000;
-constants.stimulusTime = 2000;
+constants.contrast = [50 100];
+constants.spatialFreq = [0.05 0.1];
+constants.orientation = (0:7) * 22.5;
+constants.initialPhase = (0:1) * pi/2;
+constants.color = [1 1 1; 1 0 0; 0 1 0; 0 0 1]';
 
+constants.stimulusTime = 1000;
+constants.postStimTime = 300;
+
+constants.delayTime = 800;
 constants.subject = 'DEBUG';
 constants.eyeControl = 0;
 constants.rewardProb = 1;
@@ -42,10 +45,9 @@ constants.date = datestr(now,'YYYY-mm-dd_HH-MM-SS');
 
 trials = struct;
 
-%params.constants = constants;
 T = netStartSession(T,constants);
 
-for i = 1:24
+for i = 1:50
     
     fprintf('trial #%d\n',i)
 
@@ -54,7 +56,7 @@ for i = 1:24
     T = netSync(T,struct('counter',1));
     T = netInitTrial(T);
     
-    T = netShowFixspot(T,struct);
+    T = netShowFixSpot(T,struct);
     pause(0.5)
     
     T = netShowStimulus(T,struct);
@@ -68,3 +70,8 @@ end
 T = netEndSession(T);
 T = cleanUp(T);
 
+catch
+    sca
+    err = lasterror;
+    error(err)
+end
