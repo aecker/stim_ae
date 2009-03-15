@@ -5,7 +5,9 @@ function e = MultDimExperiment(varargin)
 % Some variables we need to precompute the stimulus
 e.textures = [];
 e.textureSize = [];
+e.gammaTables = [];
 e.alphaMask = [];
+e.alphaMaskSize = [];
 
 t = TrialBasedExperiment(MultDimRandomization,StimulationData);
 e = class(e,'MultDimExperiment',t);

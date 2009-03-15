@@ -46,15 +46,35 @@ for i = 1:nFrames*stimFrames
     
     % new stimulus after n frames
     if frames == 0
-        k = k+1;
+        k = k + 1;
         frames = stimFrames;
+        
+        % new grating parameters
+        diskSize = getSessionParam(e,'diskSize',conds(k));
+        spatialFreq = getSessionParam(e,'spatialFreq',conds(k));
+        pxPerDeg = getPxPerDeg(getConverter(e));
+        spatialFreq = spatialFreq / pxPerDeg(1);
+        orientation = getSessionParam(e,'orientation',conds(k));
+        phi = getSessionParam(e,'initialPhase',conds(k));
+        period = 1 / spatialFreq;
+        speed = getSessionParam(e,'speed',conds(k));    % in cycles/sec
+        speed = speed * period / refresh;               % convert to px/frame
     end
+    
+    % set luminance via gamma table manipulation
+    Screen('LoadNormalizedGammaTable',win,repmat(e.gammaTables(:,conds(k)),1,3));
 
-    % draw texture, aperture, flip screen
+    % move grating
+    u = mod(phi,period) - period/2;
+    xInc = -u * sin(orientation/180*pi);
+    yInc = u * cos(orientation/180*pi);
     ts = e.textureSize(conds(k));
-    destRect = [centerX centerY centerX centerY] + [-ts -ts ts ts] / 2;
+    destRect = [centerX centerY centerX centerY] + [-ts -ts ts ts] / 2 ...
+        + [xInc yInc xInc yInc];
+    
+    % draw grating
     Screen('DrawTexture',win,e.textures(conds(k)),[],destRect); 
-    Screen('DrawTexture',win,e.alphaMask); 
+    Screen('DrawTexture',win,e.alphaMask(e.alphaMaskSize == diskSize)); 
     drawFixspot(e);
     e = swap(e);
 
@@ -65,6 +85,7 @@ for i = 1:nFrames*stimFrames
     end
     
     frames = frames - 1;
+    phi = phi + speed;
 end
 
 % keep fixation spot after stimulus turns off
