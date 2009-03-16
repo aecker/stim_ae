@@ -6,7 +6,6 @@ function e = initCondition(e,cond)
 diskSize = getSessionParam(e,'diskSize',cond);
 spatFreq = getSessionParam(e,'spatialFreq',cond);
 phase    = getSessionParam(e,'initialPhase',cond);
-ori      = getSessionParam(e,'orientation',cond) / 180 * pi;
 color    = getSessionParam(e,'color',cond);
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatFreq = spatFreq / pxPerDeg(1);
@@ -18,13 +17,6 @@ e.textureSize(cond) = ceil(diskSize + period);
 
 % rotate co-ordinate system
 phi = 2*pi*spatFreq * (1:e.textureSize(cond));
-[x,y] = meshgrid(phi,phi);
-% R = [sin(ori) cos(ori)];
-R = [-sin(ori) cos(ori)];
-phi = [x(:) y(:)] * R';
-phi = reshape(phi,e.textureSize(cond),[]);
-
-% generate grating
 grat = 127.5 + 126.5 * sin(phi + phase);
 
 % color grating

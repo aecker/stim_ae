@@ -73,7 +73,7 @@ for i = 1:nFrames*stimFrames
         + [xInc yInc xInc yInc];
     
     % draw grating
-    Screen('DrawTexture',win,e.textures(conds(k)),[],destRect); 
+    Screen('DrawTexture',win,e.textures(conds(k)),[],destRect,orientation+90); 
     Screen('DrawTexture',win,e.alphaMask(e.alphaMaskSize == diskSize)); 
     drawFixspot(e);
     e = swap(e);

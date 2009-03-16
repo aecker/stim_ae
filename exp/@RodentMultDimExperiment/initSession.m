@@ -12,3 +12,6 @@ params.fixSpotColor = [0; 0; 0];
 
 % initialize parent
 e.MultDimExperiment = initSession(e.MultDimExperiment,params,expType);
+
+% make sure photodiode object has large enough buffer
+e = set(e,'photoDiodeTimer',PhotoDiodeTimer(params.stimulusTime/1000*60,[0 255],50));
