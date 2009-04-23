@@ -1,3 +1,7 @@
-function r = init(r,varargin)
-% Dummy
-% AE & MS 2008-07-15
+function r = init(r,params)
+% AE 2009-03-16
+
+r.n = size(params,2);
+r.params = params;
+r.pool = params;
+r.backup = params;

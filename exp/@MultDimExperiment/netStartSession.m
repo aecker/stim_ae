@@ -1,4 +1,4 @@
-function e = initSession(e,params,expType)
+function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 
 % full-screen grating?
 ndx = find(params.diskSize < 0);
@@ -9,19 +9,20 @@ if ~isempty(ndx)
 end
 
 % initialize parent
-e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
+[e,retInt32,retStruct,returned] = initSession(e,params);
 
-% Since we overwrote initSession, we need to manually initialize the
-% conditions now. TrialBasedExperiment/initSession is calling initCondition
-% automatically, but since the above call is running only on the parent, it
-% calls TrialBasedExperiment/initCondition instead of
-% GratingExperiment/initSession.
-nCond = getNumConditions(e);
-e.gammaTables = zeros(256,nCond);
-e.textures = zeros(1,nCond);
-for i = 1:nCond
-    e = initCondition(e,i);
+% also put constants into condition structure
+data = get(e,'data');
+cond = getConditions(data);
+toRand = {'orientation','spatialFreq','contrast','luminance','color','speed','initialPhase'};
+f = fieldnames(cond);
+for i = 1:numel(toRand)
+    ndx = strmatch(toRand{i},f,'exact');
+    if isempty(ndx)
+        [cond.(toRand{i})] = deal(params.(toRand{i}));
+    end
 end
+e = set(e,'data',setConditions(data,cond));
 
 % Enable alpha blending with proper blend-function. We need it for drawing
 % of our alpha-mask

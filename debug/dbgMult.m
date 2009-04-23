@@ -16,19 +16,25 @@ T = openWindow(T);
 constants.fixSpotColor = [255; 0; 0];
 constants.fixSpotLocation = [0; 0];
 constants.fixSpotSize = 10;
-constants.bgColor = [128; 128; 128];
+constants.bgColor = [127.5; 127.5; 127.5];
+
+constants.monitorSize = [41; 30];
+constants.monitorDistance = 107;
+constants.monitorCenter = [800; 600];
 
 constants.location = [50; 50];
-constants.diskSize = 400;
-constants.stimFrames = 2;
+constants.diskSize = 73;
+constants.stimFrames = 150;
+constants.luminance = 0.5;
 
-constants.contrast = [50 100];
-constants.spatialFreq = [0.05 0.1];
-constants.orientation = (0:7) * 22.5;
-constants.initialPhase = (0:1) * pi/2;
-constants.color = [1 1 1; 1 0 0; 0 1 0; 0 0 1]';
+constants.contrast = 1;
+constants.spatialFreq = 1;
+constants.orientation = [0 90];
+constants.initialPhase = pi/2;
+constants.color = [1 1 1]';
+constants.speed = 0;
 
-constants.stimulusTime = 1000;
+constants.stimulusTime = 1500;
 constants.postStimTime = 300;
 
 constants.delayTime = 800;
@@ -47,7 +53,7 @@ trials = struct;
 
 T = netStartSession(T,constants);
 
-for i = 1:50
+for i = 1:3
     
     fprintf('trial #%d\n',i)
 

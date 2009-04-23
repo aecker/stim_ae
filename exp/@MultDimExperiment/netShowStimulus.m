@@ -3,7 +3,6 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 %
 % AE 2009-04-23
 
-% some member variables
 win = get(e,'win');
 rect = Screen('Rect',win);
 refresh = get(e,'refreshRate');
@@ -56,7 +55,7 @@ for i = 1:nFrames*stimFrames
     end
     
     % set luminance via gamma table manipulation
-    Screen('LoadNormalizedGammaTable',win,repmat(e.gammaTables(:,conds(k)),1,3));
+    Screen('LoadNormalizedGammaTable',win,repmat(e.gammaTables(:,conds(k)),1,3),1);
 
     % move grating
     u = mod(phi,period) - period/2;
@@ -73,13 +72,18 @@ for i = 1:nFrames*stimFrames
     Screen('DrawTexture',win,e.alphaMask(e.alphaMaskSize == diskSize)); 
     drawFixspot(e);
     e = swap(e);
-
+    
     % compute startTime
     if i == 1
         startTime = getLastSwap(e);
         e = addEvent(e,'showStimulus',startTime);
     end
     
+    % log event for each new stimulus
+    if frames == stimFrames
+        e = addEvent(e,'showSubStimulus',getLastSwap(e));
+    end
+
     frames = frames - 1;
     phi = phi + speed;
 end

@@ -1,4 +1,4 @@
-function e = initSession(e,params,expType)
+function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 
 % for 2-photon, we don't need the following settings, so just set them here
 params.joystickThreshold = 0;
@@ -11,7 +11,9 @@ params.fixSpotSize = 0;
 params.fixSpotColor = [0; 0; 0];
 
 % initialize parent
-e.MultDimExperiment = initSession(e.MultDimExperiment,params,expType);
+[e.MultDimExperiment,retInt32,retStruct,returned] = ...
+    netStartSession(e.MultDimExperiment,params);
 
-% make sure photodiode object has large enough buffer
+% make sure photodiode object has large enough buffer and also a large spot
+% alternating color, since we're running full screen gratings
 e = set(e,'photoDiodeTimer',PhotoDiodeTimer(params.stimulusTime/1000*60,[0 255],50));
