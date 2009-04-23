@@ -1,9 +1,7 @@
 function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % Show multidimensional oriented gratings.
 %
-%   TODO: color
-%
-% AE 2009-01-29
+% AE 2009-04-23
 
 % some member variables
 win = get(e,'win');
@@ -13,7 +11,6 @@ refresh = get(e,'refreshRate');
 % read parameters
 stimTime = getParam(e,'stimulusTime');
 stimFrames = getParam(e,'stimFrames');
-location = getParam(e,'location');
 postStimTime = getParam(e,'postStimulusTime');
 
 % compute number of frames
@@ -25,10 +22,6 @@ nFrames = ceil(m / stimFrames);
 random = get(e,'randomization');
 [conds,random] = getParams(random,nFrames);
 e = set(e,'randomization',random);
-
-% some shortcuts
-centerX = mean(rect([1 3])) + location(1);
-centerY = mean(rect([2 4])) + location(2);
 
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
@@ -48,8 +41,9 @@ for i = 1:nFrames*stimFrames
     if frames == 0
         k = k + 1;
         frames = stimFrames;
-        
+
         % new grating parameters
+        location = getSessionParam(e,'location',conds(k));
         diskSize = getSessionParam(e,'diskSize',conds(k));
         spatialFreq = getSessionParam(e,'spatialFreq',conds(k));
         pxPerDeg = getPxPerDeg(getConverter(e));
@@ -69,6 +63,8 @@ for i = 1:nFrames*stimFrames
     xInc = -u * sin(orientation/180*pi);
     yInc = u * cos(orientation/180*pi);
     ts = e.textureSize(conds(k));
+    centerX = mean(rect([1 3])) + location(1);
+    centerY = mean(rect([2 4])) + location(2);
     destRect = [centerX centerY centerX centerY] + [-ts -ts ts ts] / 2 ...
         + [xInc yInc xInc yInc];
     
