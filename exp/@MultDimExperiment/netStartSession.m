@@ -14,7 +14,7 @@ end
 % also put constants into condition structure
 data = get(e,'data');
 cond = getConditions(data);
-toRand = {'orientation','spatialFreq','contrast','luminance','color','speed','initialPhase'};
+toRand = {'location','orientation','spatialFreq','contrast','luminance','color','speed','initialPhase'};
 f = fieldnames(cond);
 for i = 1:numel(toRand)
     ndx = strmatch(toRand{i},f,'exact');
@@ -30,21 +30,21 @@ win = get(e,'win');
 Screen('BlendFunction',win,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 % Generate alpha masks
+
+% determine size
+maxPeriod = max(e.textureSize) - max(params.diskSize);
+e.alphaMaskSize = ceil(max(params.diskSize) / 2 + maxPeriod) + 5;
+
 nDiskSizes = numel(params.diskSize);
 e.alphaMask = zeros(1,nDiskSizes);
-e.alphaMaskSize = zeros(1,nDiskSizes);
+e.alphaDiskSize = zeros(1,nDiskSizes);
 for i = 1:nDiskSizes
-    rect = Screen('Rect',win);
-    halfWidth = ceil(diff(rect([1 3])) / 2);
-    halfHeight = ceil(diff(rect([2 4])) / 2);
-    location = getSessionParam(e,'location',1);
     bgColor = getSessionParam(e,'bgColor',1);
     diskSize = params.diskSize(i);
-    [X,Y] = meshgrid((-halfWidth:halfWidth-1) - location(1), ...
-                 (-halfHeight:halfHeight-1) - location(2));
-    alphaLum = repmat(permute(bgColor,[2 3 1]), ...
-                      2*halfHeight,2*halfWidth);
+    x = -e.alphaMaskSize:e.alphaMaskSize-1;
+    [X,Y] = meshgrid(x,x);
+    alphaLum = repmat(permute(bgColor,[2 3 1]),2*e.alphaMaskSize,2*e.alphaMaskSize);
     alphaBlend = 255 * (sqrt(X.^2 + Y.^2) > diskSize/2);
     e.alphaMask(i) = Screen('MakeTexture',win,cat(3,alphaLum,alphaBlend));
-    e.alphaMaskSize(i) = diskSize;
+    e.alphaDiskSize(i) = diskSize;
 end

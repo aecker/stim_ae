@@ -8,6 +8,7 @@ e.textureSize = [];
 e.gammaTables = [];
 e.alphaMask = [];
 e.alphaMaskSize = [];
+e.alphaDiskSize = [];
 
 t = TrialBasedExperiment(MultDimRandomization,StimulationData);
 e = class(e,'MultDimExperiment',t);

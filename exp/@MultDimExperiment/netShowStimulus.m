@@ -69,7 +69,12 @@ for i = 1:nFrames*stimFrames
     
     % draw grating
     Screen('DrawTexture',win,e.textures(conds(k)),[],destRect,orientation+90); 
-    Screen('DrawTexture',win,e.alphaMask(e.alphaMaskSize == diskSize)); 
+    
+    % draw circular aperture
+    alphaRect = [centerX centerY centerX centerY] + [-1 -1 1 1] * e.alphaMaskSize;
+    Screen('DrawTexture',win,e.alphaMask(e.alphaDiskSize == diskSize),[],alphaRect,orientation+90); 
+    
+    % fixation spot
     drawFixspot(e);
     e = swap(e);
     
