@@ -8,7 +8,7 @@ function [types,sites] = getEventTypes(e)
 % and now add our own ones
 % show/endSubStimulus mark onset and offset of single stimuli (of which we
 % have multiple per trial)
-types = [types; {'showSubStimulus','endSubStimulus'}];
+types = [types; {'showSubStimulus'; 'endSubStimulus'}];
 
 % Site that triggers the above events (0 = Mac/Matlab; 1 = PC/LabView)
 sites = [sites, 0, 0];
