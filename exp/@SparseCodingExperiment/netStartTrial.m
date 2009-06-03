@@ -1,4 +1,4 @@
-function e = initTrial(e)
+function e = netStartTrial(e)
 % Initialize trial.
 % AE 2008-08-04
 
