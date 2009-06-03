@@ -1,4 +1,4 @@
-function e = initSession(e,params,expType)
+function e = netStartSession(e,params,expType)
 
 % set randomization
 params.imageStats = e.imgStatConst(params.imageStats);
