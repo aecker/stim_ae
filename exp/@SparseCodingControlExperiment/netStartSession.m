@@ -1,4 +1,4 @@
-function e = netStartSession(e,params,expType)
+function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 
 % set randomization
 params.imageStats = e.imgStatConst(params.imageStats);
@@ -6,12 +6,7 @@ r = AllImagesRandomization(params.imagePath,params.imageStats);
 e = set(e,'randomization',r);
 
 % initialize parent
-e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
-
-% Since we overwrote initSession, we need to manually initialize the conditions 
-% now. TrialBasedExperiment/initSession is calling initCondition automatically,
-% but since the above call is running only on the parent, it calls
-% TrialBasedExperiment/initCondition instead of GratingExperiment/initSession.
+[e,retInt32,retStruct,returned] = initSession(e,params);
 
 % create alpha blend mask
 win = get(e,'win');
