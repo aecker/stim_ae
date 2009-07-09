@@ -1,4 +1,4 @@
-function e = initSession(e,params,expType)
+function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 % Mani
 % June-04-2008
 % Create randomization
@@ -9,5 +9,5 @@ rnd = OnlineMappingRandomization(params);
 e = set(e,'randomization',rnd);
 %--------------------------------------------------------------------------
 % call parent's init function
-e.TrialBasedExperiment = initSession(e.TrialBasedExperiment,params,expType);
+[e,retInt32,retStruct,returned] = initSession(e,params);
 %--------------------------------------------------------------------------
