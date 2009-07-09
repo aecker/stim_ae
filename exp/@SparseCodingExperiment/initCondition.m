@@ -5,20 +5,23 @@ function e = initCondition(e,cond)
 win = get(e,'win');
 rect = Screen('Rect',win);
 
-imagePath = getSessionParam(e,'imagePath',1);        % image path
+% imagePath = getSessionParam(e,'imagePath',1);        % image path
 n = getSessionParam(e,'imageNumber',cond);          % number of the image
+n = find(e.textureNum == n);
 stat = e.imgStatConst{getSessionParam(e,'imageStats',cond)};
 
 % read image
-img = imread(getLocalPath(sprintf('%s\\%05.0f_%s.tif',imagePath,n,stat)));
+% img = imread(getLocalPath(sprintf('%s\\%05.0f_%s.tif',imagePath,n,stat)));
+img = e.textureFile(n).(stat); %#ok<FNDSB>
+e.textureSize(:,cond) = size(img)';  
 
 % generate texture
-imgSize = size(img);
-diskSize = getSessionParam(e,'diskSize',cond);
-fadeFactor = getSessionParam(e,'fadeFactor',cond);    
-dx = ceil(fadeFactor*diskSize);
-texture = img(imgSize(1)/2 + (-dx+1:dx),imgSize(2)/2 + (-dx+1:dx))';
-e.textures(cond) = Screen('MakeTexture',win,texture');
+% imgSize = size(img);
+% diskSize = getSessionParam(e,'diskSize',cond);
+% fadeFactor = getSessionParam(e,'fadeFactor',cond);    
+% dx = ceil(fadeFactor*diskSize);
+% texture = img(imgSize(1)/2 + (-dx+1:dx),imgSize(2)/2 + (-dx+1:dx))';
+e.textures(cond) = Screen('MakeTexture',win,img');
 
 % generate mask
 halfWidth = ceil(diff(rect([1 3])) / 2);
@@ -33,6 +36,8 @@ alphaLum = repmat(permute(bgColor,[2 3 1]), ...
                   2*halfHeight,2*halfWidth);
 
 % create blending map with cosine fade out
+diskSize = getSessionParam(e,'diskSize',cond);
+fadeFactor = getSessionParam(e,'fadeFactor',cond);    
 normXY = sqrt(X.^2 + Y.^2);              
 disk = (normXY < diskSize/2);
 blend = normXY < fadeFactor*diskSize/2 & normXY >= diskSize/2;

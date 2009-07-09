@@ -14,7 +14,7 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % some member variables
 win = get(e,'win');
 rect = Screen('Rect',win);
-refresh = get(e,'refreshRate');
+% refresh = get(e,'refreshRate');
 
 % read parameters
 curIdx = getParam(e,'condition');
@@ -33,7 +33,7 @@ fprintf('\n image id: %05.0f, image stats: %s',n,imStats);
 
 % some shortcuts
 texture = e.textures(curIdx);
-texSize = fadeFactor*getParam(e,'diskSize');
+texSize = e.textureSize(:,currIdx); % fadeFactor*getParam(e,'diskSize');
 alpha = e.alphaMask(curIdx);
 centerX = mean(rect([1 3])) + location(1);
 centerY = mean(rect([2 4])) + location(2);
@@ -55,7 +55,7 @@ while running
         break
     end
     
-    destRect = [-texSize -texSize texSize texSize] / 2 ...
+    destRect = [-texSize(1) -texSize(2) texSize(1) texSize(2)] / 2 ...
                     + [centerX centerY centerX centerY];
     
     % draw texture, aperture, flip screen

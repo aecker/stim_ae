@@ -5,6 +5,8 @@ function e = SparseCodingExperiment(varargin)
 
 % Some variables we need to precompute the stimulus
 e.textures = [];
+e.textureFile = struct;
+e.textureId = [];
 e.textureSize = [];
 e.alphaMask = [];
 e.imgStatConst = {'whn','phs','nat'};
