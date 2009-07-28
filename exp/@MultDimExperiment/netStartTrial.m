@@ -1,11 +1,12 @@
 function [e,retInt32,retStruct,returned] = netStartTrial(e,params)
 % Start trial.
-% AE 2008-08-04
+% AE 2009-07-27
 
 % initilialize parent
 [e,retInt32,retStruct,returned] = initTrial(e,params);
 
 % compute post-stimulus fixation time
-delayTime = getParam(e,'delayTime');
+postStimTime = getParam(e,'postStimulusTime');
 stimTime = getParam(e,'stimulusTime');
-e = setTrialParam(e,'postStimulusTime',delayTime - stimTime);
+retStruct.delayTime = stimTime + postStimTime;
+e = setTrialParam(e,'delayTime',retStruct.delayTime);
