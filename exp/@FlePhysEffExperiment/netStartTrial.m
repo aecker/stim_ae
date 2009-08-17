@@ -47,15 +47,15 @@ while ~completed
     % test whether we can fit this stimulus
     if stimTime + thisStimTime <= maxStimTime
         stimTime = stimTime + thisStimTime + interStimTime;
-        onsets(end+1) = stimTime;                                               %#ok<AGROW>
-        conditions(end+1) = c;                                                  %#ok<AGROW>
+        onsets(end+1) = stimTime;                                          %#ok<AGROW>
+        conditions(end+1) = c;                                             %#ok<AGROW>
     else
         % didn't fit in any more, put it back into condition pool
         rnd = putBackLastCondition(rnd);
-        % we don't need an interStimTime after the last stim, postStimTime takes
-        % care of that.
+        % we don't need an interStimTime after the last stim, postStimTime
+        % takes care of that.
         stimTime = stimTime - interStimTime;
-        onsets(end) = stimTime + postStimTime;                                  %#ok<AGROW>
+        onsets(end) = stimTime + postStimTime;                             %#ok<AGROW>
         completed = true;
     end
 end

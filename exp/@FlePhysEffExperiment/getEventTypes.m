@@ -1,5 +1,5 @@
 function [types,sites] = getEventTypes(e)
-% Here we add some custom events only used by the FlePhysExperimentV2.
+% Here we add some custom events only used by the FlePhysEffExperiment.
 % AE 2009-03-15
 
 % first get all events defined by the parent class

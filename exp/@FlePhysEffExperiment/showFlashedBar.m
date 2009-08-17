@@ -3,17 +3,22 @@ function [e,abort] = showFlashedBar(e,cond,firstStim)
 % AE 2009-03-16
 
 % parameters
-conditions = getConditions(get(e,'randomization'));
-trajAngle  = conditions(cond).trajectoryAngle;
-loc        = conditions(cond).flashLocation;
-barSize    = getParam(e,'barSize');
-stimCenter = getParam(e,'stimCenter');
-nLocs      = getParam(e,'numFlashLocs');
+conditions  = getConditions(get(e,'randomization'));
+trajAngle   = conditions(cond).trajectoryAngle;
+loc         = conditions(cond).flashLocation;
+arrangement = conditions(cond).arrangement;
+locDist     = getParam(e,'flashLocDist');
+barSize     = getParam(e,'barSize');
+stimCenter  = getParam(e,'stimCenter');
+nLocs       = getParam(e,'numFlashLocs');
+
+% stimulus arrangement: which one goes through the center (i.e. the RFs)
+vDistFlash = (1 - arrangement) * vDist;
 
 % draw flashed bar
 angle = trajAngle / 180 * pi;
-flashLoc = (loc - (nLocs + 1) / 2) * barSize(1);
-center = stimCenter + flashLoc * [cos(angle); -sin(angle)];
+flashLoc = (loc - (nLocs + 1) / 2) * locDist;
+center = stimCenter + [0; vDistFlash] + flashLoc * [cos(angle); -sin(angle)];
 rect = [center - barSize/2; center + barSize/2];
 Screen('DrawTexture',get(e,'win'),e.tex(cond),[],rect,-angle*180/pi);
 
@@ -37,9 +42,13 @@ drawFixSpot(e);
 e = swap(e);
 
 % save bar locations
-e = setTrialParam(e,'barLocations',[getParam(e,'barLocations') {flashLoc}]);
-e = setTrialParam(e,'barRects',[getParam(e,'barRects') {rect}]);
-e = setTrialParam(e,'barCenters',[getParam(e,'barCenters') {center}]);
+e = setTrialParam(e,'flashLocations',[getParam(e,'flashLocations') {flashLoc}]);
+e = setTrialParam(e,'flashgRects',[getParam(e,'flashRects') {rect}]);
+e = setTrialParam(e,'flashCenters',[getParam(e,'flashCenters') {center}]);
+
+e = setTrialParam(e,'barLocations',[getParam(e,'barLocations') {[]}]);
+e = setTrialParam(e,'barRects',[getParam(e,'barRects') {[]}]);
+e = setTrialParam(e,'barCenters',[getParam(e,'barCenters') {[]}]);
 
 % this function only takes two frames, so we don't bother about checking for
 % aborts in here

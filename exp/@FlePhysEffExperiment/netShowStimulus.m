@@ -18,7 +18,7 @@ for i = 1:numel(onsets)
     
     % show stimulus
     c = cond(i);
-    if conditions(c).isFlash
+    if ~conditions(c).isMoving
         [e,abort] = showFlashedBar(e,c,i==1);
     else
         [e,abort] = showMovingBar(e,c,i==1);

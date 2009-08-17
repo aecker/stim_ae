@@ -1,4 +1,5 @@
-function r = FlePhysEffRandomization(barColor,trajectoryAngle,dx,direction,numFlashLocs,flashStop)
+function r = FlePhysEffRandomization(barColor,trajectoryAngle,dx, ...
+    direction,numFlashLocs,flashStop,arrangement,combined)
 
 % internal white noise randomization
 r.white = [];
@@ -12,5 +13,7 @@ r.dx = dx;
 r.direction = direction;
 r.numFlashLocs = numFlashLocs;
 r.flashStop = flashStop;
+r.arrangement = arrangement;
+r.combined = combined;
 
 r = class(r,'FlePhysEffRandomization');
