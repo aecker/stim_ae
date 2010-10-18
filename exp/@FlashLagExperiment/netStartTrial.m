@@ -17,5 +17,4 @@ end
 e = set(e,'randomization',r);
 
 % call parent's netStartTrial
-[e.TrialBasedExperiment,retInt32,retStruct,returned] = ...
-    netStartTrial(e.TrialBasedExperiment,params);
+[e,retInt32,retStruct,returned] = initTrial(e,params);

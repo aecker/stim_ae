@@ -15,6 +15,7 @@ interStimTime = getParam(e,'interStimulusTime');
 postStimTime  = getParam(e,'postStimulusTime');
 trajLen       = getParam(e,'trajectoryLength');
 nLocs         = getParam(e,'numFlashLocs');
+combined      = getParam(e,'combined');
 
 onsets = [];
 conditions = [];
@@ -26,19 +27,28 @@ while ~completed
     [c,rnd] = getNextCondition(rnd);
     
     % calculate time the stimulus takes
-    if cond(c).isFlash
+    if ~cond(c).isMoving
         thisStimTime = 1000 / refresh;
     else
         trajFrames = ceil(trajLen / cond(c).dx);
         trajFrames = trajFrames - (mod(trajFrames,2) ~= mod(nLocs,2));
-        if cond(c).isMoving
+        if ~cond(c).isStop
             nFrames = trajFrames;
-        elseif cond(c).isStop
+        else
+            dir = cond(c).direction;
             loc = cond(c).flashLocation;
-            if ~dir
-                nFrames = (trajFrames - nLocs) / 2 + loc;
+            if combined
+                % In case of combined stimulus, the moving bar disappears at the
+                % enter irrespective of flash location 
+                nFrames = (trajFrames + 1) / 2;
             else
-                nFrames = (trajFrames - nLocs) / 2 + (nLocs - loc + 1);
+                % in case of the individual stimuli, the moving bar disappears
+                % at the different flash locations
+                if ~dir
+                    nFrames = (trajFrames - nLocs) / 2 + loc;
+                else
+                    nFrames = (trajFrames - nLocs) / 2 + (nLocs - loc + 1);
+                end
             end
         end
         thisStimTime = nFrames * 1000 / refresh;
@@ -51,7 +61,7 @@ while ~completed
         conditions(end+1) = c;                                             %#ok<AGROW>
     else
         % didn't fit in any more, put it back into condition pool
-        rnd = putBackLastCondition(rnd);
+        rnd = putBackPreviousCondition(rnd);
         % we don't need an interStimTime after the last stim, postStimTime
         % takes care of that.
         stimTime = stimTime - interStimTime;

@@ -3,6 +3,9 @@ function [r,canStop,mustStop] = trialCompleted(r,valid,correct)
 canStop = true;
 mustStop = false;
 
+% He's advanced by one trial within the block if he responds correctly
+% except on probe trial where he's advanced to the next trial irrespective
+% of his response
 cond = r.conditionPool(r.currentTrial);
 if (valid && correct) || ...
         r.conditions(cond).trialType == ReportPerceptRandomization.PROBE

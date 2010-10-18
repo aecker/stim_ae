@@ -101,7 +101,8 @@ end
 e = setTrialParam(e,'flashLocation',flashLoc);
 e = setTrialParam(e,'movingLocation',movingLoc);
 
-fprintf('flashLocation: %d  movingLocation: %d   offset: %d\n',flashLoc,movingLoc,flashOffset)
+fprintf('flashLocation: %d | movingLocation: %d | offset: %d\n', ....
+    round(flashLoc),round(movingLoc),flashOffset)
 
 % put start time
 firstTrial = true;
@@ -193,6 +194,3 @@ e = setTrialParam(e,'barLocations',s(1:i-1));
 % return values
 retInt32 = int32(0);
 returned = true;
-
-% 2008-05-23, PHB: removed line
-% returnStruct = struct;

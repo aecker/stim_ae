@@ -2,6 +2,11 @@ function [params,r] = getParams(r,n)
 % Return n params from the pool.
 % AE & MS 2008-07-14
 
+% Due to recursion limits in Matlab with this cide we can only return a
+% limited number of parameters at once. A solution to this problem would be
+% to flatten the recursion in this function to a loop.
+assert(size(r.params,2) * 500 > n,'You can''t request that many parameters at the same time. See comment in this function.')
+
 % How many locations are available
 k = size(r.pool,2);
 rnd = randperm(k);

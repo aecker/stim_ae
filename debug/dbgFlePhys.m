@@ -6,7 +6,7 @@ warning off TrialBasedExperiment:netEndTrial
 warning off StimulationData:setTrialParam
 warning off StimulationData:setParam
 
-T = FlePhysExperiment;
+T = FlePhysEffExperiment;
 T = set(T,'debug',true);
 T = openWindow(T);
 
@@ -24,20 +24,30 @@ constants.fixSpotSize = 10;
 %            75      14
 constants.bgColor = [10; 10; 10];
 constants.barColor = [136; 136; 136];
-constants.barSize = [20; 300];
+constants.barSize = [20; 100];
 % Speeds run in PP were: 1500, 1000, 750
 % These correspond to dx:  15,   10, 7.5
 constants.dx = 10;
 constants.stimCenter = [960; 600];
 constants.trajectoryAngle = 0;
 constants.trajectoryLength = 300;
-constants.numFlashLocs = 2;
+constants.numFlashLocs = 5;
+constants.flashLocDistance = 10;
 constants.direction = [0 1];
-constants.flashStimTime = 500;
-constants.postStimTime = 300;
-constants.flashStop = 0;
+constants.postStimulusTime = 300;
+constants.interStimulusTime = 300;
+constants.maxStimulusTime = 1500;
+constants.verticalDistance = 130;
 
-constants.delayTime = 800;
+constants.flashStop = 1;
+constants.arrangement = 1;
+constants.combined = 1;
+
+constants.delayTime = -1;
+
+constants.monitorSize = [41; 30];
+constants.monitorDistance = 107;
+constants.monitorCenter = [800; 600];
 
 constants.subject = 'DEBUG';
 constants.eyeControl = 0;
@@ -64,6 +74,7 @@ for i = 1:getNumConditions(T)
     T = netInitTrial(T);
     
     T = netShowFixspot(T,struct);
+
     pause(0.5)
     
     T = netShowStimulus(T,struct);

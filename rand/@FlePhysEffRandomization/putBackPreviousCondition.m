@@ -1,6 +1,6 @@
-function r = putBackLastCondition(r)
+function r = putBackPreviousCondition(r)
 % Put previously polled condition back into pool.
-%   r = putBackLastCondition(r)
+%   r = putBackPreviousCondition(r)
 %
 % AE 2009-03-16
 

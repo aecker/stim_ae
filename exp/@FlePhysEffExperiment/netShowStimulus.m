@@ -5,6 +5,9 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 e = setTrialParam(e,'barLocations',{});
 e = setTrialParam(e,'barRects',{});
 e = setTrialParam(e,'barCenters',{});
+e = setTrialParam(e,'flashLocations',{});
+e = setTrialParam(e,'flashRects',{});
+e = setTrialParam(e,'flashCenters',{});
 
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
@@ -19,9 +22,14 @@ for i = 1:numel(onsets)
     % show stimulus
     c = cond(i);
     if ~conditions(c).isMoving
-        [e,abort] = showFlashedBar(e,c,i==1);
+        [e,abort,s] = showFlashedBar(e,c,i==1);
     else
-        [e,abort] = showMovingBar(e,c,i==1);
+        [e,abort,s] = showMovingBar(e,c,i==1);
+    end
+    
+    % update start time after first substimulus
+    if i == 1
+        startTime = s;
     end
     
     % was there an abort during stimulus presentation?
