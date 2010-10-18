@@ -1,8 +1,5 @@
-function [r,canStop,mustStop] = trialCompleted(r,valid,varargin)
+function [r,mustStop] = trialCompleted(r,valid,varargin)
 
-r.block = trialCompleted(r.block,valid,varargin);
-
-% Indicates whether this was the last trial in current block
-canStop = true;
+r.block = trialCompleted(r.block,valid,varargin{:});
 mustStop = false;
 

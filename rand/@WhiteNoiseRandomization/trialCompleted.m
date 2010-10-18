@@ -1,10 +1,8 @@
-function [r,canStop,mustStop] = trialCompleted(r,valid,varargin)
+function [r,mustStop] = trialCompleted(r,valid,varargin)
 
-% Indicates whether this was the last trial in current block
-canStop = true;
 mustStop = false;
 
-% trial successfully completed -> remove locations from pool
+% trial not successfully completed -> restore pool from backup
 if ~valid
     r.pool = r.backup;
 end

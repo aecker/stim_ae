@@ -1,6 +1,5 @@
-function [r,canStop,mustStop] = trialCompleted(r,valid,correct)
+function [r,mustStop] = trialCompleted(r,valid,correct)
 
-canStop = true;
 mustStop = false;
 
 % determine "block" condition

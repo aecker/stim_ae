@@ -1,6 +1,5 @@
-function [r,canStop,mustStop] = trialCompleted(r,valid,correct)
+function [r,mustStop] = trialCompleted(r,valid,correct)
 
-canStop = true;
 mustStop = false;
 
 % He's advanced by one trial within the block if he responds correctly

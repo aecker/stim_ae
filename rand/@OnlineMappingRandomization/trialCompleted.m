@@ -1,7 +1,6 @@
-function [r canStop mustStop] = trialCompleted(r,validTrial,correctTrial)
+function [r,mustStop] = trialCompleted(r,validTrial,correctTrial)
 % Mani
 % June-04-2008
-canStop = true;
 mustStop = false;
 if validTrial
     r.nTrialsCompleted = r.nTrialsCompleted + 1;

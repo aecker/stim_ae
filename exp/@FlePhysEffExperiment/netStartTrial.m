@@ -23,7 +23,7 @@ stimTime = 0;
 completed = false;
 while ~completed
 
-    % look what the next condition would be (doesn't take it out of the pool)
+    % get the next condition
     [c,rnd] = getNextCondition(rnd);
     
     % calculate time the stimulus takes
@@ -38,12 +38,12 @@ while ~completed
             dir = cond(c).direction;
             loc = cond(c).flashLocation;
             if combined
-                % In case of combined stimulus, the moving bar disappears at the
-                % enter irrespective of flash location 
+                % In case of combined stimulus, the moving bar disappears
+                % at the center irrespective of flash location 
                 nFrames = (trajFrames + 1) / 2;
             else
-                % in case of the individual stimuli, the moving bar disappears
-                % at the different flash locations
+                % in case of the individual stimuli, the moving bar
+                % disappears at the different flash locations
                 if ~dir
                     nFrames = (trajFrames - nLocs) / 2 + loc;
                 else

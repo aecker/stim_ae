@@ -52,7 +52,7 @@ while running
     % draw texture, aperture, flip screen
     Screen('DrawTexture',win,texture,[],destRect,orientation); 
     Screen('DrawTexture',win,alpha); 
-    drawFixspot(e);
+    drawFixSpot(e);
     e = swap(e);
     
     % compute startTime

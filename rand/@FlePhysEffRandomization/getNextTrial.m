@@ -1,5 +1,4 @@
 function [r,condIndex] = getNextTrial(r)
-% AE 2009-03-16
+% AE 2010-10-17
 
-% we have multiple conditions per trial
-condIndex = NaN;
+[r.white,condIndex] = getNextTrial(r.white);

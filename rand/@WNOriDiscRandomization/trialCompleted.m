@@ -1,4 +1,4 @@
-function [r,canStop,mustStop] = trialCompleted(r,valid,varargin)
+function [r,mustStop] = trialCompleted(r,valid,varargin)
 
 % block randomization manages which signal orientation and noise level is
 % shown in each trial
@@ -10,6 +10,5 @@ r.signalWhite = trialCompleted(r.signalWhite,valid,varargin{:});
 c = r.currentCond;
 r.noiseWhite{c} = trialCompleted(r.noiseWhite{c},valid,varargin{:});
 
-canStop = true;
 mustStop = false;
 
