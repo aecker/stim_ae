@@ -2,7 +2,7 @@ function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 
 idx = params.imageNumber;
 file = params.imageFile;
-file = load(file);
+file = load(getLocalPath(file));
 textures = file.textures(idx);
 
 e.textureFile = textures;

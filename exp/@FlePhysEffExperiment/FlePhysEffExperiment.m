@@ -9,5 +9,5 @@ function e = FlePhysEffExperiment(varargin)
 e.tex = [];
 
 % real randomization is put at initialization
-t = TrialBasedExperiment(NoRandomization,StimulationData);
+t = TrialBasedExperiment(FlePhysEffRandomization,StimulationData);
 e = class(e,'FlePhysEffExperiment',t);

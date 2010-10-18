@@ -50,7 +50,7 @@ while running
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
-        fprintf('stimulus was aborted.....................................\n')
+        fprintf(' [aborted]')
         break
     end
     

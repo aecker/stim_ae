@@ -1,7 +1,4 @@
-function r = init(r,params)
+function r = init(r,varargin)
 % AE 2009-03-16
 
-r.n = size(params,2);
-r.params = params;
-r.pool = params;
-r.backup = params;
+% Do nothing here. Parameters are set via setParams()

@@ -1,6 +1,5 @@
 function e = AllImagesExperiment(varargin)
-% Sparse Coding Experiment with block randomization.
-% In each session, N images are selected from a database. 
+% Sparse Coding Experiment which shows all images.
 
 
 % Some variables we need to precompute the stimulus

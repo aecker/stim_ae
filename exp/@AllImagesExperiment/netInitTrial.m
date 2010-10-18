@@ -13,9 +13,10 @@ function [e,retInt32,retStruct,returned] = netInitTrial(e,params)
 % AE 2009-03-16
 
 tic
+
 % make stimulus
 win = get(e,'win');
-rect = Screen('Rect',win);
+% rect = Screen('Rect',win);
 cond = getParam(e,'condition');
 
 n = getSessionParam(e,'imageNumber',cond);          % number of the image
@@ -27,33 +28,10 @@ img = e.textureFile(n).(stat); %#ok<FNDSB>
 e.curTexSz = size(img)';  
 
 % generate texture
+if ~isempty(e.curTex)
+    Screen('Close',e.curTex);
+end
 e.curTex = Screen('MakeTexture',win,img');
-
-% generate mask
-halfWidth = ceil(diff(rect([1 3])) / 2);
-halfHeight = ceil(diff(rect([2 4])) / 2);
-location = getSessionParam(e,'location',cond);
-bgColor = getSessionParam(e,'bgColor',cond);
-
-[X,Y] = meshgrid((-halfWidth:halfWidth-1) - location(1), ...
-             (-halfHeight:halfHeight-1) - location(2));
-
-alphaLum = repmat(permute(bgColor,[2 3 1]), ...
-                  2*halfHeight,2*halfWidth);
-
-% create blending map with cosine fade out
-diskSize = getSessionParam(e,'diskSize',cond);
-fadeFactor = getSessionParam(e,'fadeFactor',cond);    
-normXY = sqrt(X.^2 + Y.^2);              
-disk = (normXY < diskSize/2);
-blend = normXY < fadeFactor*diskSize/2 & normXY >= diskSize/2;
-mv = fadeFactor*diskSize/2 - diskSize/2;
-blend = (0.5*cos((normXY-diskSize/2)*pi/mv)+.5).*blend;
-
-alphaBlend = 255 * (1-blend-disk);
-
-
-e.alphaMask = Screen('MakeTexture',win,cat(3,alphaLum,alphaBlend));
 
 disp(toc)
 

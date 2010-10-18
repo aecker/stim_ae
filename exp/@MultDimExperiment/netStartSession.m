@@ -1,6 +1,6 @@
 function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 
-% full-screen grating?
+% calculate disk size in case of full-screen grating
 ndx = find(params.diskSize < 0);
 if ~isempty(ndx)
     rect = Screen(get(e,'win'),'Rect');
@@ -10,19 +10,6 @@ end
 
 % initialize parent
 [e,retInt32,retStruct,returned] = initSession(e,params);
-
-% also put constants into condition structure
-data = get(e,'data');
-cond = getConditions(data);
-toRand = {'location','orientation','spatialFreq','contrast','luminance','color','speed','initialPhase'};
-f = fieldnames(cond);
-for i = 1:numel(toRand)
-    ndx = strmatch(toRand{i},f,'exact');
-    if isempty(ndx)
-        [cond.(toRand{i})] = deal(params.(toRand{i}));
-    end
-end
-e = set(e,'data',setConditions(data,cond));
 
 % Enable alpha blending with proper blend-function. We need it for drawing
 % of our alpha-mask
