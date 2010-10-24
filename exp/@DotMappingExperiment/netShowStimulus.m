@@ -1,4 +1,4 @@
-function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
+function [e,retInt32,retStruct,returned] = netShowStimulus(e,varargin)
 % Show stimulus.
 % AE & MS 2008-07-14
 
@@ -42,7 +42,7 @@ if nFill > 2
 else
     fprintf('Sparse dots\n\n')
     random = get(e,'randomization');
-    nFill = round(pFill * dotNumX * dotNumY);
+    nFill = max(1,round(pFill * dotNumX * dotNumY)); % at least one dot
     for i = 1:nFrames
         [tmp,random] = getParams(random,nFill);
         for j = 1:size(tmp,2)
@@ -83,8 +83,10 @@ for k = 1:stimFrames*nFrames
     end
     
     % draw black/white rectangles
-    Screen('DrawDots',win,dotLocations{i},dotSize,repmat(dotColors{i},3,1),[0,0],0);
-
+    rect = [dotLocations{i} - ceil(dotSize/2) * ones(2,1) + 1; ...
+            dotLocations{i} + fix(dotSize/2) * ones(2,1)];
+    Screen('FillRect',win,dotColors{i},rect); 
+    
     % draw photodiode spot; do buffer swap and keep timestamp
     drawFixspot(e);
     e = swap(e);
@@ -92,7 +94,6 @@ for k = 1:stimFrames*nFrames
     % compute startTime
     if firstFrame
 
-        %------------------------------------------------------------------
         % return function call
         tcpReturnFunctionCall(e,int32(0),struct('correctResponse',int32(1)),'netShowStimulus');
 
@@ -104,8 +105,8 @@ for k = 1:stimFrames*nFrames
 end
 
 %--------------------------------------------------------------------------
-% clear screen (abort clears the screen anyway in netAbortTrial, so skip it in
-% this case)
+% clear screen (abort clears the screen anyway in netAbortTrial, so skip it
+% in this case)
 if ~abort
     e = clearScreen(e);
 end

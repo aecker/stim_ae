@@ -1,7 +1,7 @@
 function [e,retInt32,retStruct,returned] = netStartTrial(e,params)
 % Start a new trial.
 
-% call parent's netStartTrial
+% call parent's initialization
 [e,retInt32,retStruct,returned] = initTrial(e,params);
 
 % Do we need to reinitialize the randomization?

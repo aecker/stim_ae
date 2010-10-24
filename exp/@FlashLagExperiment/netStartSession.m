@@ -10,3 +10,5 @@ barColor = getParam(e,'barColor');
 barSize = getParam(e,'barSize');
 texMat = permute(repmat(barColor,[1; barSize]),[2 3 1]);
 e.tex = Screen('MakeTexture',get(e,'win'),texMat);
+
+Screen('BlendFunction',get(e,'win'),'GL_SRC_ALPHA','GL_ONE_MINUS_SRC_ALPHA');

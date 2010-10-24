@@ -1,4 +1,4 @@
-function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
+function [e,retInt32,retStruct,returned] = netShowStimulus(e,varargin)
 % Show stimulus.
 % AE 2007-10-17
 
@@ -18,12 +18,21 @@ randLocation     = getParam(e,'randLocation');
 noFlashZone      = getParam(e,'noFlashZone');
 lagProb          = getParam(e,'lagProb');
 expMode          = getParam(e,'expMode');       % expMode=true means we use the fixed flashOffsets
+offsetY          = getParam(e,'yOffset');
 flashOffset      = getParam(e,'flashOffset');   % constant offset for training  
 flashOffsets     = getParam(e,'flashOffsets');  % different offsets used for experiment
 offsetThreshold  = getParam(e,'offsetThreshold');
 trialType        = getParam(e,'trialType');
 trajectoryAngle  = getParam(e,'trajectoryAngle');
 trajectoryCenter = getParam(e,'trajectoryCenter');
+
+% response targets
+monitorCenter    = getParam(e,'monitorCenter');
+leftTarget       = monitorCenter + getParam(e,'leftTarget');
+rightTarget      = monitorCenter + getParam(e,'rightTarget');
+targetRadius     = getParam(e,'targetRadius');
+targetColor      = getParam(e,'targetColor');
+
 moveDir = rand(1) > getParam(e,'moveProb');
 e = setTrialParam(e,'moveDir',moveDir);
 e = setTrialParam(e,'stimulusTime',len / speed * 1000);
@@ -60,6 +69,11 @@ retStruct.trialIndex = int32(getParam(e,'trialIndex'));
 retStruct.trialType = int32(getParam(e,'trialType'));
 retStruct.blockSize = int32(getParam(e,'blockSize'));
 retStruct.blockType = int32(getParam(e,'blockType'));
+
+% inform state system of target locations
+retStruct.leftTarget = leftTarget;
+retStruct.rightTarget = rightTarget;
+
 % as this is a non-blocking function call from LabView, we have to return it
 % manually
 tcpReturnFunctionCall(e,int32(0),retStruct);
@@ -77,7 +91,9 @@ startPos = trajectoryCenter - len/2 * [cos(angle); -sin(angle)];
 % (3) Positive offset means the flashed bar is ahead of the moving bar
 offsetMove = (flashDuration - 1) * speed / refresh / 2;
 offsetX = flashOffset + offsetMove + perceivedLag;
-offsetY = 1.2 * barSize(2);
+
+% AE 2010-10-23: Changed the vertical offset to be a parameter
+% offsetY = 1.2 * barSize(2);
 offset = offsetX * [cos(angle); -sin(angle)] ...
        + offsetY * [sin(mod(angle,pi)); cos(mod(angle,pi))];
 
@@ -137,6 +153,9 @@ while s(i) < len
     % fixation spot
     drawFixSpot(e);
     
+    % response targets
+    Screen('DrawDots',win,[leftTarget rightTarget],targetRadius/2,targetColor',[],1);
+    
     % buffer swap
     e = swap(e);
     
@@ -159,9 +178,12 @@ while s(i) < len
     end    
 end
 
-% keep fixation spot after stimulus turns off
+% keep fixation spot and response targets after stimulus turns off
 if ~abort
 
+    % response targets
+    Screen('DrawDots',win,[leftTarget rightTarget],targetRadius/2,targetColor,[],1);
+    
     drawFixSpot(e);
     e = swap(e);
     
