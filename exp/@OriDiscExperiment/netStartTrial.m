@@ -18,6 +18,7 @@ centerOri = getParam(e,'centerOrientation');
 orientation = centerOri + (2 * class - 1) * 2.^(stepSize * level);
 e = setTrialParam(e,'orientation',orientation);
 e = setTrialParam(e,'level',level);
+e = setTrialParam(e,'threshold',getThreshold(r));
 
 % if phases are supposed to be randomized, determine the phase for this
 % trial here (note that this is not blocked in any way)

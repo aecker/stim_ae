@@ -7,11 +7,21 @@ e = clearScreen(e);
 % read outcome
 e = setTrialParam(e,'correctResponse',logical(params.correctResponse));
 e = setTrialParam(e,'validTrial',true);
+fprintf('correctResponse = %d\n',params.correctResponse)
 
 % If the monkey responds correctly, he will be rewarded with a certain
 % probability.
 r = get(e,'randomization');
 isReward = getReward(r,logical(params.correctResponse));
+
+if getParam(e,'playResponseSounds')
+    if params.correctResponse
+        e = playSound(e,'correctResponse');
+    else
+        e = playSound(e,'incorrectResponse');
+    end
+end
+
 if getParam(e,'randReward')
     mu = getParam(e,'rewardAmount');
     a = 1.5;

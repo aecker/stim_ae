@@ -77,8 +77,7 @@ end
 T = netEndSession(T);
 T = cleanUp(T);
 
-catch
+catch e
     sca
-    err = lasterror;
-    error(err)
+    rethrow(e)
 end

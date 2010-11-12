@@ -83,12 +83,14 @@ for k = 1:stimFrames*nFrames
     end
     
     % draw black/white rectangles
-    rect = [dotLocations{i} - ceil(dotSize/2) * ones(2,1) + 1; ...
-            dotLocations{i} + fix(dotSize/2) * ones(2,1)];
-    Screen('FillRect',win,dotColors{i},rect); 
+    for j = 1:size(dotLocations{i},2)
+        rect = [dotLocations{i}(:,j) - ceil(dotSize/2) * ones(2,1); ...
+                dotLocations{i}(:,j) + fix(dotSize/2) * ones(2,1)];
+        Screen('FillRect',win,dotColors{i}(j),rect);
+    end
     
     % draw photodiode spot; do buffer swap and keep timestamp
-    drawFixspot(e);
+    drawFixSpot(e);
     e = swap(e);
     
     % compute startTime
