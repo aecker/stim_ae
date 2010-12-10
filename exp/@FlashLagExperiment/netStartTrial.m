@@ -28,3 +28,24 @@ e = setTrialParam(e,'rightTarget',rightTarget);
 retStruct.leftTarget = leftTarget;
 retStruct.rightTarget = rightTarget;
 retStruct.targetRadius = getParam(e,'targetRadius');
+
+% Punish according to user specification
+inCorrectResponse = ~(getParam(e,'correctResponse'));
+validTrial = getParam(e,'validTrial');
+punishTime = 0;
+switch params.punishType
+    case 'IncorrRespOnly'
+        if validTrial && inCorrectResponse
+            punishTime = params.punishTime;
+        end
+    case 'AbortsOnly'
+        if ~validTrial
+            punishTime = params.punishTime;
+        end
+    otherwise % aborts and incorrect response
+        if ~validTrial || inCorrectResponse
+            punishTime = params.punishTime;
+        end
+end
+
+retStruct.punishTime = int32(punishTime);
