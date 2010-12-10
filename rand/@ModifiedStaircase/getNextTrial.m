@@ -4,6 +4,7 @@ function [r,cond] = getNextTrial(r)
 
 % randomly draw stimulus intensity for the next trial
 level = r.distribution(r.threshold);
+level = min(level,r.maxLevel);
 
 % did we show this stimulus level before?
 levelNdx = find(r.levels == level,1);

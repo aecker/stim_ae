@@ -25,6 +25,7 @@ r.threshold = [];
 
 % stimulus levels
 r.levels = [];
+r.maxLevel = [];
 
 % distribution used to draw stimulus levels in each trial (has to return
 % integer values)

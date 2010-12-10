@@ -15,3 +15,9 @@ r.distribution = eval(params.distribution);
 
 % pool size (enforce it to be even)
 r.poolSize = params.poolSize + mod(params.poolSize,2);
+
+% maximum stimulus level (to avoid ambiguities with circular quantities)
+% note that this should be well above the actual threshold of the subject.
+% otherwise the distribution of stimuli won't be what is expected because
+% the same upper bound is applied to both, threshold and stimulus level.
+r.maxLevel = fix(params.maxLevel);
