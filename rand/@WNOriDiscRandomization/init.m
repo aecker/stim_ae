@@ -5,7 +5,7 @@ function r = init(r,params)
 % probability of occurence
 bp.signal = params.signal;
 bp.signalProb = params.signalProb;
-r.signalBlock = init(BlockRandomization,bp);
+r.signalBlock = init(BlockRandomization('signal','signalProb'),bp);
 
 % use white noise randomization to increase block size
 scond = getConditions(r.signalBlock);
@@ -15,9 +15,9 @@ r.signalWhite = init(WhiteNoiseRandomization,repmat(1:ns,1,params.signalBlockSiz
 % create noise conditions
 np.orientation = params.orientation;
 np.phase = params.phase;
-r.noiseBlock = init(BlockRandomization,np);
+r.noiseBlock = init(BlockRandomization('orientation','phase'),np);
 
-% create WhiteNoiseRandomizations to deal with noise foir reverse
+% create WhiteNoiseRandomizations to deal with noise for reverse
 % correlation
 no = numel(params.orientation);
 ncond = getConditions(r.noiseBlock);
