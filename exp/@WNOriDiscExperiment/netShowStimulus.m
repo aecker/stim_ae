@@ -12,6 +12,7 @@ refresh = get(e,'refreshRate');
 condNdx = getParam(e,'condition');
 stimTime = getParam(e,'stimulusTime');
 postStimTime = getParam(e,'postStimulusTime');
+stimFrames = getParam(e,'stimFrames');
 stimLoc = getParam(e,'stimulusLocation');
 spatialFreq = getParam(e,'spatialFreq');
 pxPerDeg = getPxPerDeg(getConverter(e));
@@ -19,22 +20,23 @@ spatialFreq = spatialFreq / pxPerDeg(1);
 period = 1 / spatialFreq;
 
 % compute number of frames
-flipInterval = 1000 / refresh; % frame duration in msec ~= 10 msec
+flipInterval = stimFrames * 1000 / refresh; % frame duration in msec ~= 10 msec
 nFrames = ceil(stimTime / flipInterval);
 
 % obtain orientations to show
 random = get(e,'randomization');
-[orientations,random,actualP] = getOrientations(random,nFrames);
+[orientations,random,acutalFraction] = getOrientations(random,nFrames);
 e = set(e,'randomization',random);
-e = setTrialParam(e,'acutalP',actualP);
+e = setTrialParam(e,'acutalFraction',acutalFraction);
 
 % conditions (for phase)
 cond = getConditions(random);
+phase = cond(condNdx).phase;
 
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 
-for i = 1:nFrames
+for i = 1:nFrames*stimFrames
 
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
@@ -44,9 +46,8 @@ for i = 1:nFrames
     end
     
     % grating parameters
-    orientation = orientations(i);
-    phase = cond(condNdx).phase;
-
+    orientation = orientations(ceil(i / stimFrames));
+    
     % move grating
     u = mod(phase,360) / 360 * period;
     xo = -u * sin(orientation/180*pi);
@@ -99,7 +100,7 @@ else
 end
 
 % store shown stimuli
-e = setTrialParam(e,'noiseOrientations',orientations(1:i));
+e = setTrialParam(e,'noiseOrientations',orientations(1:ceil(i / stimFrames)));
 
 % return values
 retInt32 = int32(0);

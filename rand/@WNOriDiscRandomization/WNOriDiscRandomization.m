@@ -11,6 +11,7 @@ r.randSeedNum = [];
 r.phases = [];
 r.orientations = [];
 r.signals = [];
+r.stepSize = [];
 
 % seeds for fixed seed trials (((((TODO))))))
 r.seeds = [];

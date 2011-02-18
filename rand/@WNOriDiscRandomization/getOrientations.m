@@ -1,12 +1,12 @@
-function [orientations,r,actualP] = getOrientations(r,n)
+function [orientations,r,acutalFraction] = getOrientations(r,n)
 % Return orientations for the current trial
 % AE 2011-02-18
 
 % determine signal orientation and probability of occurence
 level = getLevel(r.stair);
-p = 1 / (1 + exp(-level));
+p = 1 / (1 + exp(-level * r.stepSize));
 m = round(p * n);
-actualP = n / m;
+acutalFraction = m / n;
 signal = r.signals(r.curSignalIndex);
 signal = repmat(signal,1,m);
 

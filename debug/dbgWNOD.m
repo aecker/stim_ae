@@ -26,17 +26,19 @@ constants.stimulusLocation = [100; 200];
 constants.diskSize = 150;
 
 constants.signalBlockSize = 1;
+constants.stimFrames = 1;
 constants.orientations = 0:5:175;
 constants.oriBlockSize = 2;
 constants.phases = [0 45 90 135 180 225 270 315];
-constants.signal = [45 135];
+constants.signals = [45 135];
 constants.randSeedNum = 10;
 constants.fixedSeedNum = 10;
 
 constants.stepCorrect = -0.1;
 constants.stepWrong = 0.4;
-constants.initialThreshold = 2;
-constants.distribution = '@(x) round(x)';
+constants.stepSize = 0.2;
+constants.initialThreshold = 0;
+constants.distribution = '@(x) round((rand(1)  - 0.5) * 3 + x)';
 constants.poolSize = 10;
 constants.maxLevel = 5;
 
@@ -44,10 +46,11 @@ constants.contrast = 1;
 constants.spatialFreq = 3;
 constants.color = [1 1 1]';
 
-constants.stimulusTime = 2000;
-constants.postStimulusTime = 300;
 
-constants.delayTime = 800;
+constants.stimulusTime = 1000;
+constants.postStimulusTime = 100;
+
+constants.delayTime = 2000;
 constants.subject = 'DEBUG';
 constants.eyeControl = 0;
 constants.rewardProb = 1;
@@ -61,9 +64,10 @@ constants.date = datestr(now,'YYYY-mm-dd_HH-MM-SS');
 
 trials = struct;
 
+
 T = netStartSession(T,constants);
 
-for i = 1:2
+for i = 1:20
     
     fprintf('trial #%d\n',i)
 
@@ -73,20 +77,20 @@ for i = 1:2
     T = netInitTrial(T);
     
     T = netShowFixSpot(T,struct);
-    pause(0.5)
+    pause(0.1)
     
     T = netShowStimulus(T,struct);
     
     T = netTrialOutcome(T,struct('correctResponse',true,'behaviorTimestamp',NaN));
     T = netEndTrial(T);
 
-    pause(0.5)
+    pause(0.2)
 end
 
 T = netEndSession(T);
 T = cleanUp(T);
 
-catch e
+catch 
     sca
-    rethrow(e)
+    rethrow(lasterror)
 end

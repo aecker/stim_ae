@@ -6,6 +6,7 @@ r.randSeedNum = params.randSeedNum;
 r.phases = params.phases;
 r.orientations = params.orientations;
 r.signals = params.signals;
+r.stepSize = params.stepSize;
 
 % initialize staircase randomization
 r.stair = init(ModifiedStaircase,params);
