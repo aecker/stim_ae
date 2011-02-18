@@ -1,3 +1,3 @@
 function c = getConditions(r)
 
-c = getConditions(r.signalBlock);
+c = r.conditions;

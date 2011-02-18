@@ -9,6 +9,7 @@ rect = Screen('Rect',win);
 refresh = get(e,'refreshRate');
 
 % read parameters
+condNdx = getParam(e,'condition');
 stimTime = getParam(e,'stimulusTime');
 postStimTime = getParam(e,'postStimulusTime');
 stimLoc = getParam(e,'stimulusLocation');
@@ -21,11 +22,13 @@ period = 1 / spatialFreq;
 flipInterval = 1000 / refresh; % frame duration in msec ~= 10 msec
 nFrames = ceil(stimTime / flipInterval);
 
-% obtain conditions to show
+% obtain orientations to show
 random = get(e,'randomization');
-[nCondNdx,random] = getNoiseParams(random,nFrames);
-nCond = getNoiseConditions(random);
+[orientations,random] = getOrientations(random,nFrames);
 e = set(e,'randomization',random);
+
+% conditions (for phase)
+cond = getConditions(random);
 
 % return function call
 tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
@@ -40,8 +43,8 @@ for i = 1:nFrames
     end
     
     % grating parameters
-    orientation = nCond(nCondNdx(i)).orientation;
-    phase = nCond(nCondNdx(i)).phase;
+    orientation = orientations(i);
+    phase = cond(condNdx).phase;
 
     % move grating
     u = mod(phase,360) / 360 * period;

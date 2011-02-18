@@ -2,20 +2,42 @@ function r = WNOriDiscRandomization
 % Randomization for white noise orientation discrimination
 % AE 2010-10-14
 
-% block randomization to manage signal conditions
-r.signalBlock = [];
+% conditions
+r.conditions = [];
 
-% white noise randomization to increase block sizes
-r.signalWhite = [];
+% some parameters
+r.fixedSeedNum = [];
+r.randSeedNum = [];
+r.phases = [];
+r.orientations = [];
+r.signals = [];
 
-% block randomization to manage noise conditions
-r.noiseBlock = [];
+% seeds for fixed seed trials (((((TODO))))))
+r.seeds = [];
 
-% white noise randomization to manage noise orientations within each signal
-% condition
-r.noiseWhite = {};
+% list of levels already shown
+r.levels = [];
+
+% signal and difficulty level is handled by staircase procedure
+r.stair = [];
+
+% randomization to manage fixed vs. random seed trials
+r.seedRand = {};
+r.newSeedRand = [];
+
+% randomization to manage phases
+r.phaseRand = {};
+r.newPhaseRand = [];
+
+% randomization to manage noise orientations within each signal condition
+r.noiseRand = {};
+r.newNoiseRand = [];
 
 % to keep track of which white noise randomization is the current one
-r.currentCond = [];
+r.curSignalIndex = [];
+r.curLevelIndex = [];
+r.curCondIndex = [];
+r.curSeedIndex = [];
+r.curPhaseIndex = [];
 
 r = class(r,'WNOriDiscRandomization');

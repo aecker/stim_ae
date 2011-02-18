@@ -1,31 +1,41 @@
 function r = init(r,params)
-% AE 2010-10-14
+% AE 2011-02-18
 
-% initialize BlockRandomization to deal with signal orientations and
-% probability of occurence
-bp.signal = params.signal;
-bp.signalProb = params.signalProb;
-r.signalBlock = init(BlockRandomization('signal','signalProb'),bp);
+r.fixedSeedNum = params.fixedSeedNum;
+r.randSeedNum = params.randSeedNum;
+r.phases = params.phases;
+r.orientations = params.orientations;
+r.signals = params.signals;
 
-% use white noise randomization to increase block size
-scond = getConditions(r.signalBlock);
-ns = numel(scond);
-r.signalWhite = init(WhiteNoiseRandomization,repmat(1:ns,1,params.signalBlockSize));
+% initialize staircase randomization
+r.stair = init(ModifiedStaircase,params);
 
-% create noise conditions
-np.orientation = params.orientation;
-np.phase = params.phase;
-r.noiseBlock = init(BlockRandomization('orientation','phase'),np);
-
-% create WhiteNoiseRandomizations to deal with noise for reverse
-% correlation
-no = numel(params.orientation);
-ncond = getConditions(r.noiseBlock);
-nn = numel(ncond);
-for i = 1:ns
-    p = scond(i).signalProb;
-    m = round(p / (1 - p) * (no - 1));
-    s = find([ncond.orientation] == scond(i).signal);
-    s = reshape(repmat(s,m-1,1),1,[]);
-    r.noiseWhite{i} = init(WhiteNoiseRandomization,[1:nn s]);
+% include trials with fixed seed?
+fixedSeed = {false};
+if r.fixedSeedNum > 0
+    fixedSeed{2} = true;
 end
+
+% build condition structure
+r.conditions = struct('signal',{},'fixedSeed',{},'phase',{});
+for signal = r.signals
+    for seed = fixedSeed
+        for phase = r.phases
+            r.conditions(end+1) = ...
+                struct('signal',signal,'fixedSeed',seed,'phase',phase);
+        end
+    end
+end
+
+% default randomization to select fixed-seed vs. random-seed trials
+% (there is one of these for each signal condition and level)
+fixedSeed = [ones(1,r.randSeedNum) 2*ones(1,r.fixedSeedNum)];
+r.newSeedRand = init(WhiteNoiseRandomization,fixedSeed);
+
+% default phase randomization
+% (there is one of these for each signal condition, level, and seed type)
+r.newPhaseRand = init(WhiteNoiseRandomization,(1:numel(r.phases)));
+
+% default noise randomization
+orientations = repmat(r.orientations,1,params.oriBlockSize);
+r.newNoiseRand = init(WhiteNoiseRandomization,orientations);

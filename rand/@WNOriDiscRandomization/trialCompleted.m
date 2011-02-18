@@ -1,14 +1,13 @@
 function [r,mustStop] = trialCompleted(r,valid,varargin)
 
-% block randomization manages which signal orientation and noise level is
-% shown in each trial
-r.signalBlock = trialCompleted(r.signalBlock,valid,varargin{:});
+level = r.curLevelIndex;
+signal = r.curSignalIndex;
+seed = r.curSeedIndex;
+phase = r.curPhaseIndex;
 
-% white noise randomization might need to reset their pools if trial was
-% invalid
-r.signalWhite = trialCompleted(r.signalWhite,valid,varargin{:});
-c = r.currentCond;
-r.noiseWhite{c} = trialCompleted(r.noiseWhite{c},valid,varargin{:});
+% notify all randomizations
+r.seedRand{signal,level} = trialCompleted(r.seedRand{signal,level},valid);
+r.phaseRand{signal,level,seed} = trialCompleted(r.phaseRand{signal,level,seed},valid);
+r.noiseRand{signal,level,phase} = trialCompleted(r.noiseRand{signal,level,phase},valid);
 
 mustStop = false;
-

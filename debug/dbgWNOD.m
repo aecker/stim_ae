@@ -26,10 +26,19 @@ constants.stimulusLocation = [100; 200];
 constants.diskSize = 150;
 
 constants.signalBlockSize = 1;
-constants.orientation = 0:5:175;
-constants.phase = 0; %[0 45 90 135 180 225 270 315];
-constants.signal = [60:60:180];
-constants.signalProb = [0.2];
+constants.orientations = 0:5:175;
+constants.oriBlockSize = 2;
+constants.phases = [0 45 90 135 180 225 270 315];
+constants.signal = [45 135];
+constants.randSeedNum = 10;
+constants.fixedSeedNum = 10;
+
+constants.stepCorrect = -0.1;
+constants.stepWrong = 0.4;
+constants.initialThreshold = 2;
+constants.distribution = '@(x) round(x)';
+constants.poolSize = 10;
+constants.maxLevel = 5;
 
 constants.contrast = 1;
 constants.spatialFreq = 3;

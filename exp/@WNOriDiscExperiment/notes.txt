@@ -1,0 +1,17 @@
+Notes on white noise orientation discrimination stimulus
+
+- Do we want to change signalProb to signalFraction meaning that the 
+    fraction of signal frames is always deterministic?
+
+- Need to implement fraction of fixed seed trials
+
+- Need to implement fraction of zero signal trials (also with fixed seed, 
+    at least some?)
+
+- Phase is not randomized at the moment (if we want to randomize it, then
+    probably only across trials but keep it fixed within ne trial to avoid 
+    apparent motion)
+
+- levels go through logit function instead of 2^level. This might need some
+    adjustments as to where the linear part of the function is. This might
+    also have to be changed completely
