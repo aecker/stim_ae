@@ -24,8 +24,9 @@ nFrames = ceil(stimTime / flipInterval);
 
 % obtain orientations to show
 random = get(e,'randomization');
-[orientations,random] = getOrientations(random,nFrames);
+[orientations,random,actualP] = getOrientations(random,nFrames);
 e = set(e,'randomization',random);
+e = setTrialParam(e,'acutalP',actualP);
 
 % conditions (for phase)
 cond = getConditions(random);
@@ -75,7 +76,7 @@ end
 % keep fixation spot after stimulus turns off
 if ~abort
 
-    drawFixSpot(e);
+    drawFixspot(e);
     e = swap(e);
 
     % log stimulus offset event
@@ -98,7 +99,7 @@ else
 end
 
 % store shown stimuli
-e = setTrialParam(e,'noiseConditions',nCondNdx(1:i));
+e = setTrialParam(e,'noiseOrientations',orientations(1:i));
 
 % return values
 retInt32 = int32(0);

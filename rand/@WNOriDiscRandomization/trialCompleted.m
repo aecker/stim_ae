@@ -1,4 +1,7 @@
-function [r,mustStop] = trialCompleted(r,valid,varargin)
+function [r,mustStop] = trialCompleted(r,valid,correct)
+
+% update staircase procedure
+r.stair = trialCompleted(r.stair,valid,correct);
 
 level = r.curLevelIndex;
 signal = r.curSignalIndex;

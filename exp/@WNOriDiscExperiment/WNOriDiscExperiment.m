@@ -8,7 +8,7 @@ e.textureSize = [];
 e.alphaMask = [];
 
 % Randomization will be set at netStartSession
-t = TrialBasedExperiment(NoRandomization,StimulationData);
+t = TrialBasedExperiment(WNOriDiscRandomization,StimulationData);
 e = class(e,'WNOriDiscExperiment',t);
 
 % Prepare experiment

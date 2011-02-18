@@ -3,16 +3,6 @@ function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 % initialize parent
 [e,retInt32,retStruct,returned] = initSession(e,params);
 
-% initialize randomization (override default to make sure all parameters
-% end up in there)
-p.signalBlockSize = params.signalBlockSize;
-p.signal = params.signal;
-p.signalProb = params.signalProb;
-p.orientation = params.orientation;
-p.phase = params.phase;
-rnd = init(WNOriDiscRandomization,p);
-e = set(e,'randomization',rnd);
-
 % Enable alpha blending with proper blend-function. We need it for drawing
 % of our alpha-mask
 win = get(e,'win');
