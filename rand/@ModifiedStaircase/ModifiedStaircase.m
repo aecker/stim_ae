@@ -14,18 +14,24 @@ function r = ModifiedStaircase
 %   randomness into the difficulty of the task and makes it difficult for
 %   the monkeys to realize what is going on.
 %
-% AE 2010-10-14
+% AE 2010-10-14 & Some comments by MS 2010-12-11
 
-% amount of change upon correct/wrong responses
-r.correct = [];
+% amount of change upon correct/wrong responses. Note that the changes are
+% given on log2 scale.
+r.correct = []; % value given in log2 scale. If you want to decrease the 
+% orientation by 2 deg, set this value to 1 (2 = 2^1)
 r.wrong = [];
 
 % current threshold
-r.threshold = [];
+r.threshold = []; % 'r.levels' are placed around this value.
 
 % stimulus levels
-r.levels = [];
-r.maxLevel = [];
+r.levels = []; % Each value in this vector is used eventually in this expression: 
+% orientation = centerOri + (2 * class - 1) * 2.^(stepSize * level);
+
+r.maxLevel = []; % When plugged into 2.^(stepSize * maxLevel), gives you the 
+% largest relative orientation of the stimulus.
+
 
 % distribution used to draw stimulus levels in each trial (has to return
 % integer values)
