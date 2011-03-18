@@ -4,7 +4,7 @@ function r = MultDimRandomization
 
 % block randomization to create all combinations of parameters
 r.block = BlockRandomization('location','orientation','spatialFreq', ...
-    'contrast','luminance','color','speed','initialPhase');
+    'contrast','luminance','color','speed','initialPhase','diskSize');
 
 % white noise randomization to determine which conditions to show in each
 % frame
