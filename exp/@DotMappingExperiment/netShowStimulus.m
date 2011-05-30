@@ -1,7 +1,9 @@
 function [e,retInt32,retStruct,returned] = netShowStimulus(e,varargin)
 % Show stimulus.
 % AE & MS 2008-07-14
-
+% MS 2011-03-14 - moved the line that draws fixation spot so that the
+% stimulus is drawn over the fixation spot.
+%
 % some member variables..
 win     = get(e,'win');
 refresh = get(e,'refreshRate'); % Monitor refresh rate ~= 100 Hz
@@ -82,6 +84,9 @@ for k = 1:stimFrames*nFrames
         frames = stimFrames;
     end
     
+    % draw photodiode spot; do buffer swap and keep timestamp
+    drawFixSpot(e);
+    
     % draw black/white rectangles
     for j = 1:size(dotLocations{i},2)
         rect = [dotLocations{i}(:,j) - ceil(dotSize/2) * ones(2,1); ...
@@ -89,8 +94,7 @@ for k = 1:stimFrames*nFrames
         Screen('FillRect',win,dotColors{i}(j),rect);
     end
     
-    % draw photodiode spot; do buffer swap and keep timestamp
-    drawFixSpot(e);
+
     e = swap(e);
     
     % compute startTime
