@@ -19,8 +19,8 @@ win = get(e,'win');
 rect = Screen('Rect',win);
 
 % generate grating texture
-diskSize = getSessionParam(e,'diskSize');
-spatFreq = getSessionParam(e,'spatialFreq');
+diskSize = getSessionParam(e,'diskSize'); % pixels
+spatFreq = getSessionParam(e,'spatialFreq'); % cycles/pixel
 contrast = getSessionParam(e,'contrast');
 period = 1 / spatFreq;
 e.textureSize = ceil(diskSize + period);
