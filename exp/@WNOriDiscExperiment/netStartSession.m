@@ -1,5 +1,15 @@
 function [e,retInt32,retStruct,returned] = netStartSession(e,params)
 
+
+% compute response target locations 
+%   +90 because grating is along the y axis
+%   centered relative to the stimulus
+
+left = params.centerOrientation - params.targetAngle + 90;
+right = params.centerOrientation + params.targetAngle + 90;
+R = @(phi) [sin(phi / 180 * pi); -cos(phi / 180 * pi)];
+params.leftTarget = params.stimulusLocation + R(left) * params.targetDistance;
+params.rightTarget = params.stimulusLocation + R(right) * params.targetDistance;
 % initialize parent
 [e,retInt32,retStruct,returned] = initSession(e,params);
 
@@ -37,4 +47,8 @@ loc = params.stimulusLocation;
 [X,Y] = meshgrid(-hw:hw-1,-hh:hh-1);
 alphaLum = repmat(permute(params.bgColor,[2 3 1]),2*hh,2*hw);
 alphaBlend = 255 * (sqrt((X - loc(1)).^2 + (Y - loc(2)).^2) > params.diskSize/2);
+% w = triang(15);
+% w = w*w';
+% w = w/sum(w(:));
+% alphaBlend = convn(alphaBlend,w,'same');
 e.alphaMask = Screen('MakeTexture',win,cat(3,alphaLum,alphaBlend));
