@@ -1,4 +1,4 @@
-function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
+function [e,retInt32,retStruct,returned] = netShowStimulus(e,varargin)
 % Show orientation gratings.
 
 % some member variables..
@@ -38,7 +38,6 @@ while running
     % check for abort signal
     [e,abort] = tcpMiniListener(e,{'netAbortTrial','netTrialOutcome'});
     if abort
-        fprintf('stimulus was aborted.....................................\n')
         break
     end
     
