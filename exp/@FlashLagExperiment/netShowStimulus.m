@@ -2,13 +2,12 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,varargin)
 % Show stimulus.
 % AE 2007-10-17
 
-% as this is a non-blocking function call from LabView, we have to return it
-% manually
+
 retStruct.trialIndex = int32(getParam(e,'trialIndex'));
 retStruct.trialType = int32(getParam(e,'trialType'));
 retStruct.blockSize = int32(getParam(e,'blockSize'));
 retStruct.blockType = int32(getParam(e,'blockType'));
-tcpReturnFunctionCall(e,int32(0),retStruct);
+
 
 % some member variables..
 win     = get(e,'win');
@@ -24,11 +23,27 @@ yOffset          = getParam(e,'yOffset');
 trajectoryAngle  = getParam(e,'trajectoryAngle');
 trajectoryCenter = getParam(e,'trajectoryCenter');
 moveDir          = getParam(e,'moveDir');
-movingLoc        = getParam(e,'movingLoc');
+movingLoc        = getParam(e,'movingLocation');
 leftTarget       = getParam(e,'leftTarget');
 rightTarget      = getParam(e,'rightTarget');
 targetRadius     = getParam(e,'targetRadius');
 targetColor      = getParam(e,'targetColor');
+flashOffset = getParam(e,'flashOffset');
+
+% The response should indicate the location of the flashed bar relative to the 
+% moving bar
+if flashOffset < 0 && moveDir == FlashLagExperiment.MOTION_LEFT || ...
+        flashOffset >= 0 && moveDir == FlashLagExperiment.MOTION_RIGHT
+    retStruct.correctResponse = int32(TrialBasedExperiment.RIGHT_JOYSTICK);
+    disp('correct response: right')
+else
+    retStruct.correctResponse = int32(TrialBasedExperiment.LEFT_JOYSTICK);
+    disp('correct response: left')
+end
+% as this is a non-blocking function call from LabView, we have to return it
+% manually
+tcpReturnFunctionCall(e,int32(0),retStruct);
+
 
 % determine starting position
 angle = (trajectoryAngle + 180 * moveDir) / 180 * pi;
