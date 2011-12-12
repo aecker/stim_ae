@@ -47,7 +47,7 @@ flashOffsets    = getParam(e,'flashOffsets');  % different offsets used for expe
 offsetThreshold = getParam(e,'offsetThreshold');
 trialType       = getParam(e,'trialType');
 refresh         = get(e,'refreshRate');
-
+relDelayTime    = getParam(e,'relDelayTime');
 % pick random direction of motion
 moveDir = rand(1) > getParam(e,'moveProb');
 
@@ -58,7 +58,7 @@ moveDir = rand(1) > getParam(e,'moveProb');
 if expMode == FlashLagExperiment.TRAINING
     lagDir = 2 * (rand(1) > lagProb) - 1;
     flashOffset = lagDir * flashOffset;
-
+    
 else % if expMode == FlashLagExperiment.EXPERIMENT
     if trialType == ReportPerceptRandomization.PROBE
         offsets = find(abs(flashOffsets) <= offsetThreshold);
@@ -90,7 +90,7 @@ if expMode == FlashLagExperiment.TRAINING
             + rand(1) * ...
             (len - abs(flashOffset) - 2 * (noFlashZone + offsetMove) - perceivedLag);
         flashLoc = movingLoc + xOffset;
-
+        
         % flashLoc = rand(1)*(len-2*abs(flashOffset)) + (flashOffset > 0)*2*abs(flashOffset);
         movingLoc = flashLoc - flashOffset;
     else
@@ -102,43 +102,45 @@ else
     movingLoc = flashLoc - xOffset;
 end
 
-% Punish according to user specification
-d = get(e,'data');
-correctResp = getPrev(d,'correctResponse');
-validTrial = getPrev(d,'validTrial');
+% Punish according to user specification during training mode only
 punishTime = 0;
-fprintf('cr: %s\n',num2str(correctResp));
-fprintf('vt: %s\n',num2str(validTrial));
-
-if ~isnan(validTrial) && ~isnan(correctResp)
-    inCorrectResponse = ~correctResp;
-    switch params.punishType
-        case 'IncorrRespOnly'
-            if validTrial && inCorrectResponse
-                punishTime = params.punishTime;
-            end
-        case 'AbortsOnly'
-            if ~validTrial
-                punishTime = params.punishTime;
-            end
-        otherwise % aborts and incorrect response
-            if ~validTrial || inCorrectResponse
-                punishTime = params.punishTime;
-            end
-    end
-    crt = params.condRepeatType;
-    if (strcmp(crt,'IncorrRespOnly')&& validTrial && inCorrectResponse) ||...
-            (strcmp(crt,'AbortsOnly')&& ~validTrial) || ...
-            (strcmp(crt,'IncorrRespAndAborts')&&(~validTrial || inCorrectResponse))
-
-        flashLoc = getPrev(d,'flashLocation');
-        movingLoc = getPrev(d,'movingLocation');
-        flashOffset = getPrev(d,'flashOffset');
-        xOffset = getPrev(d,'xOffset');
-        moveDir = getPrev(d,'moveDir');
+if ~expMode
+    d = get(e,'data');
+    correctResp = getPrev(d,'correctResponse');
+    validTrial = getPrev(d,'validTrial');
+    
+    fprintf('cr: %s\n',num2str(correctResp));
+    fprintf('vt: %s\n',num2str(validTrial));
+    
+    if ~isnan(validTrial) && ~isnan(correctResp)
+        inCorrectResponse = ~correctResp;
+        switch params.punishType
+            case 'IncorrRespOnly'
+                if validTrial && inCorrectResponse
+                    punishTime = params.punishTime;
+                end
+            case 'AbortsOnly'
+                if ~validTrial
+                    punishTime = params.punishTime;
+                end
+            otherwise % aborts and incorrect response
+                if ~validTrial || inCorrectResponse
+                    punishTime = params.punishTime;
+                end
+        end
+        crt = params.condRepeatType;
+        if (strcmp(crt,'IncorrRespOnly')&& validTrial && inCorrectResponse) ||...
+                (strcmp(crt,'AbortsOnly')&& ~validTrial) || ...
+                (strcmp(crt,'IncorrRespAndAborts')&&(~validTrial || inCorrectResponse))
+            
+            flashLoc = getPrev(d,'flashLocation');
+            movingLoc = getPrev(d,'movingLocation');
+            flashOffset = getPrev(d,'flashOffset');
+            xOffset = getPrev(d,'xOffset');
+            moveDir = getPrev(d,'moveDir');
+        end
     end
 end
-
 e = setTrialParam(e,'flashLocation',flashLoc);
 e = setTrialParam(e,'movingLocation',movingLoc);
 e = setTrialParam(e,'flashOffset',flashOffset);
@@ -150,21 +152,15 @@ e = setTrialParam(e,'stimulusTime',len / speed * 1000);
 
 % determine delay time (is specified relative to time of flash)
 
-% When delayTime is set to -1 in labview Flash Lag Experiment Runner.vi, we
-% manually compute the delayTime according to the flash onset time. Note
-% that if in the above mentioned vi, the delayTime is set to >0, labview
-% will ignore the delayTime you send from here in the retStruct. Also, note
-% that when delayTime is set to >0 in labview, the trial param
-% 'relDelayTime' set on Create Trial Params.vi will not be used for the
-% behavior and hence it will be irrelevant for any analysis; however, its
-% value will be saved in the stim structure - Mani, 2011-06-20.
+% delayTime is now set by matlab for this experiment. Labview will simply
+% display the delayTime -MS 2011-12-12
 
-if getParam(e,'delayTime') < 0
+% if getParam(e,'delayTime') < 0
     flashTime = movingLoc / speed * 1000;
-    delayTime = flashTime + params.relDelayTime;
+    delayTime = flashTime + relDelayTime;
     e = setTrialParam(e,'delayTime',delayTime);
     retStruct.delayTime = delayTime;
-end
+% end
 
 
 
