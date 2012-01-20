@@ -22,7 +22,6 @@ flashLoc = (loc - (nLocs + 1) / 2) * locDist;
 center = stimCenter + [0; vDistFlash] + flashLoc * [cos(angle); -sin(angle)];
 rect = [center - barSize/2; center + barSize/2];
 Screen('DrawTexture',get(e,'win'),e.tex(cond),[],rect,-angle*180/pi);
-
 % fixation spot
 drawFixSpot(e);
 

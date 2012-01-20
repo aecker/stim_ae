@@ -1,7 +1,6 @@
 function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % Moving and flashed bars for Flash-Lag effect electrophysiology.
 % AE 2008-09-02
-
 e = setTrialParam(e,'barLocations',{});
 e = setTrialParam(e,'barRects',{});
 e = setTrialParam(e,'barCenters',{});
@@ -15,7 +14,7 @@ tcpReturnFunctionCall(e,int32(0),struct,'netShowStimulus');
 % iterate through random conditions for as long as we have time available
 conditions = getConditions(get(e,'randomization'));
 cond = getParam(e,'conditions');
-onsets = getParam(e,'onsets');
+onsets = getParam(e,'onsets'); % 'onsets' are cumulative subTrial endTimes (MS,2012-01-12)
 startTime = GetSecs;
 for i = 1:numel(onsets)
     
