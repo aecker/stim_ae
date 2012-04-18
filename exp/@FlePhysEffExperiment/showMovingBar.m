@@ -1,7 +1,7 @@
 function [e,abort,startTime] = showMovingBar(e,cond,firstStim)
 % FLE ephys stimulus: moving bar/combined moving+flash.
 % AE 2009-08-16
-% MS 2012-01-16
+% MS 2012-01-16, 2012-04-18
 % parameters
 conditions  = getConditions(get(e,'randomization'));
 isFlash     = conditions(cond).isFlash;
@@ -20,17 +20,30 @@ trajLen     = getParam(e,'trajectoryLength');
 nLocs       = getParam(e,'numFlashLocs');
 combined    = getParam(e,'combined');
 
+
+% assert( mod(nLocs,2) || (~combined && ~(isInit || isStop)),...
+%     'When using combined stimulus or flashInitiated and/or flashTerminated conditions, the number of flash locations has to be odd!')
+
+% MS 2012-04-18 - always keep odd number of flash locations
+assert( logical(mod(nLocs,2)), 'The number of flash locations has to be odd!')
+
+
 % stimulus arrangement: which one goes through the center (i.e. the RFs)
 vDistMov = arrangement * vDist;
 vDistFlash = (1 - arrangement) * vDist;
 
-% determine number of frames
-trajFrames = ceil(trajLen / dx);
-trajFrames = trajFrames - (mod(trajFrames,2) ~= mod(nLocs,2));
+% determine number of frames - AE
+% trajFrames = ceil(trajLen / dx);
+% trajFrames = trajFrames - (mod(trajFrames,2) ~= mod(nLocs,2))
+% centerFrame = (trajFrames + 1) / 2
+
+% determine number of frames - MS - modified the above code so that the actual trajectory
+% length is >= getParam(e,'trajectoryLength'). The code above creates trajectoryLength <= 
+% getParam(e,'trajectoryLength').
+half_traj_steps = ceil(trajLen/2/dx);
+trajFrames = length([-half_traj_steps:0 1:half_traj_steps]);
 centerFrame = (trajFrames + 1) / 2;
 
-assert( mod(nLocs,2) || (~combined && ~(isInit || isStop)),...
-    'When using combined stimulus or flashInitiated and/or flashTerminated conditions, the number of flash locations has to be odd!')
 
 % Determine starting position (to make sure we hit the flash locations)
 angle = trajAngle / 180 * pi;
