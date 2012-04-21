@@ -1,10 +1,10 @@
 function r = init(r,params)
 % AE 2008-09-03
-% MS 2012-01-16
+% MS 2012-01-16/2012-04-21
 % parameters that are randomized
 r.conditions = struct('isFlash',{},'isMoving',{},'isStop',{},'isInit',{}, ...
     'flashLocation',{},'barColor',{},'trajectoryAngle',{}, ...
-    'direction',{},'dx',{},'arrangement',{});
+    'direction',{},'dx',{},'trajOffset',{},'arrangement',{});
 
 %% Flashed and moving bars presented individually
 %   In this case we present them both in the receptive fields of the neurons
@@ -25,10 +25,13 @@ if ~params.combined % Single condition
                 'trajectoryAngle',angle, ...
                 'direction',NaN, ...
                 'dx',NaN, ...
+                'trajOffset',NaN,...
                 'arrangement',1);
             
             % moving bars
-            for dx = params.dx
+            for iDx = 1:length(params.dx)
+                dx = params.dx(iDx);
+                trajOffset = params.trajOffsets(iDx);
                 for dir = params.direction
                     % When we test the flash initiated and terminated
                     % conditions only, we do not want to show the continuous
@@ -46,6 +49,7 @@ if ~params.combined % Single condition
                             'trajectoryAngle',angle, ...
                             'direction',dir, ...
                             'dx',dx, ...
+                            'trajOffset',trajOffset,...
                             'arrangement',0);
                     end
                     % Flash-stop condition
@@ -98,7 +102,9 @@ else % combined condition
                     'dx',NaN, ...
                     'arrangement',arr);
                 
-                for dx = params.dx
+                for iDx = 1:length(params.dx)
+                    dx = params.dx(iDx);
+%                     trajOffset = params.trajOffsets(iDx);
                     for dir = params.direction
                         
                         % When we test the flash initiated and terminated
