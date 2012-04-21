@@ -12,6 +12,7 @@ dir         = conditions(cond).direction;
 dx          = conditions(cond).dx;
 loc         = conditions(cond).flashLocation;
 arrangement = conditions(cond).arrangement;
+trajOffset  = conditions(cond).trajOffset;
 locDist     = getParam(e,'flashLocDistance');
 vDist       = getParam(e,'verticalDistance');
 barSize     = getParam(e,'barSize');
@@ -47,7 +48,7 @@ centerFrame = (trajFrames + 1) / 2;
 
 % Determine starting position (to make sure we hit the flash locations)
 angle = trajAngle / 180 * pi;
-startPos = -(trajFrames - 1) / 2 * dx;
+startPos = trajOffset + (-(trajFrames - 1) / 2 * dx);
 
 if isInit
     if combined
