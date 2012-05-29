@@ -7,6 +7,8 @@ diskSize = getSessionParam(e,'diskSize',cond);
 spatFreq = getSessionParam(e,'spatialFreq',cond);
 phase    = getSessionParam(e,'initialPhase',cond);
 color    = getSessionParam(e,'color',cond);
+sinusoidal = getSessionParam(e,'sinusoidal',cond);
+
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatFreq = spatFreq / pxPerDeg(1);
 period = 1 / spatFreq;
@@ -17,7 +19,11 @@ e.textureSize(cond) = ceil(diskSize + period);
 
 % rotate co-ordinate system
 phi = 2*pi*spatFreq * (1:e.textureSize(cond));
-grat = 127.5 + 126.5 * sin(phi + phase);
+if sinusoidal
+    grat = 127.5 + 126.5 * sin(phi + phase);
+else
+    grat = 127.5 + 126.5 * sign(sin(phi + phase));
+end
 
 % color grating
 color = permute(color,[2 3 1]);
