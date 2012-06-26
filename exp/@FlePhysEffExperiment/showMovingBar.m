@@ -120,10 +120,15 @@ for i = 1:nFrames
    
     % combined? center frame: flash
     
-    if isFlash && ((isInit && i==1) || (~isInit && i == centerFrame))
+%     if isFlash && ((isInit && i==1) || (~isInit && i == centerFrame))
+%         Screen('DrawTexture',get(e,'win'),e.tex(cond),[],flashRect,-angle*180/pi);
+%     end
+
+    % In combined condition, we show the flash and moving bar with zero
+    % offset only. And we will do this for each flash location - MS
+    if isFlash && ((isInit && i==1) || (~isInit && center(1,i)==flashCenter(1)))
         Screen('DrawTexture',get(e,'win'),e.tex(cond),[],flashRect,-angle*180/pi);
     end
-    
     
     % fixation spot
     drawFixSpot(e);
