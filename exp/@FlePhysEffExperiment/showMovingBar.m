@@ -77,17 +77,19 @@ end
 
 % flash-stop or flash-init condition?
 if isStop || isInit
-    if combined
-        % combined stimulus: stop is always at the center of the screen 
-        % with the flash at a given offset
-        nFrames = centerFrame;
-    else
+%     if combined
+%         % combined stimulus: stop is always at the center of the screen 
+%         % with the flash at a given offset
+%         nFrames = centerFrame;
+%     else
         % individual stimuli: start or stop at each of the flash locations
-        relFlashDist = (loc - (nLocs + 1) / 2) * locDist;
-        flipSign = ((-1)^dir)*((-1)^isStop);
-        pixToMove = (trajFrames * dx/2) - flipSign * relFlashDist;
+%         relFlashDist = (loc - (nLocs + 1) / 2) * locDist;
+%         flipSign = ((-1)^dir)*((-1)^isStop);
+%         pixToMove = (trajFrames * dx/2) - flipSign * relFlashDist;
+        pixToMove = round(trajFrames * dx/2);
+
         nFrames = ceil(pixToMove/dx);        
-    end
+%     end
 else
     nFrames = trajFrames;
 end
