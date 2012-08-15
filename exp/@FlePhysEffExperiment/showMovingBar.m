@@ -1,7 +1,7 @@
 function [e,abort,startTime] = showMovingBar(e,cond,firstStim)
 % FLE ephys stimulus: moving bar/combined moving+flash.
 % AE 2009-08-16
-% MS 2012-01-16, 2012-04-18
+% MS 2012-01-16, 2012-04-18, 2012-08-14
 % parameters
 conditions  = getConditions(get(e,'randomization'));
 isFlash     = conditions(cond).isFlash;
@@ -43,8 +43,27 @@ vDistFlash = (1 - arrangement) * vDist;
 % getParam(e,'trajectoryLength').
 half_traj_steps = ceil(trajLen/2/dx);
 trajFrames = length([-half_traj_steps:0 1:half_traj_steps]);
-centerFrame = (trajFrames + 1) / 2;
+% centerFrame = (trajFrames + 1) / 2;
 
+% flash-stop or flash-init condition?
+if isStop || isInit
+%     if combined
+%         % combined stimulus: stop is always at the center of the screen 
+%         % with the flash at a given offset
+%         nFrames = centerFrame;
+%     else
+        % individual stimuli: start or stop at each of the flash locations
+%         relFlashDist = (loc - (nLocs + 1) / 2) * locDist;
+%         flipSign = ((-1)^dir)*((-1)^isStop);
+%         pixToMove = (trajFrames * dx/2) - flipSign * relFlashDist;
+% Trajectory length for initiated and terminated conditions is half of the continuous
+% motion trajectory length.
+        pixToMove = round(trajFrames * dx/2);
+        nFrames = ceil(pixToMove/dx);        
+%     end
+else
+    nFrames = trajFrames;
+end
 
 % Determine starting position (to make sure we hit the flash locations)
 angle = trajAngle / 180 * pi;
@@ -54,14 +73,22 @@ if isInit
     if combined
         % For flash initiated combined condition, the moving bar always starts from the
         % trajectory center irrespective of the flash location.
-        startPos = 0;        
+        error('Flash init condition not implemented yet for combined condition')
+%         startPos = 0;        
     else
         % For flash initiated single condition, the moving bar starts from each flash location.
         startPos = (loc - (nLocs + 1) / 2) * locDist;
     end
 end
 
-
+if isStop
+    if combined
+        error('Flash stop condition not implemented yet for combined condition')
+    else
+        stopPos = (loc -  (nLocs + 1)/2) * locDist;
+        startPos = stopPos - ((-1)^(dir) * (nFrames-1) * locDist);
+    end
+end
 % combined? determine flash location
 if isFlash
     % Distance of flash center in pix relative to stim center
@@ -75,24 +102,6 @@ else
     flashRect = [];
 end
 
-% flash-stop or flash-init condition?
-if isStop || isInit
-%     if combined
-%         % combined stimulus: stop is always at the center of the screen 
-%         % with the flash at a given offset
-%         nFrames = centerFrame;
-%     else
-        % individual stimuli: start or stop at each of the flash locations
-%         relFlashDist = (loc - (nLocs + 1) / 2) * locDist;
-%         flipSign = ((-1)^dir)*((-1)^isStop);
-%         pixToMove = (trajFrames * dx/2) - flipSign * relFlashDist;
-        pixToMove = round(trajFrames * dx/2);
-
-        nFrames = ceil(pixToMove/dx);        
-%     end
-else
-    nFrames = trajFrames;
-end
     
 abort = false;
 startTime = NaN;
@@ -109,7 +118,7 @@ for i = 1:nFrames
     end
 
     % draw colored rectangle
-    if isInit && ~combined
+    if (isInit || isStop) && ~combined
         s(i) = startPos + (i-1) * dx * (-1)^dir;
     else
         s(i) = (-1)^dir * (startPos + (i-1) * dx);
