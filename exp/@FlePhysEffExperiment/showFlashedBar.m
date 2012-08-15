@@ -1,7 +1,7 @@
 function [e,abort,startTime] = showFlashedBar(e,cond,firstStim)
 % Flashed bar for Flash-Lag effect electrophysiology.
 % AE 2009-03-16
-
+% MS 2012-08-15
 % parameters
 conditions  = getConditions(get(e,'randomization'));
 trajAngle   = conditions(cond).trajectoryAngle;
@@ -12,7 +12,13 @@ barSize     = getParam(e,'barSize');
 stimCenter  = getParam(e,'stimCenter');
 nLocs       = getParam(e,'numFlashLocs');
 vDist       = getParam(e,'verticalDistance');
+nLocsBarMap       = getParam(e,'numFlashLocsBarMap');
 
+isInit = getParam(e,'flashInit');
+isStop = getParam(e,'flashStop');
+if isInit || isStop
+    nLocs = nLocsBarMap;
+end
 % stimulus arrangement: which one goes through the center (i.e. the RFs)
 vDistFlash = (1 - arrangement) * vDist;
 
