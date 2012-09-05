@@ -1,6 +1,6 @@
 function r = init(r,params)
 % AE 2008-09-03
-% MS 2012-01-16/2012-04-21/2012-08-15
+% MS 2012-01-16/2012-04-21/2012-08-15/2012-09-04
 % parameters that are randomized
 r.conditions = struct('isFlash',{},'isMoving',{},'isStop',{},'isInit',{}, ...
     'flashLocation',{},'barColor',{},'trajectoryAngle',{}, ...
@@ -91,11 +91,11 @@ else % combined condition
             
             % flashes only
             nLocs = params.numFlashLocs;
-             if params.flashInit || params.flashStop
+%              if params.flashInit || params.flashStop
                 nLocsBarMap = params.numFlashLocsBarMap;
-            else
-                nLocsBarMap = nLocs;
-            end
+%             else
+%                 nLocsBarMap = nLocs;
+%             end
             r.conditions(end+(1:nLocsBarMap)) = ...
                 struct('isFlash',1, ...
                 'isMoving',0, ...
