@@ -13,5 +13,7 @@ if getParam(e,'dotSize') ~= getPrev(data,'dotSize') || ...
 end
 
 % write stimulusTime parameter
-delayTime = getParam(e,'delayTime');
-e = setTrialParam(e,'stimulusTime',delayTime);
+retStruct.delayTime = getParam(e,'stimulusTime');
+% delayTime = getParam(e,'delayTime');
+% e = setTrialParam(e,'stimulusTime',delayTime);
+
