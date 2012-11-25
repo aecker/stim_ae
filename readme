@@ -1,0 +1,5 @@
+To be able to use Philipp's natural images/textures experiments you need
+to download the texture files from https://github.com/aecker/stim_ae/downloads
+and put them in the folders exp/@AllImagesExperiment and
+exp/@SparseCodingExperiment, respectively.
+
