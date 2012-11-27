@@ -118,6 +118,8 @@ e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
 e = setTrialParam(e, 'nFramesPre', numel(oriPre));
 e = setTrialParam(e, 'nFramesCoh', numel(oriCoh));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
+e = setTrialParam(e, 'delayTime', delayTime);
+e = setTrialParam(e, 'catchTrial', catchTrial);
 
 % return values
 retInt32 = int32(0);
