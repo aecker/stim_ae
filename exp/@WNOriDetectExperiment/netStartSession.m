@@ -36,11 +36,10 @@ e.texture = Screen('MakeTexture', win, grat);
 
 % generate alpha mask
 rect = Screen('Rect', win);
-hw = ceil(diff(rect([1 3])) / 2);
-hh = ceil(diff(rect([2 4])) / 2);
 loc = params.stimulusLocation;
-[X,Y] = meshgrid(-hw : hw - 1, -hh : hh - 1);
-alphaLum = repmat(permute(params.bgColor, [2 3 1]), 2 * hh, 2 * hw);
+[X, Y] = meshgrid((0 : rect(3) - 1) - params.monitorCenter(1), ...
+                  (0 : rect(4) - 1) - params.monitorCenter(2));
+alphaLum = repmat(permute(params.bgColor, [2 3 1]), rect(4), rect(3));
 if params.isMask % smooth edges?
     d = sqrt((X - loc(1)).^2 + (Y - loc(2)).^2) / params.diskSize;
     alphaBlend = (1 - cos(d * 2 * pi)) / 2; % radial cosine window
@@ -49,4 +48,4 @@ else
 end
 outside = sqrt((X - loc(1)).^2 + (Y - loc(2)).^2) > params.diskSize / 2;
 alphaBlend(outside) = 1;
-e.alphaMask = Screen('MakeTexture', win, cat(3, alphaLum, alphaBlend), [], [], 1);
+e.alphaMask = Screen('MakeTexture', win, cat(3, alphaLum, 255 * alphaBlend));
