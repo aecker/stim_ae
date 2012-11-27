@@ -20,17 +20,22 @@ constants.bgColor = [127.5; 127.5; 127.5];
 
 constants.monitorSize = [41; 30];
 constants.monitorDistance = 107;
-constants.monitorCenter = [800; 600];
+constants.monitorCenter = [400; 200];
 
 constants.stimulusLocation = [100; 200];
 constants.diskSize = 150;
+constants.isMask = 1;
+constants.contrast = 1;
+constants.spatialFreq = 5;
+constants.color = [1 1 1]';
+
 constants.phase = 0;
 constants.orientations = 0 : 5 : 175;
 
 constants.biases = [0 : 4; 4 : -1 : 0];
 constants.signals = [45 135];
 constants.coherences = [2 4 8 16 32];
-constants.nSeeds = 10;
+constants.nSeeds = 5;
 constants.nCatchPerBlock = 10;
 constants.nRepsPerBlock = 5;
 constants.subBlockSize = 10;
@@ -42,10 +47,6 @@ constants.nFramesCoh = 50;
 
 constants.waitTime = 100;
 constants.responseTime = 1000;
-
-constants.contrast = 1;
-constants.spatialFreq = 3;
-constants.color = [1 1 1]';
 
 constants.subject = 'DEBUG';
 constants.eyeControl = 0;
