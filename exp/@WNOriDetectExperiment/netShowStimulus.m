@@ -25,6 +25,9 @@ pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
 period = 1 / spatialFreq;
 
+% store overrides
+e = setParams(e, varargin{:});
+
 % catch trial
 catchTrial = isnan(signal);
 if catchTrial
@@ -132,9 +135,11 @@ returned = true;
 
 function val = getParamOrOverride(e, name, params)
 % Get experimental parameter allowing by-trial overrides from LabView
+% Overrides have the string 'Train' appended (i.e. 'foo' -> 'fooTrain').
 
-if nargin > 2 && isfield(params, name)
-    val = params.(name);
+nameTrain = [name 'Train'];
+if nargin > 2 && isfield(params, nameTrain)
+    val = params.(nameTrain);
 else
     val = getParam(e, name);
 end
