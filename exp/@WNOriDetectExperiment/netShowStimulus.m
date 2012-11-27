@@ -21,32 +21,29 @@ if catchTrial
     nFramesPre = getParam(e, 'nFramesPreMax');
     nFramesCoh = 0;
     nFramesPost = 0;
+    cohOrientations = [];
+    postOrientations = [];
 else
-    % determine number of frames ("constant hazard function")
+    % determine number of frames before change (constant hazard function)
     nFramesPreMin = getParam(e, 'nFramesPreMin');
     nFramesPreMean = getParam(e, 'nFramesPreMean');
     nFramesPreMax = getParam(e, 'nFramesPreMax');
     nFramesPre = min(nFramesPreMax, exprnd(nFramesPreMean - nFramesPreMin) + nFramesPreMin);
     nFramesCoh = getParam(e, 'nFramesCoh');
     nFramesPost = ceil(getParam(e, 'responseTime') / 1000 * refresh);
+    
+    % generate "coherent" portion of trial
+    signal = getParam(e, 'signal');
+    coherence = getParam(e, 'coherence');
+    cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
+
+    % generate post-coherent (completely random) sequence of orientations
+    postOrientations = getRandomOrientations(e, nFramesPost);
 end
 
-% get "random orientations from randomization object"
-preOrientations = getParam(e, 'fixedSeedOrientations');
-preOrientations = preOrientations(1 : nFramesPre);
-
-% generate "coherent" portion of trial
-signal = getParam(e, 'signalOrientation');
-signalFrac = getParam(e, 'signalFrac');
-nSignalFrames = ceil(signalFrac * nFramesCoh);
-orientations = getParam(e, 'orientations');
-nOri = numel(orientations);
-cohOrientations = [repmat(signal, 1, nSignalFrames), ...
-    orientations(ceil(rand(1, nFramesCoh - nSignalFrames) * nOri))];
-cohOrientations = cohOrientations(randperm(nFramesCoh));
-
-% generate post-coherent (completely random) sequence of orientations
-postOrientations = orientations(ceil(rand(1, nFramesPost) * nOri));
+% generate pseudorandom orientations (fixed seed) before the change
+seed = getParam(e, 'seed');
+preOrientations = getRandomOrientations(e, nFramesPre, seed);
 
 orientations = [preOrientations, cohOrientations, postOrientations];
 

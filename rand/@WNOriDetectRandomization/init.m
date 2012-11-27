@@ -3,10 +3,6 @@ function r = init(r, params)
 
 r.params = params;
 
-% draw random seeds
-rand('state', now * 1000);
-r.params.seeds = ceil(rand(1, params.nSeeds) * 1e6);
-
 % initialize pools
 nBiases = size(params.biases, 2);
 nSignals = numel(params.signals);
