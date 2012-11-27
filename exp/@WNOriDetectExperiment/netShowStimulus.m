@@ -25,6 +25,7 @@ if catchTrial
     nFramesPost = 0;
     cohOrientations = [];
     postOrientations = [];
+    fprintf('catch trial\n')
 else
     % determine number of frames before change (constant hazard function)
     nFramesPreMin = getParam(e, 'nFramesPreMin');
@@ -40,6 +41,8 @@ else
 
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
+
+    fprintf('signal: %3d | coherence: %2d | frames pre: %d\n', signal, coherence, nFramesPre)
 end
 
 % generate pseudorandom orientations (fixed seed) before the change
