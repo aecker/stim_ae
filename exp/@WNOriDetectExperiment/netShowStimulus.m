@@ -6,21 +6,29 @@ function [e, retInt32, retStruct, returned] = netShowStimulus(e, varargin)
 
 win = get(e, 'win');
 refresh = get(e, 'refreshRate');
-
-% read parameters
-stimLoc = getParam(e, 'stimulusLocation');
 monitorCenter = getParam(e, 'monitorCenter');
-spatialFreq = getParam(e, 'spatialFreq');
+
+% we allow the following parameter be overridden for training. in that case
+% they get passed from LabView into netShowStimulus as the second input
+stimLoc = getParamOrOverride(e, 'stimulusLocation', varargin{:});
+signal = getParamOrOverride(e, 'signal', varargin{:});
+phase = getParamOrOverride(e, 'phase', varargin{:});
+nFramesPreMin = getParamOrOverride(e, 'nFramesPreMin', varargin{:});
+nFramesPreMean = getParamOrOverride(e, 'nFramesPreMean', varargin{:});
+nFramesPreMax = getParamOrOverride(e, 'nFramesPreMax', varargin{:});
+nFramesCoh = getParamOrOverride(e, 'nFramesCoh', varargin{:});
+coherence = getParamOrOverride(e, 'coherence', varargin{:});
+waitTime = getParamOrOverride(e, 'waitTime', varargin{:});
+responseTime = getParamOrOverride(e, 'responseTime', varargin{:});
+spatialFreq = getParamOrOverride(e, 'spatialFreq', varargin{:});
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
 period = 1 / spatialFreq;
-signal = getParam(e, 'signal');
-phase = getParam(e, 'phase');
 
 % catch trial
 catchTrial = isnan(signal);
 if catchTrial
-    nFramesPre = getParam(e, 'nFramesPreMax');
+    nFramesPre = nFramesPreMax;
     nFramesCoh = 0;
     nFramesPost = 0;
     cohOrientations = [];
@@ -28,15 +36,10 @@ if catchTrial
     fprintf('catch trial\n')
 else
     % determine number of frames before change (constant hazard function)
-    nFramesPreMin = getParam(e, 'nFramesPreMin');
-    nFramesPreMean = getParam(e, 'nFramesPreMean');
-    nFramesPreMax = getParam(e, 'nFramesPreMax');
     nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
-    nFramesCoh = getParam(e, 'nFramesCoh');
-    nFramesPost = ceil(getParam(e, 'responseTime') / 1000 * refresh);
+    nFramesPost = ceil(responseTime / 1000 * refresh);
     
     % generate "coherent" portion of trial
-    coherence = getParam(e, 'coherence');
     cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
 
     % generate post-coherent (completely random) sequence of orientations
@@ -52,7 +55,7 @@ preOrientations = getRandomOrientations(e, nFramesPre, seed);
 orientations = [preOrientations, cohOrientations, postOrientations];
 
 % return function call
-params.delayTime = nFramesPre / refresh * 1000 + getParam(e, 'waitTime');
+params.delayTime = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
@@ -125,3 +128,13 @@ e = setTrialParam(e, 'catchTrial', catchTrial);
 retInt32 = int32(0);
 retStruct = struct;
 returned = true;
+
+
+function val = getParamOrOverride(e, name, params)
+% Get experimental parameter allowing by-trial overrides from LabView
+
+if nargin > 2 && isfield(params, name)
+    val = params.(name);
+else
+    val = getParam(e, name);
+end
