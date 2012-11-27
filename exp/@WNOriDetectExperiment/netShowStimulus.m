@@ -14,9 +14,11 @@ spatialFreq = getParam(e, 'spatialFreq');
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
 period = 1 / spatialFreq;
+signal = getParam(e, 'signal');
+phase = getParam(e, 'phase');
 
 % catch trial
-catchTrial = getParam(e, 'catchTrial');
+catchTrial = isnan(signal);
 if catchTrial
     nFramesPre = getParam(e, 'nFramesPreMax');
     nFramesCoh = 0;
@@ -28,12 +30,11 @@ else
     nFramesPreMin = getParam(e, 'nFramesPreMin');
     nFramesPreMean = getParam(e, 'nFramesPreMean');
     nFramesPreMax = getParam(e, 'nFramesPreMax');
-    nFramesPre = min(nFramesPreMax, exprnd(nFramesPreMean - nFramesPreMin) + nFramesPreMin);
+    nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
     nFramesCoh = getParam(e, 'nFramesCoh');
     nFramesPost = ceil(getParam(e, 'responseTime') / 1000 * refresh);
     
     % generate "coherent" portion of trial
-    signal = getParam(e, 'signal');
     coherence = getParam(e, 'coherence');
     cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
 
@@ -79,7 +80,7 @@ for i = 1 : nFramesTotal
     Screen('DrawTexture', win, e.alphaMask);
 
     % fixation spot
-    drawFixspot(e);
+    drawFixSpot(e);
     e = swap(e);
 
     % compute startTime
@@ -115,7 +116,7 @@ e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
 e = setTrialParam(e, 'nFramesPre', numel(oriPre));
 e = setTrialParam(e, 'nFramesCoh', numel(oriCoh));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
-e = setTrialParam(e, 'delayTime', delayTime);
+e = setTrialParam(e, 'delayTime', params.delayTime);
 e = setTrialParam(e, 'catchTrial', catchTrial);
 
 % return values
