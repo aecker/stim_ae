@@ -23,14 +23,14 @@ e.textureSize = ceil(params.diskSize + period);
 
 % rotate coordinate system
 phi = 2 * pi * spatFreq * (1 : e.textureSize);
-grat = 127.5 + 127.5 * params.contrast * sin(phi);
+grat = 0.5 + 0.5 * params.contrast * sin(phi);
 
 % color grating
 color = permute(params.color, [2 3 1]);
 grat = bsxfun(@times, color, grat);
 
 % create texture
-e.texture = Screen('MakeTexture', win, grat);
+e.texture = Screen('MakeTexture', win, grat, [], [], 1);
 
 % generate alpha mask
 rect = Screen('Rect', win);
@@ -46,4 +46,4 @@ else
 end
 outside = sqrt((X - loc(1)).^2 + (Y - loc(2)).^2) > params.diskSize / 2;
 alphaBlend(outside) = 1;
-e.alphaMask = Screen('MakeTexture', win, cat(3, alphaLum, 255 * alphaBlend));
+e.alphaMask = Screen('MakeTexture', win, cat(3, alphaLum, alphaBlend), [], [], 1);
