@@ -8,6 +8,8 @@ win = get(e, 'win');
 refresh = get(e, 'refreshRate');
 
 % stimulus parameters
+bgColor = getParam(e, 'bgColor');
+monitorCenter = getParam(e, 'monitorCenter');
 stimLoc = getParam(e, 'stimulusLocation');
 signal = getParam(e, 'signal');
 phase = getParam(e, 'phase');
@@ -86,6 +88,7 @@ for i = 1 : nFramesTotal
 
     % compute startTime
     if i == 1
+        startTime = swapTime;
         e = addEvent(e, 'showStimulus', swapTime);
     end
     
@@ -129,6 +132,10 @@ for i = 1 : nFramesTotal
         end
         break
     end
+    
+    if i == nFramesTotal
+        e = clearScreen(e);
+    end
 end
 
 % log stimulus offset event
@@ -156,5 +163,5 @@ e = setTrialParam(e, 'orientationsPost', oriPost);
 e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
 e = setTrialParam(e, 'nFramesPre', numel(oriPre));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
-e = setTrialParam(e, 'delayTime', params.delayTime);
+e = setTrialParam(e, 'delayTime', delayTime);
 e = setTrialParam(e, 'catchTrial', catchTrial);
