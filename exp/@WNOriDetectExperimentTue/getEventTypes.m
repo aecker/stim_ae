@@ -3,7 +3,7 @@ function [types,sites] = getEventTypes(e)
 % AE 2011-09-19
 
 % first get all events defined by the parent class
-[types,sites] = getEventTypes(e.WNOriDiscExperiment);
+[types,sites] = getEventTypes(e.WNOriDetectExperiment);
 
 % and now add our own one for eye tracker start
 types = [types; {'eyeTrackerStart'; 'buttonAbort'}];
