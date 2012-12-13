@@ -19,7 +19,7 @@ nFramesPreMax = getParamOrOverride(e, 'nFramesPreMax', varargin{:});
 nFramesCoh = getParamOrOverride(e, 'nFramesCoh', varargin{:});
 coherence = getParamOrOverride(e, 'coherence', varargin{:});
 waitTime = getParamOrOverride(e, 'waitTime', varargin{:});
-responseTime = getParamOrOverride(e, 'responseTime', varargin{:});
+responseInterval = getParamOrOverride(e, 'responseInterval', varargin{:});
 spatialFreq = getParamOrOverride(e, 'spatialFreq', varargin{:});
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
@@ -40,7 +40,7 @@ if catchTrial
 else
     % determine number of frames before change (constant hazard function)
     nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
-    nFramesPost = ceil(responseTime / 1000 * refresh);
+    nFramesPost = ceil(responseInterval / 1000 * refresh);
     
     % generate "coherent" portion of trial
     cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
@@ -58,7 +58,7 @@ preOrientations = getRandomOrientations(e, nFramesPre, seed);
 orientations = [preOrientations, cohOrientations, postOrientations];
 
 % return function call
-params.delayTime = nFramesPre / refresh * 1000 + waitTime;
+params.responseStart = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
@@ -124,7 +124,7 @@ e = setTrialParam(e, 'orientationsPost', oriPost);
 e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
 e = setTrialParam(e, 'nFramesPre', numel(oriPre));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
-e = setTrialParam(e, 'delayTime', params.delayTime);
+e = setTrialParam(e, 'responseStart', params.responseStart);
 e = setTrialParam(e, 'catchTrial', catchTrial);
 
 % return values
