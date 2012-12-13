@@ -58,7 +58,7 @@ preOrientations = getRandomOrientations(e, nFramesPre, seed);
 orientations = [preOrientations, cohOrientations, postOrientations];
 
 % return function call
-params.delayTime = nFramesPre / refresh * 1000 + waitTime;
+params.responseStart = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
@@ -124,7 +124,7 @@ e = setTrialParam(e, 'orientationsPost', oriPost);
 e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
 e = setTrialParam(e, 'nFramesPre', numel(oriPre));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
-e = setTrialParam(e, 'delayTime', params.delayTime);
+e = setTrialParam(e, 'responseStart', params.responseStart);
 e = setTrialParam(e, 'catchTrial', catchTrial);
 
 % return values
