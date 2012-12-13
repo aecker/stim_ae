@@ -1,4 +1,4 @@
-function [e,retInt32,retStruct,returned] = netShowStimulus(e,eyeTracker)
+function [e, eyeTracker] = netShowStimulus(e,eyeTracker)
 % Show white noise orientation with added signal (i.e. one orientation is
 % more likely to be shown than all the others).
 %
@@ -83,11 +83,11 @@ while ~buttonPressed
     end
     
     % check if fixating
-    fixating = monitorFixation(eyeTracker);
+    [eyeTracker, fixating] = monitorFixation(eyeTracker);
     if ~fixating
-        e = setTrialParam(e,'response',NaN);
-        e = setTrialParam(e,'correctResponse',false);
-        e = setTrialParam(e,'validTrial',false);
+        par.behaviorTimestamp = GetSecs;
+        par.abortType = 'eyeAbort';
+        e = netAbortTrial(e, par);
         break
     end
     
@@ -96,31 +96,34 @@ while ~buttonPressed
     if buttonPressed ~= 0
         ResponsePixx('StopNow',[],[0 0 0 0 0]);
         e = clearScreen(e);
+        e = addEvent(e,'endStimulus',getLastSwap(e));
         
         if buttonPressed > 0
             resp = find(responseButtons == buttonPressed,1);
             e = setTrialParam(e,'response',resp);
             e = setTrialParam(e,'validTrial',true);
             correct = find(getParam(e, 'signal') == getParam(e, 'signals'));
-            e = setTrialParam(e,'correctResponse',resp == correct);
+            isCorrect = resp == correct;
+            e = setTrialParam(e,'correctResponse',isCorrect);
+            if isCorrect
+                e = playSound(e,'correctResponse');
+%             else
+%                 e = playSound(e,'incorrectResponse');
+            end
         else
-            e = setTrialParam(e,'response',-1);
-            e = setTrialParam(e,'correctResponse',NaN);
-            e = setTrialParam(e,'validTrial',false);
+            par.behaviorTimestamp = GetSecs;
+            par.abortType = 'buttonAbort';
+            e = netAbortTrial(e, par);
         end
+        break
     end
     
     frame = frame + 1;
 end
 
 if fixating
-    endTrial(eyeTracker);
+    eyeTracker = endTrial(eyeTracker);
 end
 
 % store shown stimuli
 e = setTrialParam(e,'noiseOrientations',orientations(1:min(end, ceil(frame / stimFrames))));
-
-% return values
-retInt32 = int32(0);
-retStruct = struct;
-returned = true;
