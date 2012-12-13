@@ -19,7 +19,7 @@ nFramesPreMax = getParamOrOverride(e, 'nFramesPreMax', varargin{:});
 nFramesCoh = getParamOrOverride(e, 'nFramesCoh', varargin{:});
 coherence = getParamOrOverride(e, 'coherence', varargin{:});
 waitTime = getParamOrOverride(e, 'waitTime', varargin{:});
-responseTime = getParamOrOverride(e, 'responseTime', varargin{:});
+responseInterval = getParamOrOverride(e, 'responseInterval', varargin{:});
 spatialFreq = getParamOrOverride(e, 'spatialFreq', varargin{:});
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
@@ -40,7 +40,7 @@ if catchTrial
 else
     % determine number of frames before change (constant hazard function)
     nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
-    nFramesPost = ceil(responseTime / 1000 * refresh);
+    nFramesPost = ceil(responseInterval / 1000 * refresh);
     
     % generate "coherent" portion of trial
     cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
