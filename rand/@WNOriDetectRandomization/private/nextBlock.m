@@ -23,7 +23,7 @@ N = N1 + N2 + Nc;
 S1 = (0.01 * rand(1, N1) + (0 : N1 - 1)) / N1;
 S2 = (0.01 * rand(1, N2) + (0 : N2 - 1)) / N2;
 Sc = (0.01 * rand(1, Nc) + (0 : Nc - 1)) / Nc;
-[~, order] = sort([S1, S2, Sc]);
+[foo, order] = sort([S1, S2, Sc]);
 signal = [ones(1, N1), 2 * ones(1, N2), 3 * ones(1, Nc)];
 signal = signal(order);
 

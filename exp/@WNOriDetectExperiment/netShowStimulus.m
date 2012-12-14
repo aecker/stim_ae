@@ -48,7 +48,7 @@ else
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
 
-    fprintf('signal: %3d | coherence: %2d | frames pre: %d\n', signal, coherence, nFramesPre)
+    fprintf('signal: %3d | coherence: %2d | frames pre: %d | total frames: %d\n', signal, coherence, nFramesPre, nFramesPre + nFramesCoh + nFramesPost)
 end
 
 % generate pseudorandom orientations (fixed seed) before the change
@@ -57,13 +57,15 @@ preOrientations = getRandomOrientations(e, nFramesPre, seed);
 
 orientations = [preOrientations, cohOrientations, postOrientations];
 
+% Run stimulus loop
+nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
+
 % return function call
 params.responseStart = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
+params.abortTime = nFramesTotal / refresh * 1000; % get in milliseconds
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
-% Run stimulus loop
-nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
 for i = 1 : nFramesTotal
 
     % check for abort signal
