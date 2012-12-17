@@ -64,6 +64,7 @@ nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
 params.responseStart = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
 params.abortTime = nFramesTotal / refresh * 1000; % get in milliseconds
+params.stimulusLocation = stimLoc;
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
 for i = 1 : nFramesTotal
