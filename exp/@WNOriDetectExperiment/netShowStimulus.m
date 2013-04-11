@@ -43,12 +43,19 @@ else
     nFramesPost = ceil(responseInterval / 1000 * refresh);
     
     % generate "coherent" portion of trial
-    cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
+    if isinf(signal)
+        orientations = getParam(e, 'orientations');
+        actualSignal = orientations(ceil(rand(1) * numel(orientations)));
+    else
+        actualSignal = signal;
+    end
+    e = setTrialParam(e, 'actualSignal', actualSignal);
+    cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
 
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
 
-    fprintf('signal: %3d | coherence: %2d | frames pre: %d | total frames: %d\n', signal, coherence, nFramesPre, nFramesPre + nFramesCoh + nFramesPost)
+    fprintf('signal: %3d | coherence: %2d | frames pre: %d | total frames: %d\n', actualSignal, coherence, nFramesPre, nFramesPre + nFramesCoh + nFramesPost)
 end
 
 % generate pseudorandom orientations (fixed seed) before the change
