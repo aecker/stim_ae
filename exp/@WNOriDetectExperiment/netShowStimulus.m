@@ -7,6 +7,9 @@ function [e, retInt32, retStruct, returned] = netShowStimulus(e, varargin)
 win = get(e, 'win');
 refresh = get(e, 'refreshRate');
 monitorCenter = getParam(e, 'monitorCenter');
+fixSpotSize = getParam(e, 'fixSpotSize');
+fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
+biases = getParam(e, 'biases');
 
 % we allow the following parameter be overridden for training. in that case
 % they get passed from LabView into netShowStimulus as the second input
@@ -27,6 +30,11 @@ period = 1 / spatialFreq;
 
 % store overrides
 e = setParams(e, varargin{:});
+
+% fixation spot color
+r = get(e, 'randomization');
+bias = biases(:, getBias(r));
+fixSpotColor = 255 * [bias / max(bias); 0];
 
 % catch trial
 catchTrial = isnan(signal);
@@ -97,9 +105,9 @@ for i = 1 : nFramesTotal
 
     % draw circular aperture
     Screen('DrawTexture', win, e.alphaMask);
-
+    
     % fixation spot
-    drawFixSpot(e);
+    Screen('DrawDots', win, fixSpotLocation, fixSpotSize, fixSpotColor, [], 1);
     e = swap(e);
 
     % compute startTime
