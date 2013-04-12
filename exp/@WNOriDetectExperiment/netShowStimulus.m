@@ -7,6 +7,9 @@ function [e, retInt32, retStruct, returned] = netShowStimulus(e, varargin)
 win = get(e, 'win');
 refresh = get(e, 'refreshRate');
 monitorCenter = getParam(e, 'monitorCenter');
+fixSpotSize = getParam(e, 'fixSpotSize');
+fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
+biases = getParam(e, 'biases');
 
 % we allow the following parameter be overridden for training. in that case
 % they get passed from LabView into netShowStimulus as the second input
@@ -19,7 +22,7 @@ nFramesPreMax = getParamOrOverride(e, 'nFramesPreMax', varargin{:});
 nFramesCoh = getParamOrOverride(e, 'nFramesCoh', varargin{:});
 coherence = getParamOrOverride(e, 'coherence', varargin{:});
 waitTime = getParamOrOverride(e, 'waitTime', varargin{:});
-responseTime = getParamOrOverride(e, 'responseTime', varargin{:});
+responseInterval = getParamOrOverride(e, 'responseInterval', varargin{:});
 spatialFreq = getParamOrOverride(e, 'spatialFreq', varargin{:});
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
@@ -27,6 +30,11 @@ period = 1 / spatialFreq;
 
 % store overrides
 e = setParams(e, varargin{:});
+
+% fixation spot color
+r = get(e, 'randomization');
+bias = biases(:, getBias(r));
+fixSpotColor = 255 * [bias / max(bias); 0];
 
 % catch trial
 catchTrial = isnan(signal);
@@ -40,15 +48,22 @@ if catchTrial
 else
     % determine number of frames before change (constant hazard function)
     nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
-    nFramesPost = ceil(responseTime / 1000 * refresh);
+    nFramesPost = ceil(responseInterval / 1000 * refresh);
     
     % generate "coherent" portion of trial
-    cohOrientations = getCoherentOrientations(e, nFramesCoh, signal, coherence);
+    if isinf(signal)
+        orientations = getParam(e, 'orientations');
+        actualSignal = orientations(ceil(rand(1) * numel(orientations)));
+    else
+        actualSignal = signal;
+    end
+    e = setTrialParam(e, 'actualSignal', actualSignal);
+    cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
 
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
 
-    fprintf('signal: %3d | coherence: %2d | frames pre: %d\n', signal, coherence, nFramesPre)
+    fprintf('signal: %3d | coherence: %2d | frames pre: %d | total frames: %d\n', actualSignal, coherence, nFramesPre, nFramesPre + nFramesCoh + nFramesPost)
 end
 
 % generate pseudorandom orientations (fixed seed) before the change
@@ -57,13 +72,16 @@ preOrientations = getRandomOrientations(e, nFramesPre, seed);
 
 orientations = [preOrientations, cohOrientations, postOrientations];
 
-% return function call
-params.delayTime = nFramesPre / refresh * 1000 + waitTime;
-params.catchTrial = catchTrial;
-tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
-
 % Run stimulus loop
 nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
+
+% return function call
+params.responseStart = nFramesPre / refresh * 1000 + waitTime;
+params.catchTrial = catchTrial;
+params.responseEnd = nFramesTotal / refresh * 1000; % get in milliseconds
+params.stimulusLocation = stimLoc;
+tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
+
 for i = 1 : nFramesTotal
 
     % check for abort signal
@@ -87,9 +105,9 @@ for i = 1 : nFramesTotal
 
     % draw circular aperture
     Screen('DrawTexture', win, e.alphaMask);
-
+    
     % fixation spot
-    drawFixSpot(e);
+    Screen('DrawDots', win, fixSpotLocation, fixSpotSize, fixSpotColor, [], 1);
     e = swap(e);
 
     % compute startTime
@@ -124,7 +142,7 @@ e = setTrialParam(e, 'orientationsPost', oriPost);
 e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
 e = setTrialParam(e, 'nFramesPre', numel(oriPre));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
-e = setTrialParam(e, 'delayTime', params.delayTime);
+e = setTrialParam(e, 'responseStart', params.responseStart);
 e = setTrialParam(e, 'catchTrial', catchTrial);
 
 % return values
