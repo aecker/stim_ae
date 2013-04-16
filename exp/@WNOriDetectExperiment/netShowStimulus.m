@@ -12,25 +12,26 @@ fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
 biases = getParam(e, 'biases');
 cue = getParam(e, 'cue');
 
-% we allow the following parameter be overridden for training. in that case
-% they get passed from LabView into netShowStimulus as the second input
-stimLoc = getParamOrOverride(e, 'stimulusLocation', varargin{:});
-signal = getParamOrOverride(e, 'signal', varargin{:});
-phase = getParamOrOverride(e, 'phase', varargin{:});
-nFramesPreMin = getParamOrOverride(e, 'nFramesPreMin', varargin{:});
-nFramesPreMean = getParamOrOverride(e, 'nFramesPreMean', varargin{:});
-nFramesPreMax = getParamOrOverride(e, 'nFramesPreMax', varargin{:});
-nFramesCoh = getParamOrOverride(e, 'nFramesCoh', varargin{:});
-coherence = getParamOrOverride(e, 'coherence', varargin{:});
-waitTime = getParamOrOverride(e, 'waitTime', varargin{:});
-responseInterval = getParamOrOverride(e, 'responseInterval', varargin{:});
-spatialFreq = getParamOrOverride(e, 'spatialFreq', varargin{:});
+stimLoc = getParam(e, 'stimulusLocation');
+phase = getParam(e, 'phase');
+waitTime = getParam(e, 'waitTime');
+spatialFreq = getParam(e, 'spatialFreq');
 pxPerDeg = getPxPerDeg(getConverter(e));
 spatialFreq = spatialFreq / pxPerDeg(1);
 period = 1 / spatialFreq;
 
-% store overrides
-e = setParams(e, varargin{:});
+% We allow the following parameter be overridden for training. They are set
+% in netStartTrial to either what LabView passes or what the config file
+% indicates
+nFramesPreMin = getParam(e, 'nFramesPreMinTrain');
+nFramesPreMean = getParam(e, 'nFramesPreMeanTrain');
+nFramesPreMax = getParam(e, 'nFramesPreMaxTrain');
+nFramesCoh = getParam(e, 'nFramesCohTrain');
+responseInterval = getParam(e, 'responseIntervalTrain');
+signal = getParam(e, 'signalTrain');
+coherence = getParam(e, 'coherenceTrain');
+coherence = min(coherence, nFramesCoh);
+catchTrial = getParam(e, 'isCatchTrialTrain');
 
 % fixation spot color
 if cue
@@ -42,7 +43,6 @@ else
 end
 
 % catch trial
-catchTrial = isnan(signal);
 if catchTrial
     nFramesPre = nFramesPreMax;
     nFramesCoh = 0;
@@ -157,15 +157,3 @@ e = setTrialParam(e, 'catchTrial', catchTrial);
 retInt32 = int32(0);
 retStruct = struct;
 returned = true;
-
-
-function val = getParamOrOverride(e, name, params)
-% Get experimental parameter allowing by-trial overrides from LabView
-% Overrides have the string 'Train' appended (i.e. 'foo' -> 'fooTrain').
-
-nameTrain = [name 'Train'];
-if nargin > 2 && isfield(params, nameTrain)
-    val = params.(nameTrain);
-else
-    val = getParam(e, name);
-end
