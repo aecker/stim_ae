@@ -9,10 +9,15 @@ Screen('FillRect', get(e, 'win'),getParam(e, 'bgColor'));
 monitorCenter = getParam(e, 'monitorCenter');
 fixSpotSize = getParam(e, 'fixSpotSize');
 fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
-biases = getParam(e, 'biases');
-r = get(e, 'randomization');
-bias = biases(:, getBias(r));
-fixSpotColor = 255 * [bias / max(bias); 0];
+if getParam(e, 'cue')
+    biases = getParam(e, 'biases');
+    r = get(e, 'randomization');
+    bias = biases(:, getBias(r));
+    fixSpotColor = 255 * [bias / max(bias); 0];
+    Screen('DrawDots', win, fixSpotLocation, fixSpotSize + 4, zeros(1, 3), [], 1);
+else
+    fixSpotColor = getParam(e, 'fixSpotColor');
+end
 Screen('DrawDots', win, fixSpotLocation, fixSpotSize, fixSpotColor, [], 1);
 e = swap(e);
 

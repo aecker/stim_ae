@@ -10,6 +10,7 @@ monitorCenter = getParam(e, 'monitorCenter');
 fixSpotSize = getParam(e, 'fixSpotSize');
 fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
 biases = getParam(e, 'biases');
+cue = getParam(e, 'cue');
 
 % we allow the following parameter be overridden for training. in that case
 % they get passed from LabView into netShowStimulus as the second input
@@ -32,9 +33,13 @@ period = 1 / spatialFreq;
 e = setParams(e, varargin{:});
 
 % fixation spot color
-r = get(e, 'randomization');
-bias = biases(:, getBias(r));
-fixSpotColor = 255 * [bias / max(bias); 0];
+if cue
+    r = get(e, 'randomization');
+    bias = biases(:, getBias(r));
+    fixSpotColor = 255 * [bias / max(bias); 0];
+else
+    fixSpotColor = getParam(e, 'fixSpotColor');
+end
 
 % catch trial
 catchTrial = isnan(signal);
@@ -107,6 +112,9 @@ for i = 1 : nFramesTotal
     Screen('DrawTexture', win, e.alphaMask);
     
     % fixation spot
+    if cue
+        Screen('DrawDots', win, fixSpotLocation, fixSpotSize + 4, zeros(1, 3), [], 1);
+    end
     Screen('DrawDots', win, fixSpotLocation, fixSpotSize, fixSpotColor, [], 1);
     e = swap(e);
 
