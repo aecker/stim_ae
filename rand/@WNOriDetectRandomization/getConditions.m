@@ -15,6 +15,7 @@ for i = 1 : nSignals
             c.signal = signals(i);
             c.coherence = coherences(j);
             c.seed = seeds(k);
+            c.isCatchTrial = false;
             conditions(i, j, k) = c; %#ok
         end
     end
@@ -22,6 +23,7 @@ end
 conditions = reshape(conditions, [], 1);
 c.signal = NaN;
 c.coherence = NaN;
+c.isCatchTrial = true;
 for k = 1 : nSeeds
     c.seed = seeds(k);
     conditions(end + 1) = c; %#ok
