@@ -57,10 +57,9 @@ nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
 delayTime = nFramesPre / refresh * 1000 + waitTime;
 
 % setup response box to start with stimulus
-responseButtons = getParam(e, 'responseButtons');
-buttonsOn = zeros(1, 5);
-buttonsOn(responseButtons) = 1;
-ResponsePixx('StartAtFlip', [], 1, buttonsOn);
+responseButtons = 1 : 5;
+ResponsePixx('StartAtFlip', [], 1, zeros(1, 5));
+buttonPressed = 0;
 
 for i = 1 : nFramesTotal    
     
@@ -113,23 +112,6 @@ for i = 1 : nFramesTotal
     if buttonPressed ~= 0
         ResponsePixx('StopNow', [], [0 0 0 0 0]);
         e = clearScreen(e);
-        
-        if buttonPressed > 0
-            resp = find(responseButtons == buttonPressed, 1);
-            e = setTrialParam(e, 'response', resp);
-            correct = find(getParam(e, 'signal') == getParam(e, 'signals'));
-            isCorrect = resp == correct;
-            e = setTrialParam(e, 'correctResponse', isCorrect);
-            valid = GetSecs - startTime > delayTime * 1000;
-            e = setTrialParam(e, 'validTrial', valid);
-            if isCorrect
-                e = playSound(e,'correctResponse');
-            end
-        else
-            par.behaviorTimestamp = GetSecs;
-            par.abortType = 'buttonAbort';
-            e = netAbortTrial(e, par);
-        end
         break
     end
     
@@ -141,12 +123,35 @@ end
 % log stimulus offset event
 e = addEvent(e, 'endStimulus', getLastSwap(e));
 
-% catch trial is performed correctly if subject maintains fixation until
-% the end of the trial
-if catchTrial
-    e = setTrialParam(e, 'response', -1);
-    e = setTrialParam(e, 'correctResponse', fixating);
-    e = setTrialParam(e, 'validTrial', fixating);
+% a correct trial is:
+%   (1) fixating until the end
+%   (2a) normal trial: press a button before the end but not before the
+%        cohent period started
+%   (ab) catch trial: don't press a button
+falseAlarm = fixating && buttonPressed && getLastSwap(e) - startTime < delayTime / 1000;
+miss = fixating && ~catchTrial && ~buttonPressed;
+correct = fixating && xor(catchTrial, buttonPressed) && ~falseAlarm;
+if correct
+    e = playSound(e, 'correctResponse');
+end
+e = setTrialParam(e, 'falseAlarm', falseAlarm);
+e = setTrialParam(e, 'miss', miss);
+e = setTrialParam(e, 'correctResponse', correct);
+e = setTrialParam(e, 'validTrial', fixating);
+
+% give feedback
+if ~fixating
+    for i = 1 : 3
+        Screen(win, 'FillRect', 0.75);
+        e = swap(e);
+    end
+    e = clearScreen(e);
+elseif ~correct
+    for i = 1 : 3
+        Screen(win, 'FillRect', 0);
+        e = swap(e);
+    end
+    e = clearScreen(e);
 end
 
 if fixating
