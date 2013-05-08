@@ -85,6 +85,7 @@ params.delayTime = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
 params.responseTime = (nFramesCoh + nFramesPost) / refresh * 1000 - waitTime;
 params.stimulusLocation = stimLoc;
+params.nFramesPreFraction = (nFramesPre - nFramesPreMin) / max(1, nFramesPreMax - nFramesPreMin);
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
 for i = 1 : nFramesTotal
