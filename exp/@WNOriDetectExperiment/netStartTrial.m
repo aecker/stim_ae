@@ -6,6 +6,7 @@ function [e, retInt32, retStruct, returned] = netStartTrial(e, params)
 % If *Train parameters are sent they are meant to override the config file.
 % If they are not sent we set them to what's in the config file
 e = checkOverride(e, 'signal', params);
+e = checkOverride(e, 'location', params);
 e = checkOverride(e, 'coherence', params);
 e = checkOverride(e, 'isCatchTrial', params);
 e = checkOverride(e, 'nFramesPreMin', params);

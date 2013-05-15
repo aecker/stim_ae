@@ -40,12 +40,15 @@ loc = params.stimulusLocation;
 [X, Y] = meshgrid((0 : rect(3) - 1) - params.monitorCenter(1), ...
                   (0 : rect(4) - 1) - params.monitorCenter(2));
 alphaLum = repmat(permute(params.bgColor, [2 3 1]), rect(4), rect(3));
-if params.isMask % smooth edges?
-    d = sqrt((X - loc(1)).^2 + (Y - loc(2)).^2) / params.diskSize;
-    alphaBlend = (1 - cos(d * 2 * pi)) / 2; % radial cosine window
-else
-    alphaBlend = zeros(size(X));
+alphaBlend = ones(size(X));
+for i = 1 : size(loc, 2)
+    if params.isMask % smooth edges?
+        d = sqrt((X - loc(1, i)).^2 + (Y - loc(2, i)).^2) / params.diskSize;
+        mask = (1 - cos(d * 2 * pi)) / 2; % radial cosine window
+    else
+        mask = zeros(size(X));
+    end
+    inside = sqrt((X - loc(1, i)).^2 + (Y - loc(2, i)).^2) <= params.diskSize / 2;
+    alphaBlend(inside) = mask(inside);
 end
-outside = sqrt((X - loc(1)).^2 + (Y - loc(2)).^2) > params.diskSize / 2;
-alphaBlend(outside) = 1;
 e.alphaMask = Screen('MakeTexture', win, cat(3, alphaLum, 255 * alphaBlend));

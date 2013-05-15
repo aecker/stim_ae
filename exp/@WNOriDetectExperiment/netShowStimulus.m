@@ -13,6 +13,7 @@ biases = getParam(e, 'biases');
 cue = getParam(e, 'cue');
 
 stimLoc = getParam(e, 'stimulusLocation');
+nLocations = size(stimLoc, 2);
 phase = getParam(e, 'phase');
 waitTime = getParam(e, 'waitTime');
 spatialFreq = getParam(e, 'spatialFreq');
@@ -29,6 +30,7 @@ nFramesPreMax = getParam(e, 'nFramesPreMaxTrain');
 nFramesCoh = getParam(e, 'nFramesCohTrain');
 responseInterval = getParam(e, 'responseIntervalTrain');
 signal = getParam(e, 'signalTrain');
+location = getParam(e, 'locationTrain');
 coherence = getParam(e, 'coherenceTrain');
 coherence = min(coherence, nFramesCoh);
 catchTrial = getParam(e, 'isCatchTrialTrain');
@@ -47,69 +49,97 @@ if catchTrial
     nFramesPre = nFramesPreMax;
     nFramesCoh = 0;
     nFramesPost = 0;
+    nFramesTotal = nFramesPre;
     cohOrientations = [];
     postOrientations = [];
+    actualLocation = -1;
     fprintf('catch trial\n')
 else
     % determine number of frames before change (constant hazard function)
     nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
     nFramesPost = ceil(responseInterval / 1000 * refresh);
-    
-    % generate "coherent" portion of trial
+    nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
+
+    % draw random signal if necessary
     if isinf(signal)
         orientations = getParam(e, 'orientations');
-        actualSignal = orientations(ceil(rand(1) * numel(orientations)));
+        actualSignal = orientations(ceil(rand(1) * numel(orientations))); %%%% RAND %%%%
     else
         actualSignal = signal;
     end
     e = setTrialParam(e, 'actualSignal', actualSignal);
+    
+    % draw random location if necessary
+    if isinf(location)
+        stimulusLocation = getParam(e, 'stimulusLocation');
+        actualLocation = ceil(rand(1) * size(stimulusLocation, 2)); %%%% RAND %%%%
+    else
+        actualLocation = location;
+    end
+    e = setTrialParam(e, 'actualLocation', actualLocation);
+
+    % generate "coherent" portion of trial
     cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
 
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
 
-    fprintf('signal: %3d | coherence: %2d | frames pre: %d | total frames: %d\n', actualSignal, coherence, nFramesPre, nFramesPre + nFramesCoh + nFramesPost)
+    fprintf('signal: %3d | location: %d | coherence: %2d | frames pre: %d | total frames: %d\n', ...
+        actualSignal, actualLocation, coherence, nFramesPre, nFramesTotal)
 end
 
-% generate pseudorandom orientations (fixed seed) before the change
+% fix random number generator seed
 seed = getParam(e, 'seed');
-preOrientations = getRandomOrientations(e, nFramesPre, seed);
+state = rand('state');                                      %#ok<*RAND>
+rand('state', seed)
 
-orientations = [preOrientations, cohOrientations, postOrientations];
+% generate seeds for each target location
+targetSeeds = ceil(rand(1, nLocations) * 1e6);
 
-% Run stimulus loop
-nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
+% generate pseudorandom orientations (fixed seed)
+for i = 1 : nLocations
+    rand('state', targetSeeds(i))
+    orientations(i, :) = getRandomOrientations(e, nFramesTotal);
+end
+
+% insert coherent period and gratings post at target location
+if ~catchTrial
+    orientations(actualLocation, nFramesPre + 1 : end) = [cohOrientations, postOrientations];
+end
+
+% reset random number generator
+rand('state', state);
 
 % return function call
 params.delayTime = nFramesPre / refresh * 1000 + waitTime;
 params.catchTrial = catchTrial;
 params.responseTime = (nFramesCoh + nFramesPost) / refresh * 1000 - waitTime;
 params.stimulusLocation = stimLoc;
+params.location = actualLocation;
 params.nFramesPreFraction = (nFramesPre - nFramesPreMin) / max(1, nFramesPreMax - nFramesPreMin);
 tcpReturnFunctionCall(e, int32(0), params, 'netShowStimulus');
 
 for i = 1 : nFramesTotal
 
-    % check for abort signal
+    % check for abort or response signal
     [e, abort] = tcpMiniListener(e, {'netAbortTrial', 'netTrialOutcome'});
     if abort
-        fprintf('stimulus was aborted\n')
         break
     end
 
-    % move grating
-    u = mod(phase, 360) / 360 * period;
-    xo = -u * sin(orientations(i) / 180 * pi);
-    yo = u * cos(orientations(i) / 180 * pi);
-    ts = e.textureSize / 2;
-    cx = monitorCenter(1) + stimLoc(1);
-    cy = monitorCenter(2) + stimLoc(2);
-    destRect = [cx cy cx cy] + ts * [-1 -1 1 1] + [xo yo xo yo];
-
-    % draw grating
-    Screen('DrawTexture', win, e.texture, [], destRect, orientations(i) + 90);
-
-    % draw circular aperture
+    % draw gratings
+    for j = 1 : size(stimLoc, 2)
+        u = mod(phase, 360) / 360 * period;
+        xo = -u * sin(orientations(i) / 180 * pi);
+        yo = u * cos(orientations(i) / 180 * pi);
+        ts = e.textureSize / 2;
+        cx = monitorCenter(1) + stimLoc(1, j);
+        cy = monitorCenter(2) + stimLoc(2, j);
+        destRect = [cx cy cx cy] + ts * [-1 -1 1 1] + [xo yo xo yo];
+        Screen('DrawTexture', win, e.texture, [], destRect, orientations(j, i) + 90);
+    end
+    
+    % overlay alpha mask
     Screen('DrawTexture', win, e.alphaMask);
     
     % fixation spot

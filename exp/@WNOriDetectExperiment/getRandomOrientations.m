@@ -1,12 +1,6 @@
-function ori = getRandomOrientations(e, n, seed)
+function ori = getRandomOrientations(e, n)
 % Get pseudorandom orientation sequence.
 % AE 2012-11-27
-
-% fix random number generator seed
-if nargin > 2
-    state = rand('state');                                      %#ok<*RAND>
-    rand('state', seed)
-end
 
 % draw pseudorandom sequence (orientations are blocked such that they don't
 % repeat until each one has been shown once)
