@@ -3,11 +3,12 @@ function r = WNOriDetectRandomization(varargin)
 %
 % AE 2012-11-26
 
-r.conditions = struct;
 r.params = struct;
+r.feature = {};
 
 r.pools.bias = [];
 r.pools.signal = {};
+r.pools.location = {};
 r.pools.coherence = {};
 r.pools.seed = {};
 

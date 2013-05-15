@@ -1,12 +1,14 @@
-function condition = getConditionByIndex(r, signal, coherence, seed)
-% Return condition number given the indices for signal, coherence and seed.
+function condition = getConditionByIndex(r, signal, location, coherence, seed)
+% Return condition number given the indices for signal, location, coherence
+% and seed.
 % AE 2012-11-27
 
 nCoherences = numel(r.params.coherences);
 nSeeds = r.params.nSeeds;
 nSignals = numel(r.params.signals);
-if signal <= nSignals
-    condition = sub2ind([nSignals nCoherences, nSeeds], signal, coherence, seed);
+nLocations = numel(r.params.locations);
+if signal <= nSignals && location <= nLocations
+    condition = sub2ind([nSignals nLocations nCoherences, nSeeds], signal, location, coherence, seed);
 else
-    condition = nSignals * nCoherences * nSeeds + seed;
+    condition = nSignals * nLocations * nCoherences * nSeeds + seed;
 end

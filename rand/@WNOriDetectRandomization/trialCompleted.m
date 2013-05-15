@@ -5,22 +5,22 @@ function [r, mustStop] = trialCompleted(r, valid, varargin)
 if valid
     biasNdx = r.current.bias;
     bias = r.pools.bias(biasNdx);
-    signalNdx = r.current.signal;
-    signal = r.pools.signal{bias}{1}(signalNdx);
+    featureNdx = r.current.feature;
+    feature = r.pools.(r.feature){bias}{1}(featureNdx);
     coherenceNdx = r.current.coherence;
-    coherence = r.pools.coherence{bias, signal}(coherenceNdx);
+    coherence = r.pools.coherence{bias, feature}(coherenceNdx);
     
-    r.pools.signal{bias}{1}(signalNdx) = [];
-    r.pools.coherence{bias, signal}(coherenceNdx) = [];
-    r.pools.seed{bias, signal, coherence}(r.current.seed) = [];
+    r.pools.(r.feature){bias}{1}(featureNdx) = [];
+    r.pools.coherence{bias, feature}(coherenceNdx) = [];
+    r.pools.seed{bias, feature, coherence}(r.current.seed) = [];
     
     % subblock done?
-    if isempty(r.pools.signal{bias}{1})
-        r.pools.signal{bias}(1) = [];
+    if isempty(r.pools.(r.feature){bias}{1})
+        r.pools.(r.feature){bias}(1) = [];
     end
 
     % block done?
-    if isempty(r.pools.signal{bias})
+    if isempty(r.pools.(r.feature){bias})
         r.pools.bias(:, r.current.bias) = [];
         r = nextBlock(r);
     end
