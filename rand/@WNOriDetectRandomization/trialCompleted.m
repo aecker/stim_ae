@@ -1,8 +1,9 @@
 function [r, mustStop] = trialCompleted(r, valid, varargin)
 % AE 2012-11-26
 
+
 % trial successfully completed -> remove condition from pool
-if valid
+if valid || r.current.feature == 3
     biasNdx = r.current.bias;
     bias = r.pools.bias(biasNdx);
     featureNdx = r.current.feature;
