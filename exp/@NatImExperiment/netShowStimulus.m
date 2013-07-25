@@ -20,13 +20,10 @@ postStimTime = getParam(e,'postStimulusTime');
 params.delayTime = stimTime+postStimTime;
 
 
-% compute number of frames
- flipInterval = 1000 / refresh; % frame duration in msec ~= 10 msec
-% imFrames = imTime / flipInterval; %no. of frames while image is shown
-% blankFrames = blankTime/flipInterval; % no. of frames while blank is shown
-% totalFrames = imFrames+blankFrames;
+% frame duration in msec ~= 10 msec
+ flipInterval = 1000 / refresh; 
 
-% show one randomly drawn sequence of ni images
+% show one randomly drawn sequence of nIm images
 conditions = getConditions(get(e,'randomization'));
 cond = getParam(e,'condition');
 
@@ -51,51 +48,47 @@ while cIm <= nIm
         break
     end
     
-    % if blank is shown for blankTime - time of one frame, show image in
-    % next frame
-    if blank
-        if GetSecs-t > (blankTime-flipInterval)/1000
-            Screen('DrawTexture',win,e.textures(statIdx(cIm),imNums(cIm)),[],e.destRect);
-            Screen('DrawTexture',win,e.alphaMask);
-            drawFixSpot(e);
-            blank = false;
-            
-            e = swap(e);
-            t = getLastSwap(e);
-            
-            if cIm == 1
-                startTime = getLastSwap(e);
-                e = addEvent(e,'showStimulus',startTime);
-            end
-            
-            subStimulusTime = getLastSwap(e);
-            e = addEvent(e,'showSubStimulus',subStimulusTime);
+    if blank && (GetSecs-t > (blankTime-flipInterval)/1000)
+        % if blank is shown for blankTime - time of one frame, show image in
+        % next frame
+        
+        Screen('DrawTexture',win,e.textures(statIdx(cIm),imNums(cIm)),[],e.destRect);
+        Screen('DrawTexture',win,e.alphaMask);
+        drawFixSpot(e);
+        blank = false;
+        
+        e = swap(e);
+        t = getLastSwap(e);
+        
+        if cIm == 1
+            startTime = getLastSwap(e);
+            e = addEvent(e,'showStimulus',startTime);
         end
         
+        subStimulusTime = getLastSwap(e);
+        e = addEvent(e,'showSubStimulus',subStimulusTime);
+        
+    elseif GetSecs-t > (imTime-flipInterval)/1000
         % if image is shown for imTime - time of one frame, show blank in next frame
-    else
-        if GetSecs-t > (imTime-flipInterval)/1000
-            
-            Screen('FillRect',win,bgColor,e.destRect);
-            drawFixSpot(e);
-            blank = true;
-            e = swap(e);
-            t = getLastSwap(e);
-            cIm = cIm+1;
-            if cIm == nIm
-                endTime = getLastSwap(e);
-                e = addEvent(e,'endStimulus',endTime);
-            end
-            
-            subStimulusTime = getLastSwap(e);
-            e = addEvent(e,'showSubStimulus',subStimulusTime);
+
+        Screen('FillRect',win,bgColor,e.destRect);
+        drawFixSpot(e);
+        blank = true;
+        
+        e = swap(e);
+        t = getLastSwap(e);
+        
+        cIm = cIm + 1;
+        if cIm == nIm + 1
+            endTime = getLastSwap(e);
+            e = addEvent(e,'endStimulus',endTime);
         end
+        
+        
     end
     
-    
     % wait a little to relax the cpu
-    WaitSecs(flipInterval/4000)
-    
+    WaitSecs(flipInterval/10000)
     
 end
 WaitSecs((postStimTime-flipInterval)/1000)
@@ -106,7 +99,6 @@ if ~abort
     e = clearScreen(e);
 end
 
-%e = setTrialParameter(e,'delayTime',delayTime);
 
 % return values
 retInt32 = int32(0);

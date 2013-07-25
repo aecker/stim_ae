@@ -11,7 +11,8 @@ halfHeight = ceil(diff(rect([2 4])) / 2);
 location = params.stimulusLocation;
 bgColor = params.bgColor;
 diskSize = params.diskSize;
-fadeFactor = params.fadeFactor;    
+fadeFactor = params.fadeFactor;
+
 
 [X,Y] = meshgrid((-halfWidth:halfWidth-1) - location(1), ...
              (-halfHeight:halfHeight-1) - location(2));
@@ -38,35 +39,34 @@ Screen('BlendFunction',win,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 nTex = params.texFileNumber; %no. of texture structure
 nIm = params.imPerTrial; % images per trial
 nGS = params.seqGroupsPerSession;%no. of distinct sequence Groups per session (each group has 3 sequences)
+scFactor = params.imSize; 
 
 nFirst = params.firstTexNumber; %first texture to pick from texture struc.
-nLast = nFirst+nIm*nGS*3; %last texture to pick from texture struc.
+nLast = nFirst + nIm * nGS - 1; %last texture to pick from texture struc.
 
 
 %load texture structure
-%texFile = params.texFile;
-%load(getLocalPath(texFile));
-%load(getLocalPath('Users/atlab/Desktop/leon_textures/textures1.mat'));
-file=sprintf('/Volumes/lab/users/george/leon_textures/LPtextures_%d.mat',nTex);
-%file = sprintf('/Volumes/scratch01/leon_textures/LPtextures_%d.mat',n);
-load(file)
 
-params.source={textures(nFirst:nLast).source};
+file=sprintf('/Volumes/lab/users/george/leon_textures/StandLPtextures_%d.mat',nTex);
+
+f = load(file);
 
 
 %create textures
-e.textures = zeros(3,nGS*nIm);
-scFactor = 3;
+e.textures = zeros(4,nGS*nIm);
 sm = ones(scFactor); %for scaling the pixels by scFactor
-for i = nFirst:nLast
-    e.textures(1,i-(nFirst-1))= Screen('MakeTexture',win,kron(double(textures(i).nat),sm)); 
-    e.textures(2,i-(nFirst-1))= Screen('MakeTexture',win,kron(double(textures(i).phs),sm));
-    e.textures(3,i-(nFirst-1))= Screen('MakeTexture',win,kron(double(textures(i).whn),sm));
+for i = 1:(nLast - nFirst + 1)
+    j = i + nFirst - 1;
+    params.source{i} = f.textures(j).source.name;
+    e.textures(1,i)= Screen('MakeTexture',win,kron(double(f.textures(j).nat),sm)); 
+    e.textures(2,i)= Screen('MakeTexture',win,kron(double(f.textures(j).phs),sm));
+    e.textures(3,i)= Screen('MakeTexture',win,kron(double(f.textures(j).whn),sm));
+    e.textures(4,i)= Screen('MakeTexture',win,kron(double(f.textures(j).org),sm));
 end
 
 
 % define stimulus position
-e.textureSize = scFactor*size(textures(nFirst).nat,1);
+e.textureSize = scFactor*size(f.textures(nFirst).nat,1);
 centerX = mean(rect([1 3])) + location(1);
 centerY = mean(rect([2 4])) + location(2);
 e.destRect = [-e.textureSize -e.textureSize e.textureSize e.textureSize] / 2 ...
