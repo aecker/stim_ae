@@ -184,6 +184,7 @@ e = setTrialParam(e, 'nFramesPost', numel(oriPost));
 e = setTrialParam(e, 'delayTime', params.delayTime);
 e = setTrialParam(e, 'responseTime', params.responseTime);
 e = setTrialParam(e, 'catchTrial', catchTrial);
+e = setTrialParam(e, 'bias',bias); % new
 
 % return values
 retInt32 = int32(0);
