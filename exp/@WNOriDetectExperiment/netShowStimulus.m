@@ -184,7 +184,9 @@ e = setTrialParam(e, 'nFramesPost', numel(oriPost));
 e = setTrialParam(e, 'delayTime', params.delayTime);
 e = setTrialParam(e, 'responseTime', params.responseTime);
 e = setTrialParam(e, 'catchTrial', catchTrial);
-e = setTrialParam(e, 'bias',bias); % new
+if cue % if clause to make compatible when no cue
+    e = setTrialParam(e, 'bias',bias); % new
+end
 
 % return values
 retInt32 = int32(0);
