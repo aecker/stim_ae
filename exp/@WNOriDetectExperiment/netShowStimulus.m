@@ -12,6 +12,7 @@ fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
 biases = getParam(e, 'biases');
 cue = getParam(e, 'cue');
 
+addCoh = getParam(e, 'addCoh');
 stimLoc = getParam(e, 'stimulusLocation');
 nLocations = size(stimLoc, 2);
 phase = getParam(e, 'phase');
@@ -79,8 +80,17 @@ else
     e = setTrialParam(e, 'actualLocation', actualLocation);
 
     % generate "coherent" portion of trial
-    cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
+    % cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
 
+    % HACK generate "coherent" portion of trial TO INCREASE COH IN 50-50
+    % BLOCK
+    if any(bias == 2)
+        coherence = coherence + addCoh;
+        cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
+    else % original statement prior to hack is just the following line:
+        cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
+    end
+    
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
 
