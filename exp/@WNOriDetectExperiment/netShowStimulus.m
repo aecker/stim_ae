@@ -82,12 +82,12 @@ else
     % generate "coherent" portion of trial
     % cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
 
-    % HACK generate "coherent" portion of trial TO INCREASE COH IN 50-50
+    % generate "coherent" portion of trial TO INCREASE COH IN 50-50
     % BLOCK
     if any(bias == 2)
         coherence = coherence + addCoh;
         cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
-    else % original statement prior to hack is just the following line:
+    else 
         cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
     end
     
@@ -111,6 +111,8 @@ for i = 1 : nLocations
     rand('state', targetSeeds(i))
     orientations(i, :) = getRandomOrientations(e, nFramesTotal);
 end
+
+
 
 % insert coherent period and gratings post at target location
 if ~catchTrial
@@ -182,7 +184,7 @@ end
 e = addEvent(e, 'endStimulus', getLastSwap(e));
 
 % store shown stimuli
-oriPre = orientations(1 : min(i, nFramesPre));
+oriPre = orientations(:, 1 : min(i, nFramesPre));
 oriCoh = orientations(min(i, nFramesPre) + 1 : min(i, nFramesPre + nFramesCoh));
 oriPost = orientations(min(i, nFramesPre + nFramesCoh) + 1 : min(i, end));
 e = setTrialParam(e, 'orientationsPre', oriPre);
