@@ -190,14 +190,15 @@ oriPost = orientations(min(i, nFramesPre + nFramesCoh) + 1 : min(i, end));
 e = setTrialParam(e, 'orientationsPre', oriPre);
 e = setTrialParam(e, 'orientationsCoh', oriCoh);
 e = setTrialParam(e, 'orientationsPost', oriPost);
-e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
-e = setTrialParam(e, 'nFramesPre', numel(oriPre));
+e = setTrialParam(e, 'orientationsAll', orientations(:, 1 : i));
+e = setTrialParam(e, 'nFramesPre', numel(oriPre(1,:)));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
 e = setTrialParam(e, 'delayTime', params.delayTime);
 e = setTrialParam(e, 'responseTime', params.responseTime);
 e = setTrialParam(e, 'catchTrial', catchTrial);
 if cue % if clause to make compatible when no cue
-    e = setTrialParam(e, 'bias',bias); % new
+    e = setTrialParam(e, 'bias', bias); % new
+    e = setTrialParam(e, 'fixSpotColor', fixSpotColor);
 end
 
 % return values
