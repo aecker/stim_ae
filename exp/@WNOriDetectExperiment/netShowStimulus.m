@@ -185,8 +185,8 @@ e = addEvent(e, 'endStimulus', getLastSwap(e));
 
 % store shown stimuli
 oriPre = orientations(:, 1 : min(i, nFramesPre));
-oriCoh = orientations(min(i, nFramesPre) + 1 : min(i, nFramesPre + nFramesCoh));
-oriPost = orientations(min(i, nFramesPre + nFramesCoh) + 1 : min(i, end));
+oriCoh = orientations(:, min(i, nFramesPre) + 1 : min(i, nFramesPre + nFramesCoh));
+oriPost = orientations(:, min(i, nFramesPre + nFramesCoh) + 1 : min(i, end));
 e = setTrialParam(e, 'orientationsPre', oriPre);
 e = setTrialParam(e, 'orientationsCoh', oriCoh);
 e = setTrialParam(e, 'orientationsPost', oriPost);
