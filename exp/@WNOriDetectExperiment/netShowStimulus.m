@@ -13,6 +13,7 @@ biases = getParam(e, 'biases');
 cue = getParam(e, 'cue');
 
 addCoh = getParam(e, 'addCoh');
+orthSig = getParam(e, 'orthogonalSignal');
 stimLoc = getParam(e, 'stimulusLocation');
 nLocations = size(stimLoc, 2);
 phase = getParam(e, 'phase');
@@ -68,7 +69,6 @@ else
     else
         actualSignal = signal;
     end
-    e = setTrialParam(e, 'actualSignal', actualSignal);
     
     % draw random location if necessary
     if isinf(location)
@@ -78,6 +78,14 @@ else
         actualLocation = location;
     end
     e = setTrialParam(e, 'actualLocation', actualLocation);
+    
+    % use orthogonal signal for 2nd location
+    if orthSig && actualLocation == 2 && actualSignal >= 90
+        actualSignal = actualSignal - 90;
+    elseif orthSig && actualLocation == 2
+        actualSignal = actualSignal + 90;
+    end
+    e = setTrialParam(e, 'actualSignal', actualSignal);
 
     % generate "coherent" portion of trial
     % cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
