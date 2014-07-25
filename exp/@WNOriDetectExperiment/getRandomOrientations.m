@@ -14,8 +14,3 @@ while i < n
     ori(i + (1 : k)) = orientations(r(1 : k));
     i = i + k;
 end
-
-% restore random number generator seed
-if nargin > 2
-    rand('state', state)
-end
