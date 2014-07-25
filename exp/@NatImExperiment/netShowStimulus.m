@@ -3,7 +3,6 @@ function [e,retInt32,retStruct,returned] = netShowStimulus(e,params)
 % randomization pattern bla bla
 %
 % LG/GD 07/10/2013
-
 win = get(e,'win');
 refresh = get(e,'refreshRate');
 
@@ -35,6 +34,7 @@ statIdx = conditions(cond).statIndex;
 %return function call
 tcpReturnFunctionCall(e,int32(0),params,'netShowStimulus');
 
+
 cIm = 1; % current image in trial sequence
 t = -Inf;
 blank = true;
@@ -59,7 +59,7 @@ while cIm <= nIm
         
         e = swap(e);
         t = getLastSwap(e);
-        
+                
         if cIm == 1
             startTime = getLastSwap(e);
             e = addEvent(e,'showStimulus',startTime);

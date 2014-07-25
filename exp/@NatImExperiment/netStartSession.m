@@ -43,17 +43,17 @@ scFactor = params.imSize;
 
 nFirst = params.firstTexNumber; %first texture to pick from texture struc.
 nLast = nFirst + nIm * nGS - 1; %last texture to pick from texture struc.
+params.lastTexNumber = nLast;
 
 
 %load texture structure
 
-file=sprintf('/Volumes/lab/users/george/leon_textures/StandLPtextures_%d.mat',nTex);
-
+file=sprintf('/Volumes/lab/users/leon/leon_textures/NatImTextures_%d.mat',nTex);
 f = load(file);
-
+params.sourcefile = sprintf('NatImTextures_%d.mat',nTex); 
 
 %create textures
-e.textures = zeros(4,nGS*nIm);
+e.textures = zeros(3,nGS*nIm);
 sm = ones(scFactor); %for scaling the pixels by scFactor
 for i = 1:(nLast - nFirst + 1)
     j = i + nFirst - 1;
@@ -61,7 +61,7 @@ for i = 1:(nLast - nFirst + 1)
     e.textures(1,i)= Screen('MakeTexture',win,kron(double(f.textures(j).nat),sm)); 
     e.textures(2,i)= Screen('MakeTexture',win,kron(double(f.textures(j).phs),sm));
     e.textures(3,i)= Screen('MakeTexture',win,kron(double(f.textures(j).whn),sm));
-    e.textures(4,i)= Screen('MakeTexture',win,kron(double(f.textures(j).org),sm));
+   % e.textures(4,i)= Screen('MakeTexture',win,kron(double(f.textures(j).org),sm));
 end
 
 

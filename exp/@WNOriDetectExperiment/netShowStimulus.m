@@ -12,6 +12,8 @@ fixSpotLocation = monitorCenter + getParam(e, 'fixSpotLocation');
 biases = getParam(e, 'biases');
 cue = getParam(e, 'cue');
 
+addCoh = getParam(e, 'addCoh');
+orthSig = getParam(e, 'orthogonalSignal');
 stimLoc = getParam(e, 'stimulusLocation');
 nLocations = size(stimLoc, 2);
 phase = getParam(e, 'phase');
@@ -67,7 +69,6 @@ else
     else
         actualSignal = signal;
     end
-    e = setTrialParam(e, 'actualSignal', actualSignal);
     
     % draw random location if necessary
     if isinf(location)
@@ -77,10 +78,27 @@ else
         actualLocation = location;
     end
     e = setTrialParam(e, 'actualLocation', actualLocation);
+    
+    % use orthogonal signal for 2nd location
+    if orthSig && actualLocation == 2 && actualSignal >= 90
+        actualSignal = actualSignal - 90;
+    elseif orthSig && actualLocation == 2
+        actualSignal = actualSignal + 90;
+    end
+    e = setTrialParam(e, 'actualSignal', actualSignal);
 
     % generate "coherent" portion of trial
-    cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
+    % cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
 
+    % generate "coherent" portion of trial TO INCREASE COH IN 50-50
+    % BLOCK
+    if any(bias == 2)
+        coherence = coherence + addCoh;
+        cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
+    else 
+        cohOrientations = getCoherentOrientations(e, nFramesCoh, actualSignal, coherence);
+    end
+    
     % generate post-coherent (completely random) sequence of orientations
     postOrientations = getRandomOrientations(e, nFramesPost);
 
@@ -101,6 +119,8 @@ for i = 1 : nLocations
     rand('state', targetSeeds(i))
     orientations(i, :) = getRandomOrientations(e, nFramesTotal);
 end
+
+
 
 % insert coherent period and gratings post at target location
 if ~catchTrial
@@ -172,18 +192,22 @@ end
 e = addEvent(e, 'endStimulus', getLastSwap(e));
 
 % store shown stimuli
-oriPre = orientations(1 : min(i, nFramesPre));
-oriCoh = orientations(min(i, nFramesPre) + 1 : min(i, nFramesPre + nFramesCoh));
-oriPost = orientations(min(i, nFramesPre + nFramesCoh) + 1 : min(i, end));
+oriPre = orientations(:, 1 : min(i, nFramesPre));
+oriCoh = orientations(:, min(i, nFramesPre) + 1 : min(i, nFramesPre + nFramesCoh));
+oriPost = orientations(:, min(i, nFramesPre + nFramesCoh) + 1 : min(i, end));
 e = setTrialParam(e, 'orientationsPre', oriPre);
 e = setTrialParam(e, 'orientationsCoh', oriCoh);
 e = setTrialParam(e, 'orientationsPost', oriPost);
-e = setTrialParam(e, 'orientationsAll', orientations(1 : i));
-e = setTrialParam(e, 'nFramesPre', numel(oriPre));
+e = setTrialParam(e, 'orientationsAll', orientations(:, 1 : i));
+e = setTrialParam(e, 'nFramesPre', numel(oriPre(1,:)));
 e = setTrialParam(e, 'nFramesPost', numel(oriPost));
 e = setTrialParam(e, 'delayTime', params.delayTime);
 e = setTrialParam(e, 'responseTime', params.responseTime);
 e = setTrialParam(e, 'catchTrial', catchTrial);
+if cue % if clause to make compatible when no cue
+    e = setTrialParam(e, 'bias', bias); % new
+    e = setTrialParam(e, 'fixSpotColor', fixSpotColor);
+end
 
 % return values
 retInt32 = int32(0);
