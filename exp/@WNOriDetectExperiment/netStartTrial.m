@@ -8,7 +8,6 @@ function [e, retInt32, retStruct, returned] = netStartTrial(e, params)
 e = checkOverride(e, 'signal', params);
 e = checkOverride(e, 'location', params);
 e = checkOverride(e, 'coherence', params);
-e = checkOverride(e, 'isCatchTrial', params);
 e = checkOverride(e, 'nFramesPreMin', params);
 e = checkOverride(e, 'nFramesPreMean', params);
 e = checkOverride(e, 'nFramesPreMax', params);

@@ -1,13 +1,8 @@
 function [r, mustStop] = trialCompleted(r, valid, varargin)
 % AE 2012-11-26
 
-biasNdx = r.current.bias;
-bias = r.pools.bias(biasNdx);
-featureNdx = r.current.feature;
-feature = r.pools.(r.feature){bias}{1}(featureNdx);
-
 % trial successfully completed -> remove condition from pool
-if valid || feature == 3
+if valid
     biasNdx = r.current.bias;
     bias = r.pools.bias(biasNdx);
     featureNdx = r.current.feature;

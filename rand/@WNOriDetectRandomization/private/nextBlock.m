@@ -9,22 +9,17 @@ end
 r.current.bias = ceil(rand() * numel(r.pools.bias));
 bias = r.pools.bias(r.current.bias);
 
-% below we balance the difference coherence levels, seeds, and signals
-% roughly uniformly within the block
+% below we roughly balance the two signals/locations within the block
 biasVal = r.params.biases(:, bias);
 nRepsPerBlock = r.params.nRepsPerBlock;
 nCoherences = numel(r.params.coherences);
 N1 = biasVal(1) * nCoherences * nRepsPerBlock;
 N2 = biasVal(2) * nCoherences * nRepsPerBlock;
-Nc = r.params.nCatchPerBlock;
-N = N1 + N2 + Nc;
-
-% roughly balance the two signals/locations and the catch trials within the block
+N = N1 + N2;
 S1 = (0.01 * rand(1, N1) + (0 : N1 - 1)) / N1;
 S2 = (0.01 * rand(1, N2) + (0 : N2 - 1)) / N2;
-Sc = (0.01 * rand(1, Nc) + (0 : Nc - 1)) / Nc;
-[foo, order] = sort([S1, S2, Sc]);
-feature = [ones(1, N1), 2 * ones(1, N2), 3 * ones(1, Nc)];
+[foo, order] = sort([S1, S2]);
+feature = [ones(1, N1), 2 * ones(1, N2)];
 feature = feature(order);
 
 % split up into smaller blocks

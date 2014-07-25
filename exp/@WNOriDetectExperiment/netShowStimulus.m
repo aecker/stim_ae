@@ -35,7 +35,6 @@ signal = getParam(e, 'signalTrain');
 location = getParam(e, 'locationTrain');
 coherence = getParam(e, 'coherenceTrain');
 coherence = min(coherence, nFramesCoh);
-catchTrial = getParam(e, 'isCatchTrialTrain');
 
 % fixation spot color
 if cue
@@ -45,6 +44,12 @@ if cue
 else
     fixSpotColor = getParam(e, 'fixSpotColor');
 end
+
+% determine number of frames before change 
+%   - constant hazard function after nFramesPreMin
+%   - catch trial if drawn change time > nFramesPreMax
+nFramesPre = exprnd(nFramesPreMean - nFramesPreMin) + nFramesPreMin;
+catchTrial = nFramesPre > nFramesPreMax;
 
 % catch trial
 if catchTrial
@@ -57,8 +62,7 @@ if catchTrial
     actualLocation = -1;
     fprintf('catch trial\n')
 else
-    % determine number of frames before change (constant hazard function)
-    nFramesPre = min(nFramesPreMax, round(exprnd(nFramesPreMean - nFramesPreMin)) + nFramesPreMin);
+    nFramesPre = round(nFramesPre);
     nFramesPost = ceil(responseInterval / 1000 * refresh);
     nFramesTotal = nFramesPre + nFramesCoh + nFramesPost;
 

@@ -10,12 +10,7 @@ feature = r.pools.(r.feature){bias}{1}(featureNdx);
 
 % draw random coherence (after refilling pool if necessary)
 if isempty(r.pools.coherence{bias, feature})
-    if feature == 3
-        k = 1; % catch trial -- no coherent phase...
-    else
-        k = numel(r.params.coherences);
-    end
-    r.pools.coherence{bias, feature} = 1 : k;
+    r.pools.coherence{bias, feature} = 1 : numel(r.params.coherences);
 end
 coherenceNdx = ceil(rand() * numel(r.pools.coherence{bias, feature}));
 coherence = r.pools.coherence{bias, feature}(coherenceNdx);
